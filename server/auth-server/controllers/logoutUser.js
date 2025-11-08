@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from './../models/User.js';
 
 /* 
 3. LOGOUT USER
@@ -7,7 +7,7 @@ import User from '../models/User.js';
 
 const logoutUser = async (req, res) => {
     try {
-        const refreshToken = req.body.refreshToken;
+        const refreshToken = req.cookies.refreshToken;
 
         // check if refresh token exists
         if (!refreshToken) {
