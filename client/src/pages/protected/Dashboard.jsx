@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Box, Container, Stack } from '@mui/material'
 
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
 import { redirect, useLoaderData } from 'react-router';
@@ -60,5 +60,7 @@ export function Dashboard() {
                 </Stack>
             </Box>
         </Box>
-    )
+    );
+
 }
+
