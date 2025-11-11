@@ -115,11 +115,11 @@ export default function SignIn(props) {
                 }
               />
             </FormControl>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox color="primary" />}
               label="Remember me"
               {...register('rememberMe')}
-            />
+            /> */}
             <ForgotPassword
             // open={open}
             // handleClose={handleClose}

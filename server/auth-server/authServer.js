@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
-import connectAuthDB from './configs/authDb.js';
+import authDb from './configs/authDb.js';
 import authRoutes from './routes/authRoutes.js';
 
 ////////////////////////////////////////////////////////////
@@ -49,17 +49,10 @@ server.use((err, req, res, next) => {
 });
 
 // start server
-(async () => {
-    try {
-        await connectAuthDB();
-        server.listen(process.env.AUTH_PORT, () => {
-            console.log(`-- AUTH SERVER RUNNING ON PORT ${process.env.AUTH_PORT}`);
-        });
-    } catch (err) {
-        console.error('Failed to start auth server:', err);
-        process.exit(1);
-    }
-})();
+server.listen(process.env.AUTH_PORT, () => {
+    console.log(`-- AUTH SERVER RUNNING ON PORT ${process.env.AUTH_PORT}`);
+});
+
 
 
 

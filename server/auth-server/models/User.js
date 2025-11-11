@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import connectAuthDB from './../configs/authDb.js';
 
 const userSchema = mongoose.Schema({
     username: {
@@ -48,6 +49,6 @@ const userSchema = mongoose.Schema({
     },
 })
 
-const User = mongoose.model('User', userSchema);
+const User = connectAuthDB.model('User', userSchema);
 
 export default User;

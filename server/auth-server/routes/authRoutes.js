@@ -39,7 +39,7 @@ authRouter.post('/logout', logoutUser);
     - if valid, generate new access token
     - send response
 */
-authRouter.post('/refresh', refreshAccessToken);
+authRouter.post('/refresh', refreshAccessToken,);
 
 // get user
 authRouter.get('/user', getUser);

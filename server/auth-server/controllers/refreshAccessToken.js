@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { generateAccessToken } from '../tokens/generateTokens.js';
+import { generateAccessToken, generateRefreshToken } from '../tokens/generateTokens.js';
 import User from '../models/User.js';
 
 const refreshAccessToken = async (req, res) => {
@@ -27,10 +27,29 @@ const refreshAccessToken = async (req, res) => {
         }
         // if all is good, generate new access token
         const newAccessToken = generateAccessToken(user)
-        res.status(200).json({ accessToken: newAccessToken });
+        const newRefreshToken = generateRefreshToken(user)
 
+        // Update user in DB 
+        user.refreshToken = newRefreshToken;
+        user.refreshTokenExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        await user.save();
+
+        // Re-set the cookie with proper options
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none", // use "none" for cross-origin setups
+            path: "/", // make available across routes
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        });
+
+        // Send new access token back
+        return res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
         console.log(error);
+        if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid or expired refresh token' });
+        }
         res.status(500).json({ message: 'Internal server error' });
     }
 }

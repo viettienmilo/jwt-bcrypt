@@ -22,7 +22,7 @@ const loginUser = async (req, res) => {
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
-        const { email, password, rememberMe } = value;
+        const { email, password } = value;
 
         // then check if user exists
         const user = await User.findOne({ email })
@@ -41,25 +41,6 @@ const loginUser = async (req, res) => {
         const refreshToken = generateRefreshToken(user);
         user.refreshToken = refreshToken;
         user.refreshTokenExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-
-        if (rememberMe) {
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: process.env.COOKIE_SECURE === 'production',
-                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-                sameSite: 'strict'
-            });
-        } else {
-            res.cookie(
-                "refreshToken",
-                refreshToken,
-                {
-                    httpOnly: true,
-                    secure: process.env.COOKIE_SECURE === 'production',
-                    sameSite: 'strict'
-                    // no maxAge → expires when browser closes
-                });
-        }
 
         await user.save();
 

@@ -10,7 +10,6 @@ const getUser = async (req, res) => {
         return res.status(401).json({ message: 'No accessToken provided' });
     }
 
-
     try {
         // get user from accessToken
         const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
@@ -33,6 +32,13 @@ const getUser = async (req, res) => {
         });
 
     } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Access token expired' });
+        }
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+        console.error('Error in getUser:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

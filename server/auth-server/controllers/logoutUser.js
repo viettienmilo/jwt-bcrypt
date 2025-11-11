@@ -18,7 +18,12 @@ const logoutUser = async (req, res) => {
         const user = await User.findOne({ refreshToken: refreshToken });
         if (!user) {
             // clear cookie and send response
-            res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'Strict', secure: true });
+            res.clearCookie(
+                'refreshToken', {
+                httpOnly: true,
+                sameSite: 'none',
+                secure: process.env.COOKIE_SECURE === 'production',
+            });
             return res.status(200).json({ message: 'User logged out already' });
         }
 
@@ -28,7 +33,12 @@ const logoutUser = async (req, res) => {
         await user.save();
 
         // clear cookie and send response
-        res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'Strict', secure: true });
+        res.clearCookie(
+            'refreshToken', {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: process.env.COOKIE_SECURE === 'production',
+        });
         res.status(200).json({ message: 'Logged out successfully' });
 
     } catch (error) {

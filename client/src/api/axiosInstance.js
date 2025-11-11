@@ -54,7 +54,13 @@ authAPI.interceptors.response.use(
             } catch (refreshError) {
                 // refresh token invalid — logout
                 useUserStore.getState().logout();
+                return Promise.reject(refreshError);
             }
+        }
+
+        // If still unauthorized after refresh or retry → logout
+        if (error.response?.status === 401) {
+            useUserStore.getState().logout();
         }
         return Promise.reject(error);
     }

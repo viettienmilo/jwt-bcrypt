@@ -4,14 +4,14 @@ import { Box, Typography } from '@mui/material'
 
 import { useUserStore } from './../../store/useUserStore.js';
 import { redirect, useLoaderData } from 'react-router';
-import API from './../../api/axiosInstance.js';
+import { authAPI } from './../../api/axiosInstance.js';
 
 // authorize user and redirect to dashboard page
 export async function loader() {
     const { accessToken } = useUserStore.getState();
     if (!accessToken) throw redirect('/login');
     try {
-        const { data } = await API.get(
+        const { data } = await authAPI.get(
             '/auth/user',
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
