@@ -9,7 +9,6 @@ import PageError from './components/PageError.jsx';
 import Profile from './pages/protected/Profile.jsx';
 
 function App() {
-
   const appRouter = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<Layout />} errorElement={<PageError />} >
       <Route index element={<Home />} />

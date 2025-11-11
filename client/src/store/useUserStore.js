@@ -5,6 +5,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// handle authentication
 export const useUserStore = create(
     persist((set) => ({         // persist keep user stay logged in when refreshing page
         accessToken: null,
@@ -17,3 +18,9 @@ export const useUserStore = create(
             name: "user-storage", // key in localStorage
         }
     ));
+
+// handle UI
+export const useUIStore = create((set) => ({
+    showNavbar: true,
+    setShowNavbar: (value) => set({ showNavbar: value }),
+}));
