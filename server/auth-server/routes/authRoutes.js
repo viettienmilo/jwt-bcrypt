@@ -3,6 +3,7 @@ import registerUser from './../controllers/registerUser.js';
 import loginUser from './../controllers/loginUser.js';
 import logoutUser from '../controllers/logoutUser.js';
 import refreshAccessToken from './../controllers/refreshAccessToken.js';
+import getUser from './../controllers/getUser.js';
 
 const authRouter = express.Router()
 
@@ -39,5 +40,8 @@ authRouter.post('/logout', logoutUser);
     - send response
 */
 authRouter.post('/refresh', refreshAccessToken);
+
+// get user
+authRouter.get('/user', getUser);
 
 export default authRouter;

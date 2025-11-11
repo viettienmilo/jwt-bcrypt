@@ -10,13 +10,16 @@ import { useUserStore } from "../store/useUserStore";
     6. If refresh fails (refresh token expired / revoked), it logs the user out.
 */
 
-const API = axios.create({
-    baseURL: import.meta.env.VITE_MAIN_API,
+const authAPI = axios.create({
+    baseURL: import.meta.env.VITE_AUTH_API,
     withCredentials: true, // needed for sending cookies
+    headers: {
+        "Content-Type": "application/json"
+    }
 });
 
 // Attach access token to all requests
-API.interceptors.request.use((config) => {
+authAPI.interceptors.request.use((config) => {
     const token = useUserStore.getState().accessToken;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -25,7 +28,7 @@ API.interceptors.request.use((config) => {
 });
 
 // Handle 401 responses automatically
-API.interceptors.response.use(
+authAPI.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -47,14 +50,14 @@ API.interceptors.response.use(
                 // retry the failed request with new token
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return API(originalRequest);
+
             } catch (refreshError) {
                 // refresh token invalid — logout
                 useUserStore.getState().logout();
             }
         }
-
         return Promise.reject(error);
     }
 );
 
-export default API;
+export { authAPI };

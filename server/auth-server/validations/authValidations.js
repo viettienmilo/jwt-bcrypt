@@ -2,7 +2,7 @@ import joi from 'joi'
 
 export const userRegisterSchema = joi.object(
     {
-        username: joi.string().min(3).max(10).required(),
+        username: joi.string().min(4).max(20).required(),
         email: joi.string().email().required(),
         password: joi.string().min(5).max(20).required(),
         confirmPassword: joi.ref('password'),
@@ -14,5 +14,6 @@ export const userLoginSchema = joi.object(
     {
         email: joi.string().email().required(),
         password: joi.string().min(5).max(20).required(),
+        rememberMe: joi.bool().required(),
     }
 )

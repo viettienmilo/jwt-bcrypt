@@ -19,25 +19,23 @@ const server = express();
 
 server.use(helmet()); // secure headers
 server.use(morgan('dev')); // http request log
-server.use(cors(
-    {
-        origin: process.env.MAIN_SERVER_URL, // http://localhost:3000
-        // allow cookies, 
-        // make sure frontend uses fetch or axios with 
-        // withCredentials: true when sending cookies (for refresh tokens).
-        credentials: true
-    }
-));
+
+server.use(
+    cors({
+        origin: process.env.CLIENT_URL,
+        credentials: true,               // allow cookies/headers
+    })
+);
 server.use(cookieParser()); // read cookies from headers
 server.use(express.json()); // read/write json
 
 // test route
-server.get('/auth', (req, res) => {
+server.get('/', (req, res) => {
     res.status(200).json({ message: "AuthServer API running" })
 });
 
 // auth routes for handle register/login/logout and refresh access token
-server.use('/auth', authRoutes)
+server.use('/api/auth', authRoutes)
 
 // handle unexpected routes
 server.use((req, res) => {

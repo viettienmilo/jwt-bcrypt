@@ -13,7 +13,7 @@ server.use(helmet()); // secure headers
 server.use(morgan('dev')); // http request log
 server.use(cors(
     {
-        origin: process.env.MAIN_SERVER_URL, // http://localhost:3000
+        origin: process.env.CLIENT_URL, // http://localhost:3000
         // allow cookies, 
         // make sure frontend uses fetch or axios with 
         // withCredentials: true when sending cookies (for refresh tokens).
