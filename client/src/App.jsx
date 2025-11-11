@@ -4,17 +4,18 @@ import Home from './pages/Home.jsx'
 import SignUp from './pages/Register.jsx';
 import SignIn from './pages/Login.jsx';
 import { Dashboard, loader as dashboardLoader } from './pages/protected/Dashboard.jsx';
-
-
+import Page404 from './components/Page404.jsx';
+import PageError from './components/PageError.jsx';
 
 function App() {
 
   const appRouter = createBrowserRouter(createRoutesFromElements(
-    <Route path='/' element={<Layout />}>
+    <Route path='/' element={<Layout />} errorElement={<PageError />} >
       <Route index element={<Home />} />
       <Route path='register' element={<SignUp />} />
       <Route path='login' element={<SignIn />} />
       <Route path='dashboard' element={<Dashboard />} loader={dashboardLoader} />
+      <Route path='*' element={<Page404 />} />
     </Route>
   ))
 
