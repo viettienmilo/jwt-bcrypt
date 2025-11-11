@@ -15,22 +15,22 @@ export default function Page404() {
                 sx={{
                     display: "block",
                     mx: "auto",
-                    mt: 30,
-                    mb: 10,
+                    mt: 16,
                     maxWidth: "100%",
                     height: "auto",
                 }}
-            >
-                <Typography variant="h6"
-                    sx={{
-                        letterSpacing: 4,
-                        fontWeight: 500,
-                        textAlign: "center",
-                        color: theme.palette.error.light
-                    }}>
-                    OOPS! PAGE NOT FOUND
-                </Typography>
-            </Box>
+            />
+
+            <Typography variant="h6"
+                sx={{
+                    mt: 4,
+                    letterSpacing: 4,
+                    fontWeight: 500,
+                    textAlign: "center",
+                    color: theme.palette.error.light
+                }}>
+                OOPS! PAGE NOT FOUND
+            </Typography>
 
             <Box
                 sx={{

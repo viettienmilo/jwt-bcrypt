@@ -58,19 +58,29 @@ const UserMenu = () => {
                 disableAutoFocus // prevent warning focus problem
                 disableAutoFocusItem // Prevent autofocus on the first item
             >
-                {user.role === 'USER' && <MenuItem onClick={() => navigate('/dashboard')}>
-                    <ListItemIcon>
-                        <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
-                    </ListItemIcon>
-                    Dashboard
-                </MenuItem>}
-                {user.role === 'ADMIN' && <MenuItem onClick={() => navigate('/admin')}>
+                {user.role === 'USER' &&
+                    <MenuItem onClick={() => {
+                        closeMenu();
+                        navigate('/dashboard')
+                    }}>
+                        <ListItemIcon>
+                            <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
+                        </ListItemIcon>
+                        Dashboard
+                    </MenuItem>}
+                {user.role === 'ADMIN' && <MenuItem onClick={() => {
+                    closeMenu();
+                    navigate('/admin')
+                }}>
                     <ListItemIcon>
                         <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
                     </ListItemIcon>
                     Admin Panel
                 </MenuItem>}
-                <MenuItem onClick={() => navigate('/profile')}>
+                <MenuItem onClick={() => {
+                    closeMenu();
+                    navigate('/profile')
+                }}>
                     <ListItemIcon>
                         <SettingsIcon sx={{ fontSize: 22, color: green[500] }} />
                     </ListItemIcon>

@@ -17,8 +17,7 @@ export default function PageError() {
                 sx={{
                     display: "block",
                     mx: "auto",
-                    mt: 25,
-                    mb: 10,
+                    mt: 16,
                     maxWidth: "100%",
                     height: "auto",
                 }}
@@ -30,7 +29,7 @@ export default function PageError() {
                 }}>
                 <Typography variant="h6"
                     sx={{
-                        my: 5,
+                        mt: 4,
                         letterSpacing: 4,
                         fontWeight: 500,
                         textAlign: "center",
