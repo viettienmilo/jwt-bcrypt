@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+import { deepPurple } from '@mui/material/colors';
 
 const drawerWidth = 240;
 
@@ -21,14 +22,15 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
-export default function SideMenu() {
+export default function SideMenu({ user }) {
+
   return (
     <Drawer
       variant="permanent"
       sx={{
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.paper',
+          backgroundColor: 'background.paper', width: 'auto', minWidth: 250
         },
       }}
     >
@@ -44,16 +46,18 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
+          alt={user.username || "username"}
+          src={user.profilePicture || undefined}
+          sx={{ width: 36, height: 36, bgcolor: deepPurple[500] }}
+        >
+          {user.username?.[0]?.toUpperCase() || "X"}
+        </Avatar>
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+            {user.username}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+            {user.email}
           </Typography>
         </Box>
         <OptionsMenu />

@@ -14,7 +14,9 @@ const getUser = async (req, res) => {
         // get user from accessToken
         const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
         const userId = decode.userId;
-        const user = await User.findById(userId);
+
+        // if user found, return all info EXCEPT password
+        const user = await User.findById(userId).select('-password');
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -24,10 +26,8 @@ const getUser = async (req, res) => {
         res.status(200).json({
             message: 'User authorized',
             user: {
-                userId: user._id,
-                username: user.username,
-                role: user.role,
-                profilePicture: user.profilePicture
+                id: user._id,
+                ...user.toObject(),
             }
         });
 

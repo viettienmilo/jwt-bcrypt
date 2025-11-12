@@ -1,4 +1,4 @@
-import { Box, Container, Stack } from '@mui/material'
+import { Box, Stack, } from '@mui/material'
 
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
 import { redirect, useLoaderData } from 'react-router';
@@ -32,8 +32,8 @@ export function Dashboard() {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            <SideMenu />
-            <AppNavbar />
+            <SideMenu user={user} />
+            {/* <AppNavbar /> */}
 
             {/* Main content */}
             <Box
@@ -57,6 +57,7 @@ export function Dashboard() {
                 >
                     <Header />
                     {/* <MainGrid /> */}
+
                 </Stack>
             </Box>
         </Box>
