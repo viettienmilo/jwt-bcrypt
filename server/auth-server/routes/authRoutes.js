@@ -4,6 +4,7 @@ import loginUser from './../controllers/loginUser.js';
 import logoutUser from '../controllers/logoutUser.js';
 import refreshAccessToken from './../controllers/refreshAccessToken.js';
 import getUser from './../controllers/getUser.js';
+import uploadImage from './../controllers/uploadImage.js';
 
 const authRouter = express.Router()
 
@@ -39,9 +40,12 @@ authRouter.post('/logout', logoutUser);
     - if valid, generate new access token
     - send response
 */
-authRouter.post('/refresh', refreshAccessToken,);
+authRouter.post('/refresh', refreshAccessToken);
 
 // get user
 authRouter.get('/user', getUser);
+
+// upload profile picture
+authRouter.post('/upload/profile-picture', uploadImage);
 
 export default authRouter;

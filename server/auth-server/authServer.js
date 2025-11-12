@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
-import authDb from './configs/authDb.js';
+import connectToCloudinary from './configs/cloudinary.js';
 import authRoutes from './routes/authRoutes.js';
 
 ////////////////////////////////////////////////////////////
@@ -14,6 +14,8 @@ import authRoutes from './routes/authRoutes.js';
 // 3. Logout user
 // 4. Refresh access token 
 ////////////////////////////////////////////////////////////
+
+connectToCloudinary();
 
 const server = express();
 

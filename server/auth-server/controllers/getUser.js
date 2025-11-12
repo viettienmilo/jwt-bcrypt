@@ -26,7 +26,7 @@ const getUser = async (req, res) => {
         res.status(200).json({
             message: 'User authorized',
             user: {
-                id: user._id,
+                useId: user._id,
                 ...user.toObject(),
             }
         });
