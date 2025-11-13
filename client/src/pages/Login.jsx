@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   Divider,
   FormLabel,
   FormControl,
@@ -15,15 +13,12 @@ import {
   FacebookIcon,
 } from '../components/CustomIcons';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
-
 import ForgotPassword from '../components/ForgotPassword';
 import Container from '../components/Container.jsx';
 import Card from './../components/Card.jsx';
-
-
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router'
+import { useNavigate, Link as RouterLink } from 'react-router'
 import useLoginUser from './../api/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
 
@@ -45,13 +40,19 @@ export default function SignIn(props) {
   // snackbar
   const { enqueueSnackbar } = useSnackbar();
 
+  // handle OAuth login
+  const handleOAuthLogin = (provider) => {
+    window.location.href = `${import.meta.env.VITE_AUTH_API}/auth/login/${provider}`;
+    // console.log(`${import.meta.env.VITE_AUTH_API}/auth/login/${provider}`)
+  };
+
   const onFormSubmit = (formData) => {
     mutate(formData, {
       onSuccess: (data) => {
         enqueueSnackbar(data.message || "User logged in successfully", { variant: 'success' });
         setAccessToken(data.accessToken)
-        setUser(data.user)
-        navigate('/dashboard')
+        setUser(data.user);
+        navigate('/')
       },
       onError: (error) => {
         enqueueSnackbar(error.response?.data?.message || "Logged failed", { variant: 'error' });
@@ -138,17 +139,17 @@ export default function SignIn(props) {
               type="button"
               // onClick={handleClickOpen}
               variant="body2"
-              sx={{ alignSelf: 'center' }}
+              sx={{ alignSelf: 'center', color: "warning.main" }}
             >
               Forgot your password?
             </Link>
           </Box>
-          <Divider>or</Divider>
+          <Divider sx={{ my: 2 }}>or</Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign in with Google')}
+              onClick={() => handleOAuthLogin('google')}
               startIcon={<GoogleIcon />}
             >
               Log in with Google
@@ -164,9 +165,10 @@ export default function SignIn(props) {
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                component={RouterLink}
+                to='/register'
                 variant="body2"
-                sx={{ alignSelf: 'center' }}
+                sx={{ alignSelf: 'center', color: "info.main" }}
               >
                 Register
               </Link>

@@ -1,5 +1,5 @@
 import multer from "multer";
 
-const uploadImage = multer({ storage: multer.diskStorage({}) })
+const uploadImageMiddleware = multer({ storage: multer.diskStorage({}) })
 
-export default uploadImage;
+export default uploadImageMiddleware;

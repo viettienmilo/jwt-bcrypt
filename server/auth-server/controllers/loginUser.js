@@ -31,7 +31,7 @@ const loginUser = async (req, res) => {
         }
 
         // if user exists, check if password is correct
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        const isPasswordCorrect = bcrypt.compare(password, user.password)
         if (!isPasswordCorrect) {
             return res.status(403).json({ message: 'Password is incorrect' })
         }
@@ -48,7 +48,7 @@ const loginUser = async (req, res) => {
         res.status(200).json({
             message: 'User logged in successfully',
             accessToken: accessToken,
-            user: { userId: user._id, role: user.role },
+            user: { userId: user._id, role: user.role, profilePicture: user.profilePicture },
         });
 
     } catch (error) {

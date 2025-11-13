@@ -149,29 +149,13 @@ export default function SignUp(props) {
           <Typography sx={{ color: 'text.secondary' }}>or</Typography>
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert('Sign up with Google')}
-            startIcon={<GoogleIcon />}
-          >
-            Sign up with Google
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert('Sign up with Facebook')}
-            startIcon={<FacebookIcon />}
-          >
-            Sign up with Facebook
-          </Button>
           <Typography sx={{ textAlign: 'center' }}>
             Already have an account?{' '}
             <Link
               component={RouterLink}  // to use Link of react-router
               to='/login'
               variant="body2"
-              sx={{ alignSelf: 'center' }}
+              sx={{ alignSelf: 'center', color: "info.main" }}
             >
               Log in
             </Link>

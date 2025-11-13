@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import connectToCloudinary from './configs/cloudinary.js';
 import authRoutes from './routes/authRoutes.js';
+import passportConfig from './configs/authStrategies.js'
+import passport from 'passport'
+// import passport from './configs/authStrategies.js';
 
 ////////////////////////////////////////////////////////////
 // AUTHENTICATION & AUTHORIZATION SERVER ///////////////////
@@ -30,6 +33,9 @@ server.use(
 );
 server.use(cookieParser()); // read cookies from headers
 server.use(express.json()); // read/write json
+
+passportConfig(passport);
+server.use(passport.initialize());
 
 // test route
 server.get('/', (req, res) => {

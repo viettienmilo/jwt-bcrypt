@@ -8,6 +8,11 @@ import Page404 from './components/Page404.jsx';
 import PageError from './components/PageError.jsx';
 import Profile from './pages/protected/Profile.jsx';
 
+import '@fontsource/poppins/300.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/700.css';
+
 function App() {
   const appRouter = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<Layout />} errorElement={<PageError />} >

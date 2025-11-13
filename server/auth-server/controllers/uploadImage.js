@@ -1,40 +1,27 @@
 import { v2 as cloudinary } from 'cloudinary'
-import User from '../models/User.js'
+import fs from 'fs';
 
-const uploadImage = async () => {
-
-    const header = req.headers['authorization'];
-    const accessToken = header.split(' ')[1];
-
-    // check if accessToken valid
-    if (!accessToken) {
-        return res.status(401).json({ message: 'No accessToken provided' });
-    }
-
+const uploadImage = async (req, res) => {
     try {
-        // verify user
-        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-        const userId = decode.userId;
-
-        // if user found, return all info EXCEPT password
-        const user = await User.findById(userId).select('-password');
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        const user = req.user;
 
         // upload images to cloudinary via multer middleware
-        const uploadImages = req.files.map(
-            async (file) => {
-                const response = await cloudinary.uploader.upload(file.path)
-                return response.secure_url;
-            }
-        )
-        // wait for all images upload completed
-        const images = await Promise.all(uploadImages);
+        const uploadImage = await cloudinary.uploader.upload(
+            req.file.path, {
+            folder: 'profilePictures',
+            public_id: user._id.toString(),
+            overwrite: true,    // overwrite the old 
+            invalidate: true,   // refresh CDN cache
+            transformation: [
+                { width: 200, height: 200, crop: "fill", gravity: "face" } // crop & fill
+            ],
+        });
+
+        // remove local temp file
+        fs.unlinkSync(req.file.path);
 
         // update user profile picture
-        user.profilePicture = images[0];
+        user.profilePicture = uploadImage.secure_url;
         await user.save();
 
         res.status(200).json({
@@ -44,7 +31,8 @@ const uploadImage = async () => {
         })
 
     } catch (error) {
-        res.status(403).json({ message: error.message })
+        console.log(error.message)
+        res.status(500).json({ message: error.message })
     }
 }
 

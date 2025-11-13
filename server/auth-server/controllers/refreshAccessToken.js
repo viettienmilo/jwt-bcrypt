@@ -13,11 +13,13 @@ const refreshAccessToken = async (req, res) => {
     try {
         // verify refreshToken
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY);
+
         // verify user
-        const user = await User.findById(decoded.userId);
+        const user = await User.findById(decoded.userId).select('-password');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         // validate refreshToken and refreshTokenExpiration
         if (user.refreshToken !== refreshToken) {
             return res.status(403).json({ message: 'Invalid Refresh token' });

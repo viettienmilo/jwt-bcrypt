@@ -8,7 +8,6 @@ import SideMenu from './../../components/protected/SideMenu';
 import Header from './../../components/protected/Header';
 
 
-
 // authorize user and redirect to dashboard page
 export async function loader() {
     const { accessToken } = useUserStore.getState();
@@ -33,7 +32,7 @@ export function Dashboard() {
     return (
         <Box sx={{ display: 'flex' }}>
             <SideMenu user={user} />
-            {/* <AppNavbar /> */}
+            <AppNavbar />
 
             {/* Main content */}
             <Box

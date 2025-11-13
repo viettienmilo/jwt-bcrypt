@@ -44,7 +44,8 @@ const UserMenu = () => {
             <Tooltip title='User settings' >
                 <Avatar src={user.profilePicture || undefined}
                     sx={{ cursor: "pointer", width: 30, height: 30, bgcolor: deepPurple[500] }}
-                    onClick={openMenu} >
+                    onClick={openMenu}
+                >
                     {user.username?.[0]?.toUpperCase() ?? "X"}
                 </Avatar>
             </Tooltip>

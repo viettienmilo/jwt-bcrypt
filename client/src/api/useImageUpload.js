@@ -5,7 +5,7 @@ const useImageUpload = () => {
     return useMutation({
         mutationFn: async (data) => {
             const response = await authAPI.post(
-                '/upload/profile-picture',
+                'auth/upload/profile-picture',
                 data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
