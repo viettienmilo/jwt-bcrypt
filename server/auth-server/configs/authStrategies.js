@@ -1,4 +1,5 @@
 import GoogleStrategy from 'passport-google-oauth2'
+import FacebookStrategy from 'passport-facebook'
 import User from './../models/User.js';
 
 // callback handler for all of providers (Google, Facebook,...)
@@ -45,7 +46,21 @@ function passportConfig(passport) {
             async (accessToken, refreshToken, profile, done) => {
                 await handleOAuthCallback(profile, 'google', done);
             }
-        ))
+        )
+    );
+
+    passport.use(
+        new FacebookStrategy({
+            clientID: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            callbackURL: process.env.FACEBOOK_CALLBACK_URI,
+            profileFields: ['id', 'displayName', 'emails', 'photos'],
+        },
+            async (accessToken, refreshToken, profile, done) => {
+                await handleOAuthCallback(profile, 'facebook', done);
+            }
+        )
+    );
 };
 
 export default passportConfig;

@@ -11,7 +11,7 @@ import Header from './../../components/protected/Header';
 export async function loader() {
     const { accessToken } = useUserStore.getState();
 
-    if (!accessToken) throw redirect('/login');
+    if (!accessToken) throw redirect('/user/login');
     try {
         const { data } = await authAPI.get(
             '/auth/user',
@@ -21,14 +21,14 @@ export async function loader() {
         useUIStore.getState().setShowNavbar(false); // hide navbar
         return { user: data.user };
     } catch (error) {
-        throw redirect('/login');
+        throw redirect('/user/login');
     }
 }
 
 export async function googleAuthLoader({ request }) {
     const url = new URL(request.url);
     const accessToken = url.searchParams.get('accessToken');
-    if (!accessToken) throw redirect('/login');
+    if (!accessToken) throw redirect('/user/login');
     useUserStore.getState().setAccessToken(accessToken);
 
     try {
@@ -41,7 +41,27 @@ export async function googleAuthLoader({ request }) {
         return { user: data.user };
 
     } catch (error) {
-        throw redirect('/login');
+        throw redirect('/user/login');
+    }
+}
+
+export async function facebookAuthLoader({ request }) {
+    const url = new URL(request.url);
+    const accessToken = url.searchParams.get('accessToken');
+    if (!accessToken) throw redirect('/user/login');
+    useUserStore.getState().setAccessToken(accessToken);
+
+    try {
+        const { data } = await authAPI.get(
+            '/auth/user',
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        useUserStore.getState().setUser(data.user); // update user
+        useUIStore.getState().setShowNavbar(false); // hide navbar
+        return { user: data.user };
+
+    } catch (error) {
+        throw redirect('/user/login');
     }
 }
 

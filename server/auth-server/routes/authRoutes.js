@@ -72,4 +72,15 @@ authRouter.get('/login/google/callback',
     }
 );
 
+// Facebook
+authRouter.get('/login/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+authRouter.get('/login/facebook/callback',
+    passport.authenticate('facebook', { session: false }),
+    (req, res) => {
+        const user = req.user;
+        const accessToken = generateAccessToken(user);
+        res.redirect(`${process.env.CLIENT_URL}/auth/facebook/callback?accessToken=${accessToken}`);
+    }
+);
+
 export default authRouter;

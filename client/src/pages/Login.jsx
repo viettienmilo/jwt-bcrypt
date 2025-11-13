@@ -18,7 +18,7 @@ import Container from '../components/Container.jsx';
 import Card from './../components/Card.jsx';
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack';
-import { useNavigate, Link as RouterLink, replace, redirect } from 'react-router'
+import { useNavigate, Link as RouterLink, redirect } from 'react-router'
 import useLoginUser from './../api/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
 // import requireAuth from './../utils/requireAuth.js';
@@ -160,7 +160,7 @@ export default function SignIn(props) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
+              onClick={() => handleOAuthLogin('facebook')}
               startIcon={<FacebookIcon />}
             >
               Log in with Facebook

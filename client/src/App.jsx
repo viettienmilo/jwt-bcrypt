@@ -3,7 +3,12 @@ import Layout from './layouts/Layout.jsx';
 import Home from './pages/Home.jsx'
 import SignUp, { loader as signUpLoader } from './pages/Register.jsx';
 import SignIn, { loader as signInLoader } from './pages/Login.jsx';
-import { Dashboard, loader as dashboardLoader, googleAuthLoader as dashboardGoogleAuthLoader } from './pages/protected/Dashboard.jsx';
+import {
+  Dashboard,
+  loader as dashboardLoader,
+  googleAuthLoader as dashboardGoogleAuthLoader,
+  facebookAuthLoader as dashboardFacebookAuthLoader,
+} from './pages/protected/Dashboard.jsx';
 import Page404 from './components/Page404.jsx';
 import PageError from './components/PageError.jsx';
 import Profile, { loader as profileLoader } from './pages/protected/Profile.jsx';
@@ -22,7 +27,8 @@ function App() {
       <Route path='user/register' element={<SignUp />} loader={() => signUpLoader(requireAuth())} />
       <Route path='user/login' element={<SignIn />} loader={() => signInLoader(requireAuth())} />
       <Route path='user/dashboard' element={<Dashboard />} loader={dashboardLoader} />
-      <Route path='user/auth/google/callback' element={<Dashboard />} loader={dashboardGoogleAuthLoader} />
+      <Route path='auth/google/callback' element={<Dashboard />} loader={dashboardGoogleAuthLoader} />
+      <Route path='auth/facebook/callback' element={<Dashboard />} loader={dashboardFacebookAuthLoader} />
       <Route path='user/profile' element={<Profile />} loader={() => profileLoader(requireAuth())} />
       <Route path='*' element={<Page404 />} />
     </Route>
