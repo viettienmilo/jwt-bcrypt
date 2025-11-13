@@ -7,8 +7,6 @@ import getUser from './../controllers/getUser.js';
 import uploadImage from './../controllers/uploadImage.js';
 import uploadImageMiddleware from './../middlewares/uploadImage.js';
 import authenticateMiddleware from './../middlewares/authenticate.js';
-// import passport from 'passport';
-import passportConfig from './../configs/authStrategies.js';
 import passport from 'passport';
 import { generateAccessToken } from './../tokens/generateTokens.js';
 
@@ -65,13 +63,12 @@ authRouter.post(
 
 // Google
 authRouter.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
 authRouter.get('/login/google/callback',
     passport.authenticate('google', { session: false }),
     (req, res) => {
         const user = req.user;
-        const token = generateAccessToken(user);
-        res.json({ token });
+        const accessToken = generateAccessToken(user);
+        res.redirect(`${process.env.CLIENT_URL}/auth/google/callback?accessToken=${accessToken}`);
     }
 );
 

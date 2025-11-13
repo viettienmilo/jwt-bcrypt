@@ -11,24 +11,22 @@ const Layout = () => {
     const setShowNavbar = useUIStore(state => state.setShowNavbar);
     const location = useLocation();
 
+    const hideNavbarPaths = ['/user/dashboard', 'user/auth/google/callback'];
+
     // hide Navbar when enter dashboard and restore it when going back
     // useEffect helps restore Navbar when user uses Back button of the browser
     useEffect(() => {
-        const isDashboard = location.pathname.includes('/dashboard');
-        if (isDashboard) {
-            // Move focus away before hiding navbar
-            if (document.activeElement) {
-                document.activeElement.blur();
-            }
-        }
-        setShowNavbar(!isDashboard);
-    }, [location])
+        const shouldHide = hideNavbarPaths.some(path => location.pathname.startsWith(path));
+        setShowNavbar(!shouldHide);
+    }, [location.pathname])
 
     return (
         <>
-            {showNavbar && <AppAppBar />}
-            <Container maxWidth={showNavbar ? "lg" : false}>
-                <Box >
+            <Container
+                maxWidth={showNavbar ? "lg" : false}
+            >
+                {showNavbar && <AppAppBar />}
+                <Box sx={{ mx: 2 }}>
                     <Outlet />
                 </Box>
             </Container>

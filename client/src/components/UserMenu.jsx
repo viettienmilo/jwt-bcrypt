@@ -15,12 +15,19 @@ import { orange, green, deepPurple } from '@mui/material/colors';
 import { useState } from "react"
 import { useUserStore } from "../store/useUserStore"
 import { useNavigate } from "react-router"
+import MenuButton from "./protected/MenuButton";
 
 const UserMenu = () => {
     const [anchorElement, setAnchorElement] = useState(null);
     const user = useUserStore(state => state.user)
     const logout = useUserStore(state => state.logout)
     const navigate = useNavigate();
+
+    const open = Boolean(anchorElement);
+
+    const handleClick = (event) => {
+        setAnchorElement(event.currentTarget);
+    };
 
     // open dropdown menu
     const openMenu = (event) => {
@@ -36,22 +43,36 @@ const UserMenu = () => {
     const logoutUser = () => {
         logout();
         closeMenu();
-        navigate('/login');
+        navigate('/user/login');
     }
 
     return (
         <>
             <Tooltip title='User settings' >
-                <Avatar src={user.profilePicture || undefined}
-                    sx={{ cursor: "pointer", width: 30, height: 30, bgcolor: deepPurple[500] }}
-                    onClick={openMenu}
+                <MenuButton
+                    aria-label="Open menu"
+                    onClick={handleClick}
+                    sx={{
+                        border: 'none',        // <── removes border completely
+                        boxShadow: 'none',     // optional, in case of shadow or focus outline
+                        p: 0,                  // optional: remove extra padding if you just want avatar size
+                        '&:hover': {
+                            backgroundColor: 'transparent', // keep clean hover
+                        },
+                    }}
                 >
-                    {user.username?.[0]?.toUpperCase() ?? "X"}
-                </Avatar>
+                    <Avatar src={user.profilePicture || undefined}
+                        sx={{ cursor: "pointer", width: 30, height: 30, bgcolor: deepPurple[500] }}
+                        onClick={openMenu}
+                    >
+                        {user.username?.[0]?.toUpperCase() ?? "X"}
+                    </Avatar>
+                </MenuButton>
+
             </Tooltip>
             <Menu
                 anchorEl={anchorElement}
-                open={Boolean(anchorElement)}
+                open={open}
                 onClose={closeMenu}
                 slotProps={{ // Pass props to the internal MenuList
                     'aria-labelledby': 'basic-button',
@@ -62,7 +83,7 @@ const UserMenu = () => {
                 {user.role === 'USER' &&
                     <MenuItem onClick={() => {
                         closeMenu();
-                        navigate('/dashboard')
+                        navigate('/user/dashboard')
                     }}>
                         <ListItemIcon>
                             <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
@@ -71,7 +92,7 @@ const UserMenu = () => {
                     </MenuItem>}
                 {user.role === 'ADMIN' && <MenuItem onClick={() => {
                     closeMenu();
-                    navigate('/admin')
+                    navigate('/user/admin')
                 }}>
                     <ListItemIcon>
                         <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
@@ -80,7 +101,7 @@ const UserMenu = () => {
                 </MenuItem>}
                 <MenuItem onClick={() => {
                     closeMenu();
-                    navigate('/profile')
+                    navigate('/user/profile')
                 }}>
                     <ListItemIcon>
                         <SettingsIcon sx={{ fontSize: 22, color: green[500] }} />

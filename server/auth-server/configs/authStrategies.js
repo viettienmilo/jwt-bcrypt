@@ -40,7 +40,7 @@ function passportConfig(passport) {
         new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'http://localhost:4000/api/auth/login/google/callback',
+            callbackURL: process.env.GOOGLE_CALLBACK_URI,
         },
             async (accessToken, refreshToken, profile, done) => {
                 await handleOAuthCallback(profile, 'google', done);

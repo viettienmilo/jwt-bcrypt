@@ -18,10 +18,14 @@ import Container from '../components/Container.jsx';
 import Card from './../components/Card.jsx';
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack';
-import { useNavigate, Link as RouterLink } from 'react-router'
+import { useNavigate, Link as RouterLink, replace, redirect } from 'react-router'
 import useLoginUser from './../api/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
+// import requireAuth from './../utils/requireAuth.js';
 
+export async function loader(isAuthed) {
+  return (isAuthed ? redirect('/user/dashboard') : null);
+}
 
 export default function SignIn(props) {
 
@@ -43,7 +47,6 @@ export default function SignIn(props) {
   // handle OAuth login
   const handleOAuthLogin = (provider) => {
     window.location.href = `${import.meta.env.VITE_AUTH_API}/auth/login/${provider}`;
-    // console.log(`${import.meta.env.VITE_AUTH_API}/auth/login/${provider}`)
   };
 
   const onFormSubmit = (formData) => {
@@ -52,7 +55,7 @@ export default function SignIn(props) {
         enqueueSnackbar(data.message || "User logged in successfully", { variant: 'success' });
         setAccessToken(data.accessToken)
         setUser(data.user);
-        navigate('/')
+        navigate('/user/dashboard')
       },
       onError: (error) => {
         enqueueSnackbar(error.response?.data?.message || "Logged failed", { variant: 'error' });
@@ -166,7 +169,7 @@ export default function SignIn(props) {
               Don&apos;t have an account?{' '}
               <Link
                 component={RouterLink}
-                to='/register'
+                to='/user/register'
                 variant="body2"
                 sx={{ alignSelf: 'center', color: "info.main" }}
               >

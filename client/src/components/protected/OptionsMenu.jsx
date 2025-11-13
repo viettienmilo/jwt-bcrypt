@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Divider, { dividerClasses } from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
@@ -10,22 +10,35 @@ import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
+import { useUserStore } from './../../store/useUserStore.js';
+import { useNavigate } from 'react-router';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
 });
 
 export default function OptionsMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const logout = useUserStore(state => state.logout);
+
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = () => {
+    logout();
+    handleClose();
+    navigate('user/login');
+  }
   return (
-    <React.Fragment>
+    <>
       <MenuButton
         aria-label="Open menu"
         onClick={handleClick}
@@ -56,11 +69,11 @@ export default function OptionsMenu() {
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <Divider />
-        {/* <MenuItem onClick={handleClose}>Add another account</MenuItem> */}
+        <MenuItem onClick={() => navigate('/')}>Main page</MenuItem>
         {/* <MenuItem onClick={handleClose}>Settings</MenuItem> */}
         <Divider />
         <MenuItem
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',
@@ -74,6 +87,6 @@ export default function OptionsMenu() {
           </ListItemIcon>
         </MenuItem>
       </Menu>
-    </React.Fragment>
+    </>
   );
 }

@@ -63,11 +63,11 @@ export default function AppAppBar() {
             }}
           >
             {!user && <Button color="primary" variant="text" size="small"
-              onClick={() => navigate('/register')}>
+              onClick={() => navigate('user/register')}>
               Register
             </Button>}
             {!user && <Button color="primary" variant="contained" size="small"
-              onClick={() => navigate('/login')}>
+              onClick={() => navigate('user/login')}>
               Log in
             </Button>}
             {/* {user && <Button color="primary" variant="contained" size="small" >

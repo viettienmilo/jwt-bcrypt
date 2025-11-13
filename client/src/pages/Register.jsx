@@ -11,18 +11,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import {
-  GoogleIcon,
-  FacebookIcon,
-} from '../components/CustomIcons.jsx';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
 import Container from './../components/Container.jsx';
 import Card from './../components/Card.jsx';
 
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
-import { useNavigate } from 'react-router'
+import { useNavigate, redirect } from 'react-router'
 import useRegisterUser from './../api/useRegisterUser.js'
+
+export async function loader(isAuthed) {
+  return (isAuthed ? redirect('/dashboard') : null);
+}
 
 export default function SignUp(props) {
 
@@ -153,7 +153,7 @@ export default function SignUp(props) {
             Already have an account?{' '}
             <Link
               component={RouterLink}  // to use Link of react-router
-              to='/login'
+              to='/user/login'
               variant="body2"
               sx={{ alignSelf: 'center', color: "info.main" }}
             >
