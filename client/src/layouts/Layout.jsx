@@ -33,7 +33,7 @@ const Layout = () => {
                     <Outlet />
                 </Box>
             </Container> :
-            <Container maxWidth='xl'>
+            <Container maxWidth={false}>
                 <Box >
                     <Outlet />
                 </Box>

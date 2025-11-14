@@ -53,8 +53,8 @@ export default function SignUp(props) {
     mutate(formData,
       {
         onSuccess: (data) => {
-          enqueueSnackbar(data.message || 'User registered successfully', { variant: 'success' });
-          navigate('/user/login');
+          enqueueSnackbar(data.message || 'Registration successful. Please check your email to activate your account.', { variant: 'info' });
+          navigate('/user/activate');
         },
         onError: (error) => {
           if (error.response?.status === 403) {

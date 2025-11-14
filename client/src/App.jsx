@@ -3,6 +3,7 @@ import Layout from './layouts/Layout.jsx';
 import Home, { loader as homeLoader } from './pages/Home.jsx'
 import SignUp, { loader as signUpLoader } from './pages/Register.jsx';
 import SignIn, { loader as signInLoader } from './pages/Login.jsx';
+import Activate from './pages/Activate.jsx';
 import {
   Dashboard,
   loader as dashboardLoader,
@@ -24,6 +25,7 @@ function App() {
     <Route path='/' element={<Layout />} errorElement={<PageError />} >
       <Route index element={<Home />} loader={() => homeLoader(requireAuth())} />
       <Route path='user/register' element={<SignUp />} loader={() => signUpLoader(requireAuth())} />
+      <Route path='user/activate' element={<Activate />} />
       <Route path='user/login' element={<SignIn />} loader={() => signInLoader(requireAuth())} />
       <Route path='user/dashboard' element={<Dashboard />} loader={dashboardLoader} />
       <Route path='auth/google/callback' element={<Dashboard />} loader={dashboardOAuthLoader} />

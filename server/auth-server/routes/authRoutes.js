@@ -9,6 +9,7 @@ import uploadImageMiddleware from './../middlewares/uploadImage.js';
 import authenticateMiddleware from './../middlewares/authenticate.js';
 import passport from 'passport';
 import { generateAccessToken } from './../tokens/generateTokens.js';
+import activateUser from './../controllers/activateUser.js';
 
 const authRouter = express.Router()
 
@@ -20,6 +21,9 @@ const authRouter = express.Router()
     - send response
 */
 authRouter.post('/register', registerUser);
+
+// activate user
+authRouter.post('/activate', activateUser);
 
 /* 
 2. LOGIN USER
