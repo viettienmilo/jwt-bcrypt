@@ -12,29 +12,32 @@ const Layout = () => {
     const location = useLocation();
 
     const hideNavbarPaths = [
-        '/user/dashboard',
+        'user/dashboard',
         'auth/google/callback',
         'auth/facebook/callback',
+        'auth/github/callback',
     ];
 
     // hide Navbar when enter dashboard and restore it when going back
     // useEffect helps restore Navbar when user uses Back button of the browser
     useEffect(() => {
-        const shouldHide = hideNavbarPaths.some(path => location.pathname.startsWith(path));
+        const shouldHide = hideNavbarPaths.some(path => location.pathname.includes(path));
         setShowNavbar(!shouldHide);
     }, [location.pathname])
 
     return (
-        <>
-            <Container
-                maxWidth={showNavbar ? "lg" : "xl"}
-            >
-                {showNavbar && <AppAppBar />}
+        showNavbar ?
+            <Container maxWidth='lg'>
+                <AppAppBar />
+                <Box>
+                    <Outlet />
+                </Box>
+            </Container> :
+            <Container maxWidth='xl'>
                 <Box >
                     <Outlet />
                 </Box>
             </Container>
-        </>
     )
 }
 

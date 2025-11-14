@@ -1,5 +1,4 @@
-import { Box, Stack, } from '@mui/material'
-
+import { Box, Stack } from '@mui/material'
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
 import { redirect, useLoaderData, } from 'react-router';
 import { authAPI } from './../../api/axiosInstance.js';
@@ -25,7 +24,7 @@ export async function loader() {
     }
 }
 
-export async function googleAuthLoader({ request }) {
+export async function oauthLoader({ request }) {
     const url = new URL(request.url);
     const accessToken = url.searchParams.get('accessToken');
     if (!accessToken) throw redirect('/user/login');
@@ -45,25 +44,45 @@ export async function googleAuthLoader({ request }) {
     }
 }
 
-export async function facebookAuthLoader({ request }) {
-    const url = new URL(request.url);
-    const accessToken = url.searchParams.get('accessToken');
-    if (!accessToken) throw redirect('/user/login');
-    useUserStore.getState().setAccessToken(accessToken);
+// export async function facebookAuthLoader({ request }) {
+//     const url = new URL(request.url);
+//     const accessToken = url.searchParams.get('accessToken');
+//     if (!accessToken) throw redirect('/user/login');
+//     useUserStore.getState().setAccessToken(accessToken);
 
-    try {
-        const { data } = await authAPI.get(
-            '/auth/user',
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        useUserStore.getState().setUser(data.user); // update user
-        useUIStore.getState().setShowNavbar(false); // hide navbar
-        return { user: data.user };
+//     try {
+//         const { data } = await authAPI.get(
+//             '/auth/user',
+//             { headers: { Authorization: `Bearer ${accessToken}` } }
+//         );
+//         useUserStore.getState().setUser(data.user); // update user
+//         useUIStore.getState().setShowNavbar(false); // hide navbar
+//         return { user: data.user };
 
-    } catch (error) {
-        throw redirect('/user/login');
-    }
-}
+//     } catch (error) {
+//         throw redirect('/user/login');
+//     }
+// }
+
+// export async function githubAuthLoader({ request }) {
+//     const url = new URL(request.url);
+//     const accessToken = url.searchParams.get('accessToken');
+//     if (!accessToken) throw redirect('/user/login');
+//     useUserStore.getState().setAccessToken(accessToken);
+
+//     try {
+//         const { data } = await authAPI.get(
+//             '/auth/user',
+//             { headers: { Authorization: `Bearer ${accessToken}` } }
+//         );
+//         useUserStore.getState().setUser(data.user); // update user
+//         useUIStore.getState().setShowNavbar(false); // hide navbar
+//         return { user: data.user };
+
+//     } catch (error) {
+//         throw redirect('/user/login');
+//     }
+// }
 
 export function Dashboard() {
     const { user } = useLoaderData();
@@ -74,6 +93,9 @@ export function Dashboard() {
             <AppNavbar />
 
             {/* Main content */}
+
+
+
             <Box
                 component="main"
                 sx={(theme) => ({
@@ -88,18 +110,18 @@ export function Dashboard() {
                     spacing={2}
                     sx={{
                         alignItems: 'center',
-                        mx: 3,
+                        ml: 6,
+                        mr: 1,
                         pb: 5,
                         mt: { xs: 8, md: 0 },
                     }}
                 >
                     <Header />
                     {/* <MainGrid /> */}
-
                 </Stack>
             </Box>
+
         </Box>
     );
-
 }
 

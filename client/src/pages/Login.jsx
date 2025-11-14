@@ -12,6 +12,7 @@ import {
   GoogleIcon,
   FacebookIcon,
 } from '../components/CustomIcons';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
 import ForgotPassword from '../components/ForgotPassword';
 import Container from '../components/Container.jsx';
@@ -21,7 +22,6 @@ import { useSnackbar } from 'notistack';
 import { useNavigate, Link as RouterLink, redirect } from 'react-router'
 import useLoginUser from './../api/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
-// import requireAuth from './../utils/requireAuth.js';
 
 export async function loader(isAuthed) {
   return (isAuthed ? redirect('/user/dashboard') : null);
@@ -70,7 +70,7 @@ export default function SignIn(props) {
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          sx={{ width: '100%', fontSize: 'clamp(1.5rem, 10vw, 1.75rem)' }}
         >
           Login
         </Typography>
@@ -164,6 +164,14 @@ export default function SignIn(props) {
               startIcon={<FacebookIcon />}
             >
               Log in with Facebook
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOAuthLogin('github')}
+              startIcon={<GitHubIcon fontSize='small' />}
+            >
+              Log in with Github
             </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}

@@ -30,6 +30,8 @@ export default function SignUp(props) {
   const {
     register,
     handleSubmit,
+    watch,
+    unregister,
     formState: { errors, }
   } = useForm({
     defaultValues: {
@@ -46,13 +48,19 @@ export default function SignUp(props) {
   const navigate = useNavigate();
 
   const onFormSubmit = (formData) => {
+    unregister("retypePassword");   // remove before mutation
+    delete formData.retypePassword;
     mutate(formData,
       {
         onSuccess: (data) => {
           enqueueSnackbar(data.message || 'User registered successfully', { variant: 'success' });
-          navigate('/login');
+          navigate('/user/login');
         },
         onError: (error) => {
+          if (error.response?.status === 403) {
+            enqueueSnackbar('User already exists', { variant: 'info' });
+            return navigate('/user/login');
+          }
           enqueueSnackbar(error.response?.data?.message || 'Registration failed', { variant: 'error' });
         },
       });
@@ -65,7 +73,7 @@ export default function SignUp(props) {
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          sx={{ width: '100%', fontSize: 'clamp(1.5rem, 10vw, 1.75rem)' }}
         >
           Register
         </Typography>
@@ -128,15 +136,33 @@ export default function SignUp(props) {
                 }
               />
             </FormControl>
-            <FormControlLabel
+            <FormControl>
+              <FormLabel htmlFor="retypePassword">Re-type Password</FormLabel>
+              <TextField
+                fullWidth
+                type="password"
+                placeholder="••••••"
+                variant="outlined"
+                error={!!errors.retypePassword}
+                helperText={errors.retypePassword?.message}
+                {...register(
+                  "retypePassword",
+                  {
+                    required: "Please re-type your password",
+                    validate: (value) => value === watch('password') || "Password did not match",
+                  })
+                }
+              />
+            </FormControl>
+            {/* <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
               label="I want to receive updates via email."
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
               // variant="contained"
-              variant="outlined"
+              variant="contained"
               loading={isPending}
               loadingIndicator="Registering..."
             >

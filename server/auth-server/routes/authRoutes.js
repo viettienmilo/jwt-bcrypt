@@ -83,4 +83,17 @@ authRouter.get('/login/facebook/callback',
     }
 );
 
+// Github
+authRouter.get('/login/github', passport.authenticate('github', { scope: ['user:email'] }));
+authRouter.get('/login/github/callback',
+    passport.authenticate('github', {
+        failureRedirect: `${process.env.CLIENT_URL}/user/login`,
+        session: false
+    }),
+    (req, res) => {
+        const user = req.user;
+        const accessToken = generateAccessToken(user);
+        res.redirect(`${process.env.CLIENT_URL}/auth/github/callback?accessToken=${accessToken}`);
+    }
+);
 export default authRouter;

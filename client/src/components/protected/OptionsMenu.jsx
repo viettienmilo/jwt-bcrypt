@@ -35,7 +35,7 @@ export default function OptionsMenu() {
   const handleLogout = () => {
     logout();
     handleClose();
-    navigate('user/login');
+    navigate('/user/login');
   }
   return (
     <>

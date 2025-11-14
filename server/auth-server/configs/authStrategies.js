@@ -1,5 +1,6 @@
 import GoogleStrategy from 'passport-google-oauth2'
 import FacebookStrategy from 'passport-facebook'
+import GithubStrategy from 'passport-github'
 import User from './../models/User.js';
 
 // callback handler for all of providers (Google, Facebook,...)
@@ -7,7 +8,7 @@ async function handleOAuthCallback(profile, provider, done) {
     try {
         // got name and email from profile (provided from provider)
         const name = profile.displayName;
-        const email = profile.emails?.[0]?.value;
+        const email = profile.emails?.[0]?.value || `${profile.username || profile.id}@github.local`;
         const image = profile.photos?.[0]?.value;
 
         // check user is existed
@@ -61,6 +62,18 @@ function passportConfig(passport) {
             }
         )
     );
+
+    passport.use(
+        new GithubStrategy({
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: process.env.GITHUB_CALLBACK_URI,
+        },
+            async (accessToken, refreshToken, profile, done) => {
+                await handleOAuthCallback(profile, 'github', done);
+            }
+        )
+    )
 };
 
 export default passportConfig;
