@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
 import Container from './../components/Container.jsx';
 import Card from './../components/Card.jsx';
@@ -105,7 +106,7 @@ export default function SignUp(props) {
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
                 fullWidth
-                type='email'
+                type='text'
                 placeholder="your@email.com"
                 variant="outlined"
                 error={!!errors.email}
@@ -162,9 +163,10 @@ export default function SignUp(props) {
               type="submit"
               fullWidth
               // variant="contained"
-              variant="contained"
+              variant="outlined"
               loading={isPending}
-              loadingIndicator="Registering..."
+              loadingPosition='start'
+              startIcon={<HowToRegIcon />}
             >
               Register
             </Button>

@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import useActivateUser from './../api/useActivateUser.js';
 import { useSnackbar } from 'notistack';
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import Container from './../components/Container.jsx';
 
 export default function Activate() {
-    // const [status, setStatus] = useState("loading");
+
     const navigate = useNavigate();
     const token = new URLSearchParams(window.location.search).get("token");
 
@@ -29,19 +30,20 @@ export default function Activate() {
         })
     }, [token]);
 
-    if (!token) {
-        return (
-            <Box sx={{ height: '100vh', display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-                <h2>No activation token provided.</h2>
-                <p>Please check your email for the correct activation link.</p>
-            </Box>
-        );
-    }
 
     return (
-        <Box sx={{ height: '100vh', display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-            <h2>Activating your account…</h2>
-            <CircularProgress />
-        </Box>
-    );
+        <Container>
+            {token ?
+                <Box sx={{ height: '100vh', display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h3">Activating your account…</Typography>
+                    <CircularProgress />
+                </Box>
+                :
+                <Box sx={{ height: '100vh', display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h3">No activation token provided.</Typography>
+                    <Typography variant="p">Please check your email for the correct activation link.</Typography>
+                </Box>
+            }
+        </Container>
+    )
 }

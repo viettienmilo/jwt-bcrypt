@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-// import User from '../models/User.js';
 import User from './../models/User.js';
 import { userLoginSchema } from './../validations/authValidations.js';
 import {
@@ -14,6 +13,10 @@ import {
     - if correct, generate access token
     - send response
 */
+
+async function checkPassword(passwordText, passwordHash) {
+    return await bcrypt.compare(passwordText, passwordHash);
+}
 
 const loginUser = async (req, res) => {
     try {
@@ -30,8 +33,13 @@ const loginUser = async (req, res) => {
             return res.status(403).json({ message: 'Invalid user/email' })
         }
 
+        // check if user is verified
+        if (!user.isVerified) {
+            return res.status(403).json({ message: 'User Account have not been activated yet.' })
+        }
+
         // if user exists, check if password is correct
-        const isPasswordCorrect = bcrypt.compare(password, user.password)
+        const isPasswordCorrect = checkPassword(password, user.password);
         if (!isPasswordCorrect) {
             return res.status(403).json({ message: 'Password is incorrect' })
         }

@@ -10,6 +10,8 @@ import authenticateMiddleware from './../middlewares/authenticate.js';
 import passport from 'passport';
 import { generateAccessToken } from './../tokens/generateTokens.js';
 import activateUser from './../controllers/activateUser.js';
+import forgotPassword from './../controllers/forgotPassword.js';
+import resetPassword from './../controllers/resetPassword.js';
 
 const authRouter = express.Router()
 
@@ -100,4 +102,10 @@ authRouter.get('/login/github/callback',
         res.redirect(`${process.env.CLIENT_URL}/auth/github/callback?accessToken=${accessToken}`);
     }
 );
+
+// forgot password
+authRouter.post('/forgot-password', forgotPassword);
+// reset password
+authRouter.post('/reset-password', resetPassword);
+
 export default authRouter;

@@ -26,6 +26,11 @@ const authenticateMiddleware = async (req, res, next) => {
         if (!user)
             return res.status(404).json({ message: 'User not found' });
 
+        // check if user is verified
+        if (!user.isVerified) {
+            return res.status(403).json({ message: 'User Account have not been activated yet.' })
+        }
+
         req.user = user;
         return next();
 

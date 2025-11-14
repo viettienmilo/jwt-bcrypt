@@ -12,6 +12,7 @@ import {
   GoogleIcon,
   FacebookIcon,
 } from '../components/CustomIcons';
+import LoginIcon from '@mui/icons-material/Login';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
 import ForgotPassword from '../components/ForgotPassword';
@@ -88,7 +89,7 @@ export default function SignIn(props) {
               <TextField
                 autoFocus
                 fullWidth
-                type='email'
+                type='text'
                 placeholder="your@email.com"
                 variant="outlined"
                 error={!!errors.email}
@@ -131,16 +132,17 @@ export default function SignIn(props) {
             <Button
               type="submit"
               fullWidth
-              variant="contained"
+              variant="outlined"
               loading={isPending}
-              loadingIndicator="Logging in..."
+              loadingPosition='end'
+              endIcon={<LoginIcon />}
             >
               Login
             </Button>
             <Link
               component="button"
               type="button"
-              // onClick={handleClickOpen}
+              onClick={() => navigate('/user/forgot-password')}
               variant="body2"
               sx={{ alignSelf: 'center', color: "warning.main" }}
             >

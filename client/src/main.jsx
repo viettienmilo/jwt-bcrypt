@@ -4,6 +4,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack'
 
+import '@fontsource/poppins/300.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/700.css';
+
 import App from './App.jsx'
 import './api/axiosInstance.js'; // set API globally and auto run interceptors to refresh accessToken
 
