@@ -21,7 +21,7 @@ import Card from './../components/Card.jsx';
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack';
 import { useNavigate, Link as RouterLink, redirect } from 'react-router'
-import useLoginUser from './../api/useLoginUser.js';
+import useLoginUser from './../hooks/auth/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
 import { useState } from 'react';
 
@@ -68,6 +68,7 @@ export default function SignIn(props) {
       },
       onError: (error) => {
         const errorCode = error.response?.data?.error;
+        console.log(errorCode)
         switch (errorCode) {
           case "ACCOUNT_NOT_VERIFIED":
             const { email } = error.response?.data?.details;

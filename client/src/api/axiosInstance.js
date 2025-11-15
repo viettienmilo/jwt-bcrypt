@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useUserStore } from "../store/useUserStore";
-
+import { AUTH } from './endpoints.js';
 /*
     1. Every API call uses the access token in the Authorization header.
     2. When that token expires, the backend returns 401 Unauthorized.
@@ -34,12 +34,14 @@ authAPI.interceptors.response.use(
         const originalRequest = error.config;
 
         // if access token expired and not retried yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401
+            && !originalRequest._retry
+            && !originalRequest.url.includes(AUTH.LOGIN)) { // prevent axios send refresh-token when log in
             originalRequest._retry = true;
             try {
                 // ask for new access token from auth server
                 const refreshResponse = await axios.post(
-                    `${import.meta.env.VITE_AUTH_API}/auth/refresh-token`,
+                    `${import.meta.env.VITE_AUTH_API}${AUTH.REFRESH_TOKEN}`,
                     {},
                     { withCredentials: true }
                 );

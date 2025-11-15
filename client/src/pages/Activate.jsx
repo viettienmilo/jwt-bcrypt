@@ -10,8 +10,8 @@ import HomeIcon from '@mui/icons-material/Home';
 
 import { useSnackbar } from 'notistack';
 import { useUserStore } from "../store/useUserStore.js";
-import useSendActivationLink from './../api/useSendActivationLink.js';
-import useActivateUser from './../api/useActivateUser.js';
+import useSendActivationLink from './../hooks/auth/useSendActivationLink.js';
+import useActivateUser from './../hooks/auth/useActivateUser.js';
 
 export default function Activate() {
 

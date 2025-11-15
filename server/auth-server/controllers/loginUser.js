@@ -31,6 +31,7 @@ const loginUser = async (req, res) => {
             return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
         if (!user.isVerified)
             return ErrorResponse(res, ERROR.ACCOUNT_NOT_VERIFIED, 403, { userId: user._id, email: user.email });
+
         const isPasswordCorrect = await checkPassword(password, user.password);
         if (!isPasswordCorrect)
             return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);

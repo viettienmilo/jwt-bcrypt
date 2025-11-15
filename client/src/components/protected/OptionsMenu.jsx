@@ -12,7 +12,7 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
 import { useUserStore } from './../../store/useUserStore.js';
 import { useNavigate } from 'react-router';
-import logoutService from './../../services/logoutService.js';
+import { logoutService } from '../../services/authServices.js';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',

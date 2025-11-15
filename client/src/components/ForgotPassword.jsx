@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
-import useForgotPassword from './../api/useForgotPassword.jsx';
+import useForgotPassword from '../hooks/auth/useForgotPassword.js';
 
 function ForgotPassword({ open, handleClose, dialogForm }) {
   const { register, handleSubmit, formState: { errors } } = dialogForm;
@@ -20,7 +20,8 @@ function ForgotPassword({ open, handleClose, dialogForm }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const onFormSubmit = (formData) => {
-    mutate(formData, {
+    const email = formData.diagEmail;
+    mutate({ email }, {
       onSuccess: () => {
         enqueueSnackbar("Email has been sent. Please check your mailbox.", { variant: 'info' });
       },

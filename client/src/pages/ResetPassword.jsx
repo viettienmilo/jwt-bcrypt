@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import Container from './../components/Container.jsx';
 import Card from './../components/Card.jsx';
 import SitemarkIcon from './../components/SitemarkIcon.jsx';
-import useResetPassword from './../api/useResetPassword.js';
+import useResetPassword from './../hooks/auth/useResetPassword.js';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useSnackbar } from 'notistack';
 import LockResetIcon from '@mui/icons-material/LockReset';

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { authAPI } from './axiosInstance';
+import { authAPI } from '../../api/axiosInstance';
 
 const useImageUpload = () => {
     return useMutation({

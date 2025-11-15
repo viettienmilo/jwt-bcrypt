@@ -17,7 +17,7 @@ import Card from './../components/Card.jsx';
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { useNavigate, redirect } from 'react-router'
-import useRegisterUser from './../api/useRegisterUser.js'
+import useRegisterUser from './../hooks/auth/useRegisterUser.js'
 
 export async function loader(isAuthed) {
   return (isAuthed ? redirect('/dashboard') : null);

@@ -16,7 +16,7 @@ import { useState } from "react"
 import { useUserStore } from "../store/useUserStore"
 import { useNavigate } from "react-router"
 import MenuButton from "./protected/MenuButton";
-import logoutService from './../services/logoutService.js';
+import { logoutService } from './../services/authServices.js';
 
 const UserMenu = () => {
     const [anchorElement, setAnchorElement] = useState(null);
