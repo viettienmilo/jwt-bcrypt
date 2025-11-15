@@ -2,9 +2,7 @@ import { Link as RouterLink } from 'react-router'
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
-  FormControlLabel,
   FormLabel,
   FormControl,
   Link,
@@ -44,8 +42,11 @@ export default function SignUp(props) {
 
   // hook for show snackbar
   const { enqueueSnackbar } = useSnackbar();
+
   // register user using tanstack mutation hook
   const { mutate, isPending } = useRegisterUser();
+
+  // const setUser = useUserStore(state => state.setUser);
   const navigate = useNavigate();
 
   const onFormSubmit = (formData) => {
@@ -53,18 +54,22 @@ export default function SignUp(props) {
     delete formData.retypePassword;
     mutate(formData,
       {
-        onSuccess: (data) => {
-          enqueueSnackbar(data.message || 'Registration successful. Please check your email to activate your account.', { variant: 'info' });
-          navigate('/user/activate');
+        onSuccess: (response) => {
+          const { user } = response.data;
+          enqueueSnackbar('Registration successful.Please activate your account to continue', { variant: 'info' });
+          navigate(`/user/activate?email=${user.email}`);
         },
         onError: (error) => {
-          if (error.response?.status === 403) {
-            enqueueSnackbar('User already exists', { variant: 'info' });
-            return navigate('/user/login');
+          const errorCode = error.response?.data?.error;
+          switch (errorCode) {
+            case "DUPLICATE_EMAIL":
+              enqueueSnackbar('This email has been used.', { variant: 'error' });
+            default:
+              return enqueueSnackbar("Undefined error occurs.", { variant: "error" });
           }
-          enqueueSnackbar(error.response?.data?.message || 'Registration failed', { variant: 'error' });
         },
-      });
+      }
+    );
   }
 
   return (
@@ -155,14 +160,9 @@ export default function SignUp(props) {
                 }
               />
             </FormControl>
-            {/* <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates via email."
-            /> */}
             <Button
               type="submit"
               fullWidth
-              // variant="contained"
               variant="outlined"
               loading={isPending}
               loadingPosition='start'

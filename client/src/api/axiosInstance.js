@@ -39,7 +39,7 @@ authAPI.interceptors.response.use(
             try {
                 // ask for new access token from auth server
                 const refreshResponse = await axios.post(
-                    `${import.meta.env.VITE_AUTH_API}/refresh`,
+                    `${import.meta.env.VITE_AUTH_API}/auth/refresh-token`,
                     {},
                     { withCredentials: true }
                 );
@@ -65,6 +65,5 @@ authAPI.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 
 export { authAPI };

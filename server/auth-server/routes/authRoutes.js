@@ -12,6 +12,7 @@ import { generateAccessToken } from './../tokens/generateTokens.js';
 import activateUser from './../controllers/activateUser.js';
 import forgotPassword from './../controllers/forgotPassword.js';
 import resetPassword from './../controllers/resetPassword.js';
+import sendActivationLink from './../controllers/sendActivationLink.js';
 
 const authRouter = express.Router()
 
@@ -50,7 +51,7 @@ authRouter.post('/logout', logoutUser);
     - if valid, generate new access token
     - send response
 */
-authRouter.post('/refresh', refreshAccessToken);
+authRouter.post('/refresh-token', refreshAccessToken);
 
 // get user
 authRouter.get('/user', authenticateMiddleware, getUser);
@@ -107,5 +108,8 @@ authRouter.get('/login/github/callback',
 authRouter.post('/forgot-password', forgotPassword);
 // reset password
 authRouter.post('/reset-password', resetPassword);
+
+// send activation link
+authRouter.post('/send-activation-link', sendActivationLink);
 
 export default authRouter;

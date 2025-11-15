@@ -20,12 +20,14 @@ async function handleOAuthCallback(profile, provider, done) {
                 username: name,
                 email: email,
                 profilePicture: image,
+                isVerified: true,
                 oauth: { provider: provider, providerId: profile.id },
             })
         } else if (!user.oauth?.providerId) {
             // Update oauth info if missing
             user.oauth = { provider, providerId: profile.id };
             user.profilePicture ||= image;
+            user.isVerified = true;
             await user.save();
         }
         return done(null, user);

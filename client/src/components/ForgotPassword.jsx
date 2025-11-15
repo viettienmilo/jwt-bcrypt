@@ -1,62 +1,92 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  TextField,
+  FormControl,
+  FormLabel
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import { useSnackbar } from 'notistack';
+import useForgotPassword from './../api/useForgotPassword.jsx';
 
-function ForgotPassword({ open, handleClose }) {
+function ForgotPassword({ open, handleClose, dialogForm }) {
+  const { register, handleSubmit, formState: { errors } } = dialogForm;
+
+  const { mutate, isPending, } = useForgotPassword();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const onFormSubmit = (formData) => {
+    mutate(formData, {
+      onSuccess: () => {
+        enqueueSnackbar("Email has been sent. Please check your mailbox.", { variant: 'info' });
+      },
+      onError: (error) => {
+        const errorCode = error.response?.data?.error;
+        switch (errorCode) {
+          case "USER_NOT_FOUND":
+            return enqueueSnackbar("User not found", { variant: "error" });
+          case "ACCOUNT_NOT_VERIFIED":
+            return enqueueSnackbar("Account is not activated", { variant: "error" });
+          default:
+            return enqueueSnackbar("Undefined error occurs.", { variant: "error" });
+        }
+      },
+    })
+  }
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
-      slotProps={{
-        paper: {
-          component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            handleClose();
-          },
-          sx: { backgroundImage: 'none' },
-        },
-      }}
     >
       <DialogTitle>Reset password</DialogTitle>
-      <DialogContent
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
-      >
-        <DialogContentText>
-          Enter your account&apos;s email address, and we&apos;ll send you a link to
-          reset your password.
-        </DialogContentText>
-        <OutlinedInput
-          autoFocus
-          required
-          margin="dense"
-          id="email"
-          name="email"
-          label="Email address"
-          placeholder="Email address"
-          type="email"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions sx={{ pb: 3, px: 3 }}>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" type="submit">
-          Continue
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
+        <DialogContent
+          sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
+        >
+          <DialogContentText>
+            Enter your account&apos;s email address, and we&apos;ll send you a link to
+            reset your password.
+          </DialogContentText>
+          <FormControl>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <TextField
+              autoFocus
+              margin="dense"
+              placeholder="your_email@domain.com"
+              type="text"
+              fullWidth
+              error={!!errors.diagEmail}
+              helperText={errors.diagEmail?.message || "Enter your valid email to reset your password"}
+              {...register(
+                "diagEmail",
+                {
+                  required: "Email is required",
+                  pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email format' }
+                })
+              }
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions sx={{ pb: 3, px: 3 }}>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            variant="contained"
+            type="submit"
+            loading={isPending}
+            loadingPosition='start'
+            endIcon={<SendIcon />}
+          >
+            Send
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }
-
-ForgotPassword.propTypes = {
-  handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-};
 
 export default ForgotPassword;

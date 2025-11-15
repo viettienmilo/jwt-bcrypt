@@ -1,7 +1,8 @@
 import User from './../models/User.js';
+import { ErrorResponse, SuccessResponse } from './../utils/response.js';
+import { ERROR } from './../constants/errorCodes.js';
 
-/* 
-3. LOGOUT USER
+/* 3. LOGOUT USER
     - delete refresh token from database
 */
 
@@ -9,22 +10,19 @@ const logoutUser = async (req, res) => {
     try {
         const refreshToken = req.cookies.refreshToken;
 
-        // check if refresh token exists
-        if (!refreshToken) {
-            return res.status(400).json({ message: 'No Refresh token provided' });
-        }
+        if (!refreshToken)
+            return ErrorResponse(res, ERROR.INVALID_TOKEN, 400);
 
-        // check if user exists
-        const user = await User.findOne({ refreshToken: refreshToken });
+        const user = await User.findOne({ refreshToken });
         if (!user) {
-            // clear cookie and send response
             res.clearCookie(
                 'refreshToken', {
                 httpOnly: true,
-                sameSite: 'none',
-                secure: process.env.COOKIE_SECURE === 'production',
+                path: '/',
+                secure: process.env.NODE_ENV === "production", // localhost must be false
+                sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
             });
-            return res.status(200).json({ message: 'User logged out already' });
+            return ErrorResponse(res, ERROR.USER_NOT_FOUND, 401);
         }
 
         // delete refresh token from database
@@ -36,14 +34,15 @@ const logoutUser = async (req, res) => {
         res.clearCookie(
             'refreshToken', {
             httpOnly: true,
-            sameSite: 'none',
-            secure: process.env.COOKIE_SECURE === 'production',
+            path: '/',
+            secure: process.env.NODE_ENV === "production", // localhost must be false
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
         });
-        res.status(200).json({ message: 'Logged out successfully' });
+        return SuccessResponse(res, null, "LOGOUT_SUCCESS", 200);
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return ErrorResponse(res, ERROR.SERVER_ERROR, 500);
     }
 }
 

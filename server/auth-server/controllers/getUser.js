@@ -1,20 +1,25 @@
+import { ErrorResponse, SuccessResponse } from './../utils/response.js';
+import { ERROR } from './../constants/errorCodes.js';
 
 const getUser = async (req, res) => {
     try {
         const user = req.user
 
         // send user back to client
-        res.status(200).json({
-            message: 'User authorized',
-            user: {
-                userId: user._id,
-                ...user.toObject(),
-            }
-        });
+        return SuccessResponse(res,
+            {
+                user: {
+                    userId: user._id,
+                    ...user.toObject(),
+                }
+            },
+            "GET_USER_SUCCESS",
+            200
+        );
 
     } catch (error) {
-        console.error('Error in getUser:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.log(error);
+        ErrorResponse(res, ERROR.SERVER_ERROR, 500);
     }
 }
 

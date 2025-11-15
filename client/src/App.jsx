@@ -1,10 +1,9 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
 import Layout from './layouts/Layout.jsx';
-import Home, { loader as homeLoader } from './pages/Home.jsx'
+import Home from './pages/Home.jsx'
 import SignUp, { loader as signUpLoader } from './pages/Register.jsx';
 import SignIn, { loader as signInLoader } from './pages/Login.jsx';
 import Activate from './pages/Activate.jsx';
-import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import {
   Dashboard,
@@ -20,10 +19,9 @@ import requireAuth from './utils/requireAuth.js';
 function App() {
   const appRouter = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<Layout />} errorElement={<PageError />} >
-      <Route index element={<Home />} loader={() => homeLoader(requireAuth())} />
+      <Route index element={<Home />} HydrateFallback={() => { return <></> }} />
       <Route path='user/register' element={<SignUp />} loader={() => signUpLoader(requireAuth())} />
       <Route path='user/activate' element={<Activate />} />
-      <Route path='user/forgot-password' element={<ForgotPassword />} />
       <Route path='user/reset-password' element={<ResetPassword />} />
       <Route path='user/login' element={<SignIn />} loader={() => signInLoader(requireAuth())} />
       <Route path='user/dashboard' element={<Dashboard />} loader={dashboardLoader} />

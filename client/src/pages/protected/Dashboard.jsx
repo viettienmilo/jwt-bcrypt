@@ -16,9 +16,10 @@ export async function loader() {
             '/auth/user',
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        useUserStore.getState().setUser(data.user); // update user
+        useUserStore.getState().setUser(data.data.user); // update user
         useUIStore.getState().setShowNavbar(false); // hide navbar
-        return { user: data.user };
+        return { user: data.data.user };
+
     } catch (error) {
         throw redirect('/user/login');
     }
@@ -44,46 +45,6 @@ export async function oauthLoader({ request }) {
     }
 }
 
-// export async function facebookAuthLoader({ request }) {
-//     const url = new URL(request.url);
-//     const accessToken = url.searchParams.get('accessToken');
-//     if (!accessToken) throw redirect('/user/login');
-//     useUserStore.getState().setAccessToken(accessToken);
-
-//     try {
-//         const { data } = await authAPI.get(
-//             '/auth/user',
-//             { headers: { Authorization: `Bearer ${accessToken}` } }
-//         );
-//         useUserStore.getState().setUser(data.user); // update user
-//         useUIStore.getState().setShowNavbar(false); // hide navbar
-//         return { user: data.user };
-
-//     } catch (error) {
-//         throw redirect('/user/login');
-//     }
-// }
-
-// export async function githubAuthLoader({ request }) {
-//     const url = new URL(request.url);
-//     const accessToken = url.searchParams.get('accessToken');
-//     if (!accessToken) throw redirect('/user/login');
-//     useUserStore.getState().setAccessToken(accessToken);
-
-//     try {
-//         const { data } = await authAPI.get(
-//             '/auth/user',
-//             { headers: { Authorization: `Bearer ${accessToken}` } }
-//         );
-//         useUserStore.getState().setUser(data.user); // update user
-//         useUIStore.getState().setShowNavbar(false); // hide navbar
-//         return { user: data.user };
-
-//     } catch (error) {
-//         throw redirect('/user/login');
-//     }
-// }
-
 export function Dashboard() {
     const { user } = useLoaderData();
 
@@ -93,9 +54,6 @@ export function Dashboard() {
             <AppNavbar />
 
             {/* Main content */}
-
-
-
             <Box
                 component="main"
                 sx={(theme) => ({
@@ -120,7 +78,6 @@ export function Dashboard() {
                     {/* <MainGrid /> */}
                 </Stack>
             </Box>
-
         </Box>
     );
 }

@@ -23,6 +23,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate, Link as RouterLink, redirect } from 'react-router'
 import useLoginUser from './../api/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
+import { useState } from 'react';
 
 export async function loader(isAuthed) {
   return (isAuthed ? redirect('/user/dashboard') : null);
@@ -32,34 +33,52 @@ export default function SignIn(props) {
 
   const navigate = useNavigate();
 
-  // state management;
-  const setAccessToken = useUserStore((state) => state.setAccessToken);
+  const setAccessToken = useUserStore((state) => state.setAccessToken); // state management;
   const setUser = useUserStore((state) => state.setUser);
 
-  // react-hook-form
-  const { register, handleSubmit, formState: { errors, } } = useForm();
 
-  // tanstack-query
-  const { mutate, isPending } = useLoginUser();
-
-  // snackbar
+  //const { register, handleSubmit, formState: { errors, } } = useForm(); // react-hook-form
+  const { mutate, isPending } = useLoginUser();   // tanstack-query
   const { enqueueSnackbar } = useSnackbar();
+
+  const [openDiag, setOpenDiag] = useState(false);
+
+  const loginForm = useForm();
+  const { register, handleSubmit, formState: { errors, } } = loginForm;
+
+  const dialogForm = useForm();
 
   // handle OAuth login
   const handleOAuthLogin = (provider) => {
     window.location.href = `${import.meta.env.VITE_AUTH_API}/auth/login/${provider}`;
   };
 
+  const handleClose = () => {
+    setOpenDiag(false);
+  }
+
   const onFormSubmit = (formData) => {
     mutate(formData, {
-      onSuccess: (data) => {
-        enqueueSnackbar(data.message || "User logged in successfully", { variant: 'success' });
-        setAccessToken(data.accessToken)
-        setUser(data.user);
+      onSuccess: (response) => {
+        enqueueSnackbar("User logged in successfully", { variant: 'success' });
+        const { accessToken, user } = response.data;
+        setAccessToken(accessToken)
+        setUser(user);
         navigate('/user/dashboard')
       },
       onError: (error) => {
-        enqueueSnackbar(error.response?.data?.message || "Logged failed", { variant: 'error' });
+        const errorCode = error.response?.data?.error;
+        switch (errorCode) {
+          case "ACCOUNT_NOT_VERIFIED":
+            const { email } = error.response?.data?.details;
+            return navigate(`/user/activate?email=${email}`);
+          case "ACTIVATION_EXPIRED":
+            return navigate(`/user/activate?expired=true&email=${email}`);
+          case "INVALID_CREDENTIALS":
+            return enqueueSnackbar("Wrong Email or Password", { variant: "error" });
+          default:
+            return enqueueSnackbar("Undefined error occurs.", { variant: "error" });
+        }
       },
     })
   };
@@ -120,15 +139,6 @@ export default function SignIn(props) {
                 }
               />
             </FormControl>
-            {/* <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Remember me"
-              {...register('rememberMe')}
-            /> */}
-            <ForgotPassword
-            // open={open}
-            // handleClose={handleClose}
-            />
             <Button
               type="submit"
               fullWidth
@@ -142,7 +152,8 @@ export default function SignIn(props) {
             <Link
               component="button"
               type="button"
-              onClick={() => navigate('/user/forgot-password')}
+              // onClick={() => navigate('/user/forgot-password')}
+              onClick={() => setOpenDiag(true)}
               variant="body2"
               sx={{ alignSelf: 'center', color: "warning.main" }}
             >
@@ -188,6 +199,13 @@ export default function SignIn(props) {
             </Typography>
           </Box>
         </form>
+
+        <ForgotPassword
+          open={openDiag}
+          handleClose={handleClose}
+          dialogForm={dialogForm}
+        />
+
       </Card>
     </Container>
   );

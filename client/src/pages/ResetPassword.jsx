@@ -10,7 +10,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 
 const ResetPassword = () => {
 
-    const { register, handleSubmit, watch, unregister, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
             password: ""
         }

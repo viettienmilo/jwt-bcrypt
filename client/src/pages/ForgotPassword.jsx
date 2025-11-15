@@ -68,16 +68,17 @@ const ForgotPassword = () => {
                                 }
                             />
                         </FormControl>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="outlined"
-                            loading={isPending}
-                            loadingPosition="end"
-                            endIcon={<SendIcon />}
-                        >
-                            Send
-                        </Button>
+                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                            <Button
+                                type="submit"
+                                variant="outlined"
+                                loading={isPending}
+                                loadingPosition="end"
+                                endIcon={<SendIcon />}
+                            >
+                                Send
+                            </Button>
+                        </Box>
                     </Box>
                 </form>
             </Card>

@@ -8,6 +8,7 @@ import connectToCloudinary from './configs/cloudinary.js';
 import authRoutes from './routes/authRoutes.js';
 import passportConfig from './configs/authStrategies.js'
 import passport from 'passport'
+import { errorHandler } from './middlewares/errorHandler.js';
 
 ////////////////////////////////////////////////////////////
 // AUTHENTICATION & AUTHORIZATION SERVER ///////////////////
@@ -44,16 +45,8 @@ server.get('/', (req, res) => {
 // auth routes for handle register/login/logout and refresh access token
 server.use('/api/auth', authRoutes)
 
-// handle unexpected routes
-server.use((req, res) => {
-    res.status(404).send('Sorry, that page cannot be found!');
-});
-
 // global error handler
-server.use((err, req, res, next) => {
-    console.error('Unhandled error:', err);
-    res.status(500).json({ message: 'Internal server error' });
-});
+server.use(errorHandler);
 
 // start server
 server.listen(process.env.AUTH_PORT, () => {

@@ -5,14 +5,10 @@ import {
     generateAccessToken,
     generateRefreshToken
 } from './../tokens/generateTokens.js';
+import { SuccessResponse, ErrorResponse } from './../utils/response.js';
+import { ERROR } from '../constants/errorCodes.js';
 
-/* 
-2. LOGIN USER
-    - check if user exists
-    - if exists, check if password is correct
-    - if correct, generate access token
-    - send response
-*/
+/* 2. LOGIN USER */
 
 async function checkPassword(passwordText, passwordHash) {
     return await bcrypt.compare(passwordText, passwordHash);
@@ -20,48 +16,61 @@ async function checkPassword(passwordText, passwordHash) {
 
 const loginUser = async (req, res) => {
     try {
-        // first, validate input
+        /* 
+        1. Validate input using joi schema
+        2. Validate user if existed and verified
+        3. Validate password
+        */
         const { error, value } = userLoginSchema.validate(req.body);
-        if (error) {
-            return res.status(400).json({ message: error.details[0].message });
-        }
+        if (error)
+            return ErrorResponse(res, ERROR.VALIDATION_ERROR, 400, error.details[0].message);
+
         const { email, password } = value;
-
-        // then check if user exists
         const user = await User.findOne({ email })
-        if (!user) {
-            return res.status(403).json({ message: 'Invalid user/email' })
-        }
+        if (!user)
+            return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
+        if (!user.isVerified)
+            return ErrorResponse(res, ERROR.ACCOUNT_NOT_VERIFIED, 403, { userId: user._id, email: user.email });
+        const isPasswordCorrect = await checkPassword(password, user.password);
+        if (!isPasswordCorrect)
+            return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
 
-        // check if user is verified
-        if (!user.isVerified) {
-            return res.status(403).json({ message: 'User Account have not been activated yet.' })
-        }
-
-        // if user exists, check if password is correct
-        const isPasswordCorrect = checkPassword(password, user.password);
-        if (!isPasswordCorrect) {
-            return res.status(403).json({ message: 'Password is incorrect' })
-        }
-
-        // if password is correct, generate access and refresh token
+        /* 
+        1. Generate access and refresh token
+        2. Save to database
+        2. Return response to frontend
+        */
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
         user.refreshToken = refreshToken;
         user.refreshTokenExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-
         await user.save();
 
-        // send response
-        res.status(200).json({
-            message: 'User logged in successfully',
-            accessToken: accessToken,
-            user: { userId: user._id, role: user.role, profilePicture: user.profilePicture },
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // localhost must be false
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            path: "/",            // important so cookie is sent to /auth/logout
+            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
         });
+
+        return SuccessResponse(
+            res,
+            {
+                accessToken,
+                user: {
+                    userId: user._id,
+                    role: user.role,
+                    profilePicture: user.profilePicture,
+                },
+            },
+            "LOGIN_SUCCESS",
+            200,
+        );
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return ErrorResponse(res, ERROR.SERVER_ERROR, 500);
     }
 }
 
