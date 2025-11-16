@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary'
 import fs from 'fs';
+import { ErrorResponse, SuccessResponse } from './../../utils/response.js';
+import { ERROR } from './../../constants/errorCodes.js';
 
 const uploadImage = async (req, res) => {
     try {
@@ -24,15 +26,19 @@ const uploadImage = async (req, res) => {
         user.profilePicture = uploadImage.secure_url;
         await user.save();
 
-        res.status(200).json({
-            message: 'Image uploaded successfully',
-            userId: user._id,
-            profilePicture: user.profilePicture
-        })
+        return SuccessResponse(
+            res,
+            {
+                userId: user._id,
+                profilePicture: user.profilePicture
+            },
+            "UPLOAD_SUCCESS",
+            200
+        )
 
     } catch (error) {
         console.log(error.message)
-        res.status(500).json({ message: error.message })
+        return ErrorResponse(res, ERROR.SERVER_ERROR, 500);
     }
 }
 

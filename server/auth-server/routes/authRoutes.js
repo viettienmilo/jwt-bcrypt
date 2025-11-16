@@ -3,10 +3,10 @@ import registerUser from './../controllers/registerUser.js';
 import loginUser from './../controllers/loginUser.js';
 import logoutUser from '../controllers/logoutUser.js';
 import refreshAccessToken from './../controllers/refreshAccessToken.js';
-import getUser from './../controllers/getUser.js';
-import uploadImage from './../controllers/uploadImage.js';
-import uploadImageMiddleware from './../middlewares/uploadImage.js';
-import authenticateMiddleware from './../middlewares/authenticate.js';
+
+// import uploadImage from './../controllers/uploadImage.js';
+// import uploadImageMiddleware from './../middlewares/uploadImage.js';
+// import authenticateMiddleware from './../middlewares/authenticate.js';
 import passport from 'passport';
 import { generateAccessToken } from './../tokens/generateTokens.js';
 import activateUser from './../controllers/activateUser.js';
@@ -53,15 +53,12 @@ authRouter.post('/logout', logoutUser);
 */
 authRouter.post('/refresh-token', refreshAccessToken);
 
-// get user
-authRouter.get('/user', authenticateMiddleware, getUser);
-
 // upload profile picture
-authRouter.post(
-    '/upload/profile-picture',
-    uploadImageMiddleware.single('profilePicture'),
-    authenticateMiddleware,
-    uploadImage);
+// authRouter.post(
+//     '/upload/profile-picture',
+//     uploadImageMiddleware.single('profilePicture'),
+//     authenticateMiddleware,
+//     uploadImage);
 
 /*
     ROUTER FOR OAUTH2 AUTHENTICATION

@@ -14,6 +14,7 @@ export const AUTH = {
 export const USER = {
     PROFILE: "/user/profile",
     UPDATE_PROFILE: "/user/update",
+    UPLOAD_PROFILE_PICTURE: "/user/upload/profile-picture"
 };
 
 // export const CLASS = {

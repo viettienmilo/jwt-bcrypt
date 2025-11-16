@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useUserStore } from "../store/useUserStore";
-import { AUTH } from './endpoints.js';
+import { AUTH, USER } from './endpoints.js';
 /*
     1. Every API call uses the access token in the Authorization header.
     2. When that token expires, the backend returns 401 Unauthorized.
@@ -68,4 +68,10 @@ authAPI.interceptors.response.use(
     }
 );
 
-export { authAPI };
+const userAPI = axios.create({
+    baseURL: import.meta.env.VITE_AUTH_API,
+    withCredentials: true,
+});
+
+
+export { authAPI, userAPI };

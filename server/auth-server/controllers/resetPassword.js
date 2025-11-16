@@ -1,22 +1,27 @@
 import ResetPasswordToken from './../models/ResetPasswordToken.js';
 import User from './../models/User.js';
 import bcrypt from 'bcrypt';
+import { ErrorResponse, SuccessResponse } from './../utils/response.js';
+import { ERROR } from './../constants/errorCodes.js';
 
 export default async function resetPassword(req, res) {
     const { token, password } = req.body;
 
-    if (!token) return res.status(403).json({ success: false, message: "No token provided" });
+    if (!token)
+        return ErrorResponse(res, ERROR.INVALID_TOKEN, 401);
 
     const record = await ResetPasswordToken.findOne({ token });
-    if (!record) return res.status(403).json({ success: false, message: "Invalid token" });
+    if (!record)
+        return ErrorResponse(res, ERROR.INVALID_TOKEN, 401);
 
     if (record.expiresAt < Date.now()) {
         await record.deleteOne();
-        return res.status(403).json({ success: false, message: "Token expired" });
+        return ErrorResponse(res, ERROR.TOKEN_EXPIRED, 401);
     }
 
     const user = await User.findById(record.userId);
-    if (!user) return res.status(403).json({ success: false, message: "User not found" });
+    if (!user)
+        return ErrorResponse(res, ERROR.USER_NOT_FOUND, 403);
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -24,5 +29,5 @@ export default async function resetPassword(req, res) {
     user.password = hashedPassword;
     await user.save();
 
-    res.status(201).json({ message: "Password reset successfully. Please log in to continue." })
+    return SuccessResponse(res, null, "RESET_PASSWORD_SUCCESS", 200);
 }

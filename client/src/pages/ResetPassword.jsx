@@ -28,11 +28,21 @@ const ResetPassword = () => {
 
         mutate(payload, {
             onSuccess: (data) => {
-                enqueueSnackbar(data?.message || "Password reset successfully. Please log in to continue.", { variant: 'success' });
+                enqueueSnackbar("Password reset successfully. Please log in to continue.", { variant: 'success' });
                 navigate('/user/login');
             },
             onError: (error) => {
-                enqueueSnackbar(error?.message || "Undefined error", { variant: 'error' });
+                const errorCode = error.response?.data?.error
+                switch (errorCode) {
+                    case "INVALID_TOKEN":
+                        return enqueueSnackbar("Token is invalid.", { variant: 'error' });
+                    case "TOKEN_EXPIRED":
+                        return enqueueSnackbar("Token is expired.", { variant: 'error' });
+                    case "USER_NOT_FOUND":
+                        return enqueueSnackbar("User not found.", { variant: 'error' });
+                    default:
+                        return enqueueSnackbar("Undefined error occurs.", { variant: 'error' });
+                }
             }
         })
     }

@@ -1,7 +1,7 @@
-import { ErrorResponse, SuccessResponse } from './../utils/response.js';
-import { ERROR } from './../constants/errorCodes.js';
+import { ErrorResponse, SuccessResponse } from '../../utils/response.js';
+import { ERROR } from '../../constants/errorCodes.js';
 
-const getUser = async (req, res) => {
+const fetchUserProfile = async (req, res) => {
     try {
         const user = req.user
 
@@ -23,4 +23,4 @@ const getUser = async (req, res) => {
     }
 }
 
-export default getUser;
+export default fetchUserProfile;

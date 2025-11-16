@@ -1,7 +1,7 @@
 import { Box, Avatar, IconButton, CircularProgress } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import { useRef, useState } from 'react';
-import useImageUpload from './../../api/useImageUpload.js';
+import useImageUpload from './../../hooks/user/useImageUpload.js';
 import { useUserStore } from '../../store/useUserStore.js';
 import { useSnackbar } from 'notistack';
 
@@ -23,11 +23,11 @@ const EditableAvatar = ({ user }) => {
 
         mutate(formData, {
             onSuccess: (data) => {
-                enqueueSnackbar(data.message || "Image uploaded successfully", { variant: 'success' });
-                setUser({ ...user, profilePicture: data.profilePicture });
+                enqueueSnackbar("Image uploaded successfully", { variant: 'success' });
+                setUser({ ...user, profilePicture: data.data.profilePicture });
             },
-            onError: (error) => {
-                enqueueSnackbar(error.response?.data?.message || "Uploading failed", { variant: 'error' });
+            onError: () => {
+                enqueueSnackbar("Uploading failed", { variant: 'error' });
             },
         })
     }

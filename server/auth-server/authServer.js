@@ -5,10 +5,11 @@ import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import connectToCloudinary from './configs/cloudinary.js';
-import authRoutes from './routes/authRoutes.js';
+import authRouter from './routes/authRoutes.js';
+import userRouter from './routes/userRoutes.js'
 import passportConfig from './configs/authStrategies.js'
 import passport from 'passport'
-import { errorHandler } from './middlewares/errorHandler.js';
+import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js';
 
 ////////////////////////////////////////////////////////////
 // AUTHENTICATION & AUTHORIZATION SERVER ///////////////////
@@ -43,10 +44,12 @@ server.get('/', (req, res) => {
 });
 
 // auth routes for handle register/login/logout and refresh access token
-server.use('/api/auth', authRoutes)
+server.use('/api/auth', authRouter)
+// user routes for handle users
+server.use('/api/user', userRouter)
 
 // global error handler
-server.use(errorHandler);
+server.use(errorHandlerMiddleware);
 
 // start server
 server.listen(process.env.AUTH_PORT, () => {
