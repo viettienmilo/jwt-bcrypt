@@ -24,9 +24,10 @@ import { useNavigate, Link as RouterLink, redirect } from 'react-router'
 import useLoginUser from './../hooks/auth/useLoginUser.js';
 import { useUserStore } from './../store/useUserStore.js';
 import { useState } from 'react';
+import useFetchUserProfile from './../hooks/user/useFetchUserProfile.js';
 
 export async function loader(isAuthed) {
-  return (isAuthed ? redirect('/user/dashboard') : null);
+  return (isAuthed ? redirect('/') : null);
 }
 
 export default function SignIn(props) {
@@ -36,9 +37,10 @@ export default function SignIn(props) {
   const setAccessToken = useUserStore((state) => state.setAccessToken); // state management;
   const setUser = useUserStore((state) => state.setUser);
 
-
   //const { register, handleSubmit, formState: { errors, } } = useForm(); // react-hook-form
-  const { mutate, isPending } = useLoginUser();   // tanstack-query
+  const { mutate: loginUserMutate, isPending } = useLoginUser();   // tanstack-query
+  const { mutate: fetchUserProfileMutate } = useFetchUserProfile();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [openDiag, setOpenDiag] = useState(false);
@@ -58,13 +60,20 @@ export default function SignIn(props) {
   }
 
   const onFormSubmit = (formData) => {
-    mutate(formData, {
+    loginUserMutate(formData, {
       onSuccess: (response) => {
         enqueueSnackbar("User logged in successfully", { variant: 'success' });
-        const { accessToken, user } = response.data;
-        setAccessToken(accessToken)
-        setUser(user);
-        navigate('/user/dashboard')
+        const { accessToken } = response.data;
+        setAccessToken(accessToken);
+        fetchUserProfileMutate({ accessToken }, {
+          onSuccess: (data) => {
+            setUser(data.data.user)
+            navigate('/')
+          },
+          onError: (error) => {
+            console.log(error)
+          }
+        })
       },
       onError: (error) => {
         const errorCode = error.response?.data?.error;
@@ -153,7 +162,6 @@ export default function SignIn(props) {
             <Link
               component="button"
               type="button"
-              // onClick={() => navigate('/user/forgot-password')}
               onClick={() => setOpenDiag(true)}
               variant="body2"
               sx={{ alignSelf: 'center', color: "warning.main" }}

@@ -34,7 +34,7 @@ export default function SignUp(props) {
     formState: { errors, }
   } = useForm({
     defaultValues: {
-      username: '',
+      // username: '',
       email: '',
       password: ''
     }
@@ -52,12 +52,13 @@ export default function SignUp(props) {
   const onFormSubmit = (formData) => {
     unregister("retypePassword");   // remove before mutation
     delete formData.retypePassword;
+
     mutate(formData,
       {
         onSuccess: (response) => {
           const { user } = response.data;
           enqueueSnackbar('Registration successful.Please activate your account to continue', { variant: 'info' });
-          navigate(`/user/activate?email=${user.email}`);
+          navigate(`/user/activate?email=${user.email}&username=${formData.username}`);
         },
         onError: (error) => {
           const errorCode = error.response?.data?.error;

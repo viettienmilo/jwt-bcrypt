@@ -63,7 +63,7 @@ const UserMenu = () => {
                         },
                     }}
                 >
-                    <Avatar src={user.profilePicture || undefined}
+                    <Avatar src={user.avatarUrl || undefined}
                         sx={{ cursor: "pointer", width: 30, height: 30, bgcolor: deepPurple[500] }}
                         onClick={openMenu}
                     >
@@ -82,7 +82,7 @@ const UserMenu = () => {
                 disableAutoFocus // prevent warning focus problem
                 disableAutoFocusItem // Prevent autofocus on the first item
             >
-                {user.role === 'USER' &&
+                {user.role === 'STUDENT' &&
                     <MenuItem onClick={() => {
                         closeMenu();
                         navigate('/user/dashboard')

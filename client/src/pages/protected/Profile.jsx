@@ -21,9 +21,9 @@ const Profile = () => {
                 height: '100vh',
             }}>
                 <Typography variant="h2" textAlign="center">
-                    Profile Page
+                    {user?.username}
                 </Typography>
-                <EditableAvatar user={user} />
+                {user && <EditableAvatar user={user} />}
             </Box>
         </Container>
     )

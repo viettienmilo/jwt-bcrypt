@@ -1,36 +1,39 @@
 import GoogleStrategy from 'passport-google-oauth2'
 import FacebookStrategy from 'passport-facebook'
-import GithubStrategy from 'passport-github'
-import User from './../models/User.js';
+import { Strategy as GithubStrategy } from 'passport-github2'
+import AuthUser from './../models/AuthUser.js';
+import normalizeOAuthUser from './../utils/normalizeOAuthUser.js';
+import { generateRefreshToken } from './../tokens/generateTokens.js';
+
 
 // callback handler for all of providers (Google, Facebook,...)
 async function handleOAuthCallback(profile, provider, done) {
     try {
-        // got name and email from profile (provided from provider)
-        const name = profile.displayName;
+        // info from profile (provided from provider)
         const email = profile.emails?.[0]?.value || `${profile.username || profile.id}@github.local`;
-        const image = profile.photos?.[0]?.value;
 
-        // check user is existed
-        // if existed, just move forward
-        // if not, create the new one in database
-        let user = await User.findOne({ email });
+        let user = await AuthUser.findOne({ email });
         if (!user) {
-            user = await User.create({
-                username: name,
+            user = await AuthUser.create({
                 email: email,
-                profilePicture: image,
                 isVerified: true,
                 oauth: { provider: provider, providerId: profile.id },
             })
-        } else if (!user.oauth?.providerId) {
-            // Update oauth info if missing
+        }
+        else if (!user.oauth || user.oauth.provider !== provider) {
             user.oauth = { provider, providerId: profile.id };
-            user.profilePicture ||= image;
             user.isVerified = true;
             await user.save();
         }
-        return done(null, user);
+
+        const normalized = normalizeOAuthUser(provider, profile);
+
+        const refreshToken = generateRefreshToken(user);
+        user.refreshToken = refreshToken;
+        user.refreshTokenExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        await user.save();
+
+        return done(null, { user, normalized, refreshToken });
 
     } catch (error) {
         console.error('OAuth error:', error);
@@ -70,9 +73,12 @@ function passportConfig(passport) {
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: process.env.GITHUB_CALLBACK_URI,
+            scope: ["user:email"],
         },
             async (accessToken, refreshToken, profile, done) => {
                 await handleOAuthCallback(profile, 'github', done);
+                // console.log("PROFILE:", profile);
+                // console.log("EMAILS:", profile.emails);
             }
         )
     )

@@ -12,12 +12,15 @@ export async function loader() {
     try {
         const { accessToken } = useUserStore.getState();
         if (!accessToken) throw redirect('/user/login');
+        useUserStore.getState().setAccessToken(accessToken);
 
-        const { data } = await fetchUserProfileService(accessToken);
+        // const { data } = await fetchUserProfileService(accessToken);
 
-        useUserStore.getState().setUser(data.user); // update user
-        useUIStore.getState().setShowNavbar(false); // hide navbar
-        return { user: data.user };
+        // useUserStore.getState().setUser(data.user); // update user
+        // useUIStore.getState().setShowNavbar(false); // hide navbar
+
+        // return { user: data.user };
+        return redirect('/')
 
     } catch (error) {
         throw redirect('/user/login');
@@ -31,11 +34,13 @@ export async function oauthLoader({ request }) {
         if (!accessToken) throw redirect('/user/login');
         useUserStore.getState().setAccessToken(accessToken);
 
-        const { data } = await fetchUserProfileService(accessToken);
+        // const { data } = await fetchUserProfileService(accessToken);
 
-        useUserStore.getState().setUser(data.user);
-        useUIStore.getState().setShowNavbar(false);
-        return { user: data.user };
+        // useUserStore.getState().setUser(data.user);
+        // useUIStore.getState().setShowNavbar(false);
+
+        // return { user: data.user };
+        return redirect('/')
 
     } catch (error) {
         throw redirect('/user/login');

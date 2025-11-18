@@ -1,5 +1,5 @@
 import ResetPasswordToken from './../models/ResetPasswordToken.js';
-import User from './../models/User.js';
+import AuthUser from './../models/AuthUser.js';
 import bcrypt from 'bcrypt';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
 import { ERROR } from './../constants/errorCodes.js';
@@ -19,14 +19,14 @@ export default async function resetPassword(req, res) {
         return ErrorResponse(res, ERROR.TOKEN_EXPIRED, 401);
     }
 
-    const user = await User.findById(record.userId);
+    const user = await AuthUser.findById(record.userId);
     if (!user)
         return ErrorResponse(res, ERROR.USER_NOT_FOUND, 403);
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    user.password = hashedPassword;
+    user.passwordHash = hashedPassword;
     await user.save();
 
     return SuccessResponse(res, null, "RESET_PASSWORD_SUCCESS", 200);

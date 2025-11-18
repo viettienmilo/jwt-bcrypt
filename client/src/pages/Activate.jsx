@@ -12,20 +12,26 @@ import { useSnackbar } from 'notistack';
 import { useUserStore } from "../store/useUserStore.js";
 import useSendActivationLink from './../hooks/auth/useSendActivationLink.js';
 import useActivateUser from './../hooks/auth/useActivateUser.js';
+import useCreateUserProfile from './../hooks/user/useCreateProfile.js';
 
 export default function Activate() {
 
     const navigate = useNavigate();
-    const token = new URLSearchParams(window.location.search).get("token");
-    const email = new URLSearchParams(window.location.search).get("email");
-    const expired = new URLSearchParams(window.location.search).get("expired");
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const email = params.get("email");
+    const username = params.get("username");
+    const expired = params.get("expired");
+
     const [error, setError] = useState(false);
 
     const { mutate: activateUserMutate } = useActivateUser();
     const { mutate: sendActivationLinkMutate, isPending } = useSendActivationLink();
+    const { mutate: createUserProfileMutate } = useCreateUserProfile();
 
     const { enqueueSnackbar } = useSnackbar();
     const user = useUserStore(state => state.user);
+    const setUser = useUserStore(state => state.setUser);
 
     const handleSubmit = () => {
         if (!email) {
@@ -34,7 +40,7 @@ export default function Activate() {
             return;
         }
 
-        sendActivationLinkMutate({ email }, {
+        sendActivationLinkMutate({ email, username }, {
             onSuccess: () => {
                 enqueueSnackbar("Activation Link has been sent. Please check your mailbox.", { variant: 'success' });
             },
@@ -53,10 +59,18 @@ export default function Activate() {
 
     useEffect(() => {
         if (token) {
-            activateUserMutate({ token }, {
-                onSuccess: () => {
-                    enqueueSnackbar("Activate Account successfully. Please log in to continue.", { variant: 'success' });
-                    navigate('/user/login');
+            activateUserMutate({ token, username }, {
+                onSuccess: (data) => {
+                    const { userId, username } = data.data;
+
+                    createUserProfileMutate({ userId, username }, {
+                        onSuccess: (data) => {
+                            // setUser(data.user);
+                            enqueueSnackbar("Activate Account successfully. Please log in to continue.", { variant: 'success' });
+                            navigate('/user/login');
+                        },
+                        onError: (error) => console.log("create user profile error: ", error),
+                    })
                 },
                 onError: (error) => {
                     const errorCode = error.response?.data?.error;
@@ -73,7 +87,7 @@ export default function Activate() {
                 }
             });
         }
-        else return;
+        // else return;
     }, [token]);
 
     return (

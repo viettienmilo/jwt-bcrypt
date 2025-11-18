@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import User from '../models/User.js';
+import AuthUser from '../models/AuthUser.js';
 import { userRegisterSchema } from '../validations/authValidations.js';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
 import { ERROR } from './../constants/errorCodes.js';
@@ -19,18 +19,18 @@ const registerUser = async (req, res) => {
         if (error)
             return ErrorResponse(res, ERROR.VALIDATION_ERROR, 400, error.details[0].message);
 
-        const { username, password, email } = value;
-        const user = await User.findOne({ email })
+        const { username, email, password } = value;
+        const user = await AuthUser.findOne({ email })
         if (user)
             return ErrorResponse(res, ERROR.DUPLICATE_EMAIL, 409);
 
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const newUser = new User({
-            username: username,
-            password: hashedPassword,
+        const newUser = new AuthUser({
+            // username: username,
             email: email,
+            passwordHash: hashedPassword,
         });
         await newUser.save();
 
@@ -39,6 +39,7 @@ const registerUser = async (req, res) => {
                 user: {
                     userId: newUser._id,
                     email: newUser.email,
+                    username: username,
                 }
             },
             "REGISTER_SUCCESS",

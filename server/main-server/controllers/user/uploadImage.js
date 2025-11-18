@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary'
 import fs from 'fs';
-import { ErrorResponse, SuccessResponse } from './../../utils/response.js';
-import { ERROR } from './../../constants/errorCodes.js';
+import { ErrorResponse } from './../utils/response.js';
+import { ERROR } from './../constants/errorCodes.js';
 
 const uploadImage = async (req, res) => {
     try {

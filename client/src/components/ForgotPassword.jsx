@@ -76,7 +76,7 @@ function ForgotPassword({ open, handleClose, dialogForm }) {
         <DialogActions sx={{ pb: 3, px: 3 }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
-            variant="contained"
+            variant="outlined"
             type="submit"
             loading={isPending}
             loadingPosition='start'

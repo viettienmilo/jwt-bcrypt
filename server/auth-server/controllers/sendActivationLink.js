@@ -3,14 +3,14 @@ import ActivationToken from '../models/ActivationToken.js';
 import mailSender from './../configs/nodemailer.js';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
 import { ERROR } from './../constants/errorCodes.js';
-import User from './../models/User.js';
+import AuthUser from './../models/AuthUser.js';
 
 export default async function sendActivationLink(req, res) {
-    const { email } = req.body;
+    const { email, username } = req.body;
     if (!email)
         return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
 
-    const user = await User.findOne({ email });
+    const user = await AuthUser.findOne({ email });
     if (!user)
         return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
 
@@ -32,9 +32,11 @@ export default async function sendActivationLink(req, res) {
         html:
             `
                 <p><i>Please click on following link to activate your account: </i><p>
-                <a href="${process.env.CLIENT_URL}/user/activate?token=${token}">Click to Activate</a>
+                <a href="${process.env.CLIENT_URL}/user/activate?token=${token}&username=${username}&email=${email}"">
+                    ${process.env.CLIENT_URL}/user/activate?token=${token}&username=${username}&email=${email}"
+                </a>
             `
     }
     await mailSender.sendMail(mail)
-    return SuccessResponse(res, { email }, "EMAIL_SENT", 201);
+    return SuccessResponse(res, { email, username }, "EMAIL_SENT", 201);
 }

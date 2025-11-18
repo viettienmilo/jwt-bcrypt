@@ -3,7 +3,7 @@ import { activateService } from "@/services";
 
 const useActivateUser = () => {
     return useMutation({
-        mutationFn: activateService,
+        mutationFn: ({ token, username }) => activateService(token, username),
     });
 }
 

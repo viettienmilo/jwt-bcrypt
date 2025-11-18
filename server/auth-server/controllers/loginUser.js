@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import User from './../models/User.js';
+import AuthUser from './../models/AuthUser.js';
 import { userLoginSchema } from './../validations/authValidations.js';
 import {
     generateAccessToken,
@@ -26,13 +26,13 @@ const loginUser = async (req, res) => {
             return ErrorResponse(res, ERROR.VALIDATION_ERROR, 400, error.details[0].message);
 
         const { email, password } = value;
-        const user = await User.findOne({ email })
+        const user = await AuthUser.findOne({ email })
         if (!user)
             return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
         if (!user.isVerified)
             return ErrorResponse(res, ERROR.ACCOUNT_NOT_VERIFIED, 403, { userId: user._id, email: user.email });
 
-        const isPasswordCorrect = await checkPassword(password, user.password);
+        const isPasswordCorrect = await checkPassword(password, user.passwordHash);
         if (!isPasswordCorrect)
             return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
 
@@ -61,8 +61,10 @@ const loginUser = async (req, res) => {
                 accessToken,
                 user: {
                     userId: user._id,
-                    role: user.role,
-                    profilePicture: user.profilePicture,
+                    email: user.email,
+
+                    // role: user.role,
+                    // profilePicture: user.profilePicture,
                 },
             },
             "LOGIN_SUCCESS",

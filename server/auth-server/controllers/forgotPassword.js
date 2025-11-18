@@ -1,8 +1,6 @@
 import crypto from 'crypto'
-
 import ResetPasswordToken from './../models/ResetPasswordToken.js';
-import User from './../models/User.js';
-
+import AuthUser from './../models/AuthUser.js';
 import { forgotPasswordEmailSchema } from './../validations/authValidations.js';
 import mailSender from './../configs/nodemailer.js';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
@@ -15,7 +13,7 @@ export default async function forgotPassword(req, res) {
             return ErrorResponse(res, ERROR.VALIDATION_ERROR, 400, error.details[0].message);
 
         const { email } = value;
-        const user = await User.findOne({ email });
+        const user = await AuthUser.findOne({ email });
         if (!user)
             return ErrorResponse(res, ERROR.USER_NOT_FOUND, 403);
         if (!user.isVerified)

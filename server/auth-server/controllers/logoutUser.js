@@ -1,4 +1,4 @@
-import User from './../models/User.js';
+import AuthUser from './../models/AuthUser.js';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
 import { ERROR } from './../constants/errorCodes.js';
 
@@ -11,9 +11,9 @@ const logoutUser = async (req, res) => {
         const refreshToken = req.cookies.refreshToken;
 
         if (!refreshToken)
-            return ErrorResponse(res, ERROR.INVALID_TOKEN, 400);
+            return SuccessResponse(res, null, "LOGOUT_SUCCESS", 200);
 
-        const user = await User.findOne({ refreshToken });
+        const user = await AuthUser.findOne({ refreshToken });
         if (!user) {
             res.clearCookie(
                 'refreshToken', {

@@ -21,9 +21,11 @@ export async function sendActivationLinkService(data) {
     }
 }
 
-export async function activateService(data) {
+export async function activateService(token, username) {
     try {
-        const response = await authAPI.post(AUTH.ACTIVATE, data);
+        const response = await authAPI.get(AUTH.ACTIVATE, {
+            params: { token, username },
+        });
         return response.data;
     } catch (error) {
         console.log("ACTIVATE_ERROR: __ ", error.response?.data || error.message);

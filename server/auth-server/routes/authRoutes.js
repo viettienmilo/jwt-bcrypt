@@ -4,9 +4,6 @@ import loginUser from './../controllers/loginUser.js';
 import logoutUser from '../controllers/logoutUser.js';
 import refreshAccessToken from './../controllers/refreshAccessToken.js';
 
-// import uploadImage from './../controllers/uploadImage.js';
-// import uploadImageMiddleware from './../middlewares/uploadImage.js';
-// import authenticateMiddleware from './../middlewares/authenticate.js';
 import passport from 'passport';
 import { generateAccessToken } from './../tokens/generateTokens.js';
 import activateUser from './../controllers/activateUser.js';
@@ -26,7 +23,8 @@ const authRouter = express.Router()
 authRouter.post('/register', registerUser);
 
 // activate user
-authRouter.post('/activate', activateUser);
+// authRouter.post('/activate', activateUser);
+authRouter.get('/activate', activateUser);
 
 /* 
 2. LOGIN USER
@@ -53,12 +51,6 @@ authRouter.post('/logout', logoutUser);
 */
 authRouter.post('/refresh-token', refreshAccessToken);
 
-// upload profile picture
-// authRouter.post(
-//     '/upload/profile-picture',
-//     uploadImageMiddleware.single('profilePicture'),
-//     authenticateMiddleware,
-//     uploadImage);
 
 /*
     ROUTER FOR OAUTH2 AUTHENTICATION
@@ -70,9 +62,19 @@ authRouter.get('/login/google', passport.authenticate('google', { scope: ['profi
 authRouter.get('/login/google/callback',
     passport.authenticate('google', { session: false }),
     (req, res) => {
-        const user = req.user;
+        const user = req.user.user;
+        const normalized = req.user.normalized;
         const accessToken = generateAccessToken(user);
-        res.redirect(`${process.env.CLIENT_URL}/auth/google/callback?accessToken=${accessToken}`);
+        const refreshToken = req.user.refreshToken;
+        console.log(refreshToken)
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // localhost must be false
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            path: "/",            // important so cookie is sent to /auth/logout
+            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
+        });
+        res.redirect(`${process.env.CLIENT_URL}/auth/google/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
     }
 );
 
@@ -81,9 +83,18 @@ authRouter.get('/login/facebook', passport.authenticate('facebook', { scope: ['e
 authRouter.get('/login/facebook/callback',
     passport.authenticate('facebook', { session: false }),
     (req, res) => {
-        const user = req.user;
+        const user = req.user.user;
+        const normalized = req.user.normalized;
         const accessToken = generateAccessToken(user);
-        res.redirect(`${process.env.CLIENT_URL}/auth/facebook/callback?accessToken=${accessToken}`);
+        const refreshToken = req.user.refreshToken;
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // localhost must be false
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            path: "/",            // important so cookie is sent to /auth/logout
+            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
+        });
+        res.redirect(`${process.env.CLIENT_URL}/auth/facebook/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
     }
 );
 
@@ -95,9 +106,18 @@ authRouter.get('/login/github/callback',
         session: false
     }),
     (req, res) => {
-        const user = req.user;
+        const user = req.user.user;
+        const normalized = req.user.normalized;
         const accessToken = generateAccessToken(user);
-        res.redirect(`${process.env.CLIENT_URL}/auth/github/callback?accessToken=${accessToken}`);
+        const refreshToken = req.user.refreshToken;
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // localhost must be false
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            path: "/",            // important so cookie is sent to /auth/logout
+            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
+        });
+        res.redirect(`${process.env.CLIENT_URL}/auth/github/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
     }
 );
 

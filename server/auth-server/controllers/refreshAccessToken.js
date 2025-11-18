@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { generateAccessToken, generateRefreshToken } from '../tokens/generateTokens.js';
-import User from '../models/User.js';
+import AuthUser from '../models/AuthUser.js';
 import { ErrorResponse, SuccessResponse } from './../utils/response.js';
 import { ERROR } from './../constants/errorCodes.js';
 
@@ -11,7 +11,7 @@ const refreshAccessToken = async (req, res) => {
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY);
-        const user = await User.findById(decoded.userId).select('-password');
+        const user = await AuthUser.findById(decoded.userId).select('-password');
         if (!user)
             return ErrorResponse(res, ERROR.USER_NOT_FOUND, 404);
 

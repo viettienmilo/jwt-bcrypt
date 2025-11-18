@@ -4,9 +4,9 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
-import connectToCloudinary from './configs/cloudinary.js';
+// import connectToCloudinary from './configs/cloudinary.js';
 import authRouter from './routes/authRoutes.js';
-import userRouter from './routes/userRoutes.js'
+// import userRouter from './routes/userRoutes.js'
 import passportConfig from './configs/authStrategies.js'
 import passport from 'passport'
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js';
@@ -19,7 +19,7 @@ import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js'
 // 4. Refresh access token 
 ////////////////////////////////////////////////////////////
 
-connectToCloudinary();
+// connectToCloudinary();
 
 const server = express();
 
@@ -46,7 +46,7 @@ server.get('/', (req, res) => {
 // auth routes for handle register/login/logout and refresh access token
 server.use('/api/auth', authRouter)
 // user routes for handle users
-server.use('/api/user', userRouter)
+// server.use('/api/user', userRouter)
 
 // global error handler
 server.use(errorHandlerMiddleware);

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import User from '../models/User.js';
+import AuthUser from '../models/AuthUser.js';
 import { ErrorResponse } from '../utils/response.js';
 import { ERROR } from '../constants/errorCodes.js';
 
@@ -21,7 +21,7 @@ const authMiddleware = async (req, res, next) => {
         }
 
         const userId = decoded.userId;
-        const user = await User.findById(userId).select('-password');
+        const user = await AuthUser.findById(userId).select('-password');
         if (!user)
             return ErrorResponse(res, ERROR.USER_NOT_FOUND, 403);
         if (!user.isVerified)

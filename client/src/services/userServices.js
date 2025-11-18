@@ -2,6 +2,19 @@ import { userAPI } from '../api/axiosInstance.js';
 import { USER } from './../api/endpoints';
 import { useUserStore } from './../store/useUserStore.js';
 
+export async function createUserProfileService(data) {
+    try {
+        const response = await userAPI.post(
+            USER.CREATE_PROFILE,
+            data,
+        )
+        return response.data;
+    } catch (error) {
+        console.log("CREATE_PROFILE_ERROR: __ ", error.response?.data?.error || error.message);
+        throw (error.response?.data || error);
+    }
+}
+
 export async function fetchUserProfileService(accessToken) {
     try {
         const response = await userAPI.get(
@@ -9,7 +22,6 @@ export async function fetchUserProfileService(accessToken) {
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                    "Content-Type": "application/json",
                 }
             }
         );
