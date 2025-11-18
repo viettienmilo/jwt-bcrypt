@@ -10,6 +10,7 @@ import authRouter from './routes/authRoutes.js';
 import passportConfig from './configs/authStrategies.js'
 import passport from 'passport'
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js';
+import rateLimiter from './configs/rateLimiter.js';
 
 ////////////////////////////////////////////////////////////
 // AUTHENTICATION & AUTHORIZATION SERVER ///////////////////
@@ -34,6 +35,7 @@ server.use(
 );
 server.use(cookieParser()); // read cookies from headers
 server.use(express.json()); // read/write json
+server.use(rateLimiter);
 
 passportConfig(passport);
 server.use(passport.initialize());
@@ -55,10 +57,3 @@ server.use(errorHandlerMiddleware);
 server.listen(process.env.AUTH_PORT, () => {
     console.log(`-- AUTH SERVER RUNNING ON PORT ${process.env.AUTH_PORT}`);
 });
-
-
-
-
-
-
-

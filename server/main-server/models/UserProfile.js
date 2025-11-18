@@ -7,7 +7,6 @@ const userProfileSchema = new mongoose.Schema({
     firstname: String,
     lastname: String,
     avatarUrl: String,
-    role: { type: String, enum: ["STUDENT", "ADMIN"], default: "STUDENT" },
     desc: { type: String },
     address: { type: String },
 }, { timestamps: true });

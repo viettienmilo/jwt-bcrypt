@@ -35,6 +35,7 @@ export async function fetchUserProfileService(accessToken) {
 
 export async function uploadProfilePitureService(data) {
     const accessToken = useUserStore.getState().accessToken;
+
     try {
         const response = await userAPI.post(
             USER.UPLOAD_PROFILE_PICTURE,
@@ -45,6 +46,7 @@ export async function uploadProfilePitureService(data) {
                 },
             }
         );
+
         return response.data;
 
     } catch (error) {

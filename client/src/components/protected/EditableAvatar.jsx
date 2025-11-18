@@ -18,13 +18,13 @@ const EditableAvatar = ({ user }) => {
         if (!file) return;
 
         const formData = new FormData();
-        formData.append('profilePicture', file);
-        formData.append('userId', user.id);
+        formData.append('avatarUrl', file);
+        formData.append('userId', user._id);
 
         mutate(formData, {
             onSuccess: (data) => {
                 enqueueSnackbar("Image uploaded successfully", { variant: 'success' });
-                setUser({ ...user, profilePicture: data.data.profilePicture });
+                setUser({ ...user, profilePicture: data.data.avatarUrl });
             },
             onError: () => {
                 enqueueSnackbar("Uploading failed", { variant: 'error' });
@@ -51,7 +51,7 @@ const EditableAvatar = ({ user }) => {
                     height: 150,
                     alignSelf: 'center',
                 }}
-                src={user.profilePicture || undefined}
+                src={user.avatarUrl || undefined}
                 alt={user.username}
             />
 
@@ -81,7 +81,6 @@ const EditableAvatar = ({ user }) => {
                     sx={{
                         position: 'absolute',
                         bottom: 8,
-                        // left: 100,
                         right: 8,
                     }}
                 >

@@ -62,9 +62,8 @@ const loginUser = async (req, res) => {
                 user: {
                     userId: user._id,
                     email: user.email,
-
-                    // role: user.role,
-                    // profilePicture: user.profilePicture,
+                    role: user.role,
+                    auth: user.auth,
                 },
             },
             "LOGIN_SUCCESS",

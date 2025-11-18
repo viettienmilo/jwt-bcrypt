@@ -36,6 +36,7 @@ export default function SignIn(props) {
 
   const setAccessToken = useUserStore((state) => state.setAccessToken); // state management;
   const setUser = useUserStore((state) => state.setUser);
+  const setRole = useUserStore((state) => state.setRole);
 
   //const { register, handleSubmit, formState: { errors, } } = useForm(); // react-hook-form
   const { mutate: loginUserMutate, isPending } = useLoginUser();   // tanstack-query
@@ -63,11 +64,12 @@ export default function SignIn(props) {
     loginUserMutate(formData, {
       onSuccess: (response) => {
         enqueueSnackbar("User logged in successfully", { variant: 'success' });
-        const { accessToken } = response.data;
+        const { accessToken, user } = response.data;
         setAccessToken(accessToken);
+        setRole(user.role);
         fetchUserProfileMutate({ accessToken }, {
           onSuccess: (data) => {
-            setUser(data.data.user)
+            setUser(data.data.user);
             navigate('/')
           },
           onError: (error) => {

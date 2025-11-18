@@ -71,9 +71,6 @@ authAPI.interceptors.response.use(
 const userAPI = axios.create({
     baseURL: import.meta.env.VITE_MAIN_API,
     withCredentials: true,
-    headers: {
-        "Content-Type": "application/json"
-    }
 });
 
 

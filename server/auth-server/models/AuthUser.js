@@ -6,6 +6,7 @@ const authUserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String },
     isVerified: { type: Boolean, default: false },
+    role: { type: String, enum: ["STUDENT", "ADMIN"], default: "STUDENT" },
     refreshToken: String,
     refreshTokenExpiration: Date,
     oauth: {

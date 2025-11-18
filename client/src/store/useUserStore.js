@@ -10,14 +10,17 @@ export const useUserStore = create(
     persist((set) => ({         // persist keep user stay logged in when refreshing page
         accessToken: null,
         user: null,
+        role: null,
         setAccessToken: (token) => set({ accessToken: token }),
         setUser: (user) => set({ user }),
-        logout: () => set({ accessToken: null, user: null }),
+        setRole: (role) => set({ role }),
+        logout: () => set({ accessToken: null, user: null, role: null }),
     }),
         {
             name: "user-storage", // key in localStorage
         }
-    ));
+    )
+);
 
 // handle UI
 export const useUIStore = create((set) => ({

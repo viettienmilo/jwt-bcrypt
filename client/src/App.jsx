@@ -17,7 +17,7 @@ import requireAuth from './utils/requireAuth.js';
 
 function App() {
   const appRouter = createBrowserRouter(createRoutesFromElements(
-    <Route path='/' element={<Layout />} errorElement={<PageError />} >
+    <Route path='/' element={<Layout />} errorElement={<PageError />} HydrateFallback={() => { return <></> }}>
       <Route index element={<Home />} HydrateFallback={() => { return <></> }} />
       <Route path='user/register' element={<SignUp />} loader={() => signUpLoader(requireAuth())} />
       <Route path='user/activate' element={<Activate />} />

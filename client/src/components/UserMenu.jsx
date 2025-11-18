@@ -20,8 +20,9 @@ import { logoutService } from './../services/authServices.js';
 
 const UserMenu = () => {
     const [anchorElement, setAnchorElement] = useState(null);
-    const user = useUserStore(state => state.user)
-    const logout = useUserStore(state => state.logout)
+    const user = useUserStore(state => state.user);
+    const role = useUserStore(state => state.role);
+    const logout = useUserStore(state => state.logout);
     const navigate = useNavigate();
 
     const open = Boolean(anchorElement);
@@ -82,7 +83,8 @@ const UserMenu = () => {
                 disableAutoFocus // prevent warning focus problem
                 disableAutoFocusItem // Prevent autofocus on the first item
             >
-                {user.role === 'STUDENT' &&
+                {
+                    role === 'STUDENT' &&
                     <MenuItem onClick={() => {
                         closeMenu();
                         navigate('/user/dashboard')
@@ -91,16 +93,19 @@ const UserMenu = () => {
                             <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
                         </ListItemIcon>
                         Dashboard
-                    </MenuItem>}
-                {user.role === 'ADMIN' && <MenuItem onClick={() => {
-                    closeMenu();
-                    navigate('/user/admin')
-                }}>
-                    <ListItemIcon>
-                        <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
-                    </ListItemIcon>
-                    Admin Panel
-                </MenuItem>}
+                    </MenuItem>
+                }
+                {
+                    role === 'ADMIN' && <MenuItem onClick={() => {
+                        closeMenu();
+                        navigate('/user/admin')
+                    }}>
+                        <ListItemIcon>
+                            <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />
+                        </ListItemIcon>
+                        Admin Panel
+                    </MenuItem>
+                }
                 <MenuItem onClick={() => {
                     closeMenu();
                     navigate('/user/profile')

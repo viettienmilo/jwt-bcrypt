@@ -28,9 +28,10 @@ const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const newUser = new AuthUser({
-            // username: username,
             email: email,
             passwordHash: hashedPassword,
+            role: "STUDENT",
+            oauth: null
         });
         await newUser.save();
 
@@ -40,6 +41,8 @@ const registerUser = async (req, res) => {
                     userId: newUser._id,
                     email: newUser.email,
                     username: username,
+                    role: newUser.role,
+                    oauth: newUser.oauth
                 }
             },
             "REGISTER_SUCCESS",

@@ -5,6 +5,9 @@ import morgan from 'morgan'
 import cors from 'cors'
 import 'dotenv/config'
 import userRouter from './routes/userRoutes.js';
+import connectToCloudinary from './configs/cloudinary.js';
+
+connectToCloudinary();
 
 const server = express();
 server.use(helmet()); // secure headers
@@ -19,7 +22,7 @@ server.use(cors(
     }
 ));
 server.use(cookieParser()); // read cookies from headers
-server.use(express.json()); // read/write json
+// server.use(express.json()); // read/write json
 
 server.get('/', (req, res) => {
     res.status(200).json({ message: "Main server is running" });
