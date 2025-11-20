@@ -47,11 +47,13 @@ authAPI.interceptors.response.use(
                 );
 
                 const newAccessToken = refreshResponse.data.accessToken;
+
+                // update to store
                 useUserStore.getState().setAccessToken(newAccessToken);
 
                 // retry the failed request with new token
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                return API(originalRequest);
+                return authAPI(originalRequest);
 
             } catch (refreshError) {
                 // refresh token invalid — logout
@@ -72,6 +74,16 @@ const userAPI = axios.create({
     baseURL: import.meta.env.VITE_MAIN_API,
     withCredentials: true,
 });
+
+userAPI.interceptors.request.use((config) => {
+    const token = useUserStore.getState().accessToken;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+},
+    (error) => Promise.reject(error)
+);
 
 
 export { authAPI, userAPI };

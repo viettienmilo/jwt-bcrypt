@@ -3,11 +3,11 @@ import mainDb from './../configs/mainDb.js';
 
 const userProfileSchema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    studentCode: { type: String, require: true },
-    username: { type: String, require: true },
-    firstname: { type: String, require: true },
-    lastname: { type: String, require: true },
-    birthdate: { type: Date, require: true },
+    studentCode: { type: String, required: true },
+    username: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    birthdate: { type: Date, required: true },
     gender: { type: String, enum: ["Male", "Female"] },
     phone: String,
     city: String,

@@ -24,7 +24,7 @@ const EditableAvatar = ({ user }) => {
         mutate(formData, {
             onSuccess: (data) => {
                 enqueueSnackbar("Image uploaded successfully", { variant: 'success' });
-                setUser({ ...user, profilePicture: data.data.avatarUrl });
+                setUser({ ...user, avatarUrl: data.data.avatarUrl });
             },
             onError: () => {
                 enqueueSnackbar("Uploading failed", { variant: 'error' });

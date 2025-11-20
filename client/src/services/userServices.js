@@ -15,6 +15,19 @@ export async function createUserProfileService(data) {
     }
 }
 
+export async function updateUserProfileService(data) {
+    try {
+        const response = await userAPI.post(
+            USER.UPDATE_PROFILE,
+            data,
+        )
+        return response.data;
+    } catch (error) {
+        console.log("UPDATE_PROFILE_ERROR: __ ", error.response?.data?.error || error.message);
+        throw (error.response?.data || error);
+    }
+}
+
 export async function fetchUserProfileService(accessToken) {
     try {
         const response = await userAPI.get(

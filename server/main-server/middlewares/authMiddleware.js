@@ -13,6 +13,7 @@ const authUserMiddleware = async (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
+        console.log(err)
         return ErrorResponse(res, ERROR.INVALID_TOKEN, 401);
     }
 }

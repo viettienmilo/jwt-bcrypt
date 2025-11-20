@@ -13,8 +13,8 @@ export const AUTH = {
 
 export const USER = {
     PROFILE: "/user/profile",
-    CREATE_PROFILE: "/user/create-profile",
-    UPDATE_PROFILE: "/user/update",
+    CREATE_PROFILE: "/user/profile/create",
+    UPDATE_PROFILE: "/user/profile/update",
     UPLOAD_PROFILE_PICTURE: "/user/upload/profile-picture"
 };
 

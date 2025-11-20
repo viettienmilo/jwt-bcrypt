@@ -9,6 +9,9 @@ import { useForm, Controller } from "react-hook-form";
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import { useRef, useState, useEffect } from 'react';
+import useUpdateProfile from './../../hooks/user/useUpdateProfile.js';
+import { useSnackbar } from 'notistack';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -20,11 +23,48 @@ export function loader(isAuthed) {
 
 const Profile = () => {
     const user = useUserStore(state => state.user);
-    const uniqueId = crypto.randomUUID();
-    const { register, control, handleSubmit, formState: { errors } } = useForm();
+    const setUser = useUserStore(state => state.setUser);
+    const [disableEdit, setDisableEdit] = useState(true);
+
+    const { register, control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            username: user?.username ?? "",
+            studentCode: user?.studentCode ?? crypto.randomUUID(),
+            lastname: user?.lastname ?? "",
+            firstname: user?.firstname ?? "",
+            birthdate: user?.birthdate ?? null,
+            city: user?.city ?? "",
+            gender: user?.gender ?? "",
+            phone: user?.phone ?? "",
+        }
+    });
+    const { mutate, isPending } = useUpdateProfile();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const focusedRef = useRef(null);
+
+    const handleEdit = () => {
+        setDisableEdit(!disableEdit);
+    }
+
+    useEffect(() => {
+        if (!disableEdit) {
+            focusedRef.current?.focus();
+        }
+    }, [disableEdit]);
 
     const onFormSubmit = (formData) => {
-        console.log(formData)
+        mutate(formData, {
+            onSuccess: (data) => {
+                const updated = data.user;
+                setUser({ ...updated, email: user.email });
+                enqueueSnackbar("Your profile has been updated successfully", { variant: 'success' });
+                setDisableEdit(true);
+            },
+            onError: () => {
+                enqueueSnackbar("Update failed.", { variant: 'error' });
+            }
+        })
     }
 
     return (
@@ -37,7 +77,6 @@ const Profile = () => {
                 pt={2} px={2}>
                 <Stack
                     direction='column'
-                // spacing={1}
                 >
                     <Typography variant='subtitle1' color='primary'>
                         Welcome back, {user?.username}
@@ -46,8 +85,12 @@ const Profile = () => {
                         {new Date().toLocaleDateString()} - {new Date().toLocaleTimeString()}
                     </Typography>
                 </Stack>
-                <Button variant='contained' color='secondary' sx={{ width: 100 }}
+                <Button
+                    variant='contained'
+                    color='secondary'
+                    sx={{ width: 100 }}
                     startIcon={<EditIcon />}
+                    onClick={handleEdit}
                 >
                     Edit
                 </Button>
@@ -62,7 +105,6 @@ const Profile = () => {
                 <Typography variant='subtitle1' color='secondary'>Account Info</Typography>
                 <Stack
                     direction='column'
-                    // justifyContent="space-between"
                     spacing={2}
                     px={2}>
                     <EditableAvatar user={user} />
@@ -72,13 +114,14 @@ const Profile = () => {
                             autoFocus
                             id="username"
                             type='text'
-                            placeholder="viettienmilo"
                             variant="outlined"
                             error={!!errors?.username}
-                            helperText={errors.username?.message || 'Edit Username'}
+                            helperText={errors?.username?.message || 'Edit Username'}
                             {
                             ...register('username', { required: "Username is required" })
                             }
+                            disabled={disableEdit}
+                            inputRef={focusedRef}
                         />
                     </FormControl>
                 </Stack>
@@ -90,7 +133,7 @@ const Profile = () => {
                 pt={2} px={2}
             >
                 <Typography variant='subtitle1' color='secondary'>Student Info</Typography>
-                <form onClick={handleSubmit(onFormSubmit)}>
+                <form onSubmit={handleSubmit(onFormSubmit)}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
                         justifyContent='flex-start'
@@ -99,17 +142,17 @@ const Profile = () => {
                         px={2}
                     >
                         <FormControl sx={{ flex: 1 }} fullWidth>
-                            <FormLabel htmlFor="studentCode">Student Code</FormLabel>
+                            <FormLabel htmlFor="studentCode">Student Code (*)</FormLabel>
                             <TextField
                                 id="studentCode"
                                 type='text'
                                 variant="outlined"
-                                defaultValue={uniqueId}
                                 error={!!errors?.studentCode}
-                                helperText={errors.studentCode?.message || 'Enter your student code'}
+                                helperText={errors?.studentCode?.message || "(*) This UUID code is temporary. If it's not your student code, please update a new one."}
                                 {
                                 ...register('studentCode', { required: "Student Code is required" })
                                 }
+                                disabled={disableEdit}
                             />
                         </FormControl>
                     </Stack>
@@ -121,33 +164,33 @@ const Profile = () => {
                         pt={2} px={2}
                     >
                         <FormControl sx={{ flex: 1 }} fullWidth>
-                            <FormLabel htmlFor="lastname">Last name</FormLabel>
+                            <FormLabel htmlFor="lastname">Last name (*)</FormLabel>
                             <TextField
                                 fullWidth
                                 id="lastname"
                                 type='text'
-                                placeholder="Nguyen Viet"
                                 variant="outlined"
                                 error={!!errors?.lastname}
-                                helperText={errors.lastname?.message || 'Input your First name'}
+                                helperText={errors?.lastname?.message || 'Input your First name'}
                                 {
                                 ...register('lastname', { required: "Last name is required" })
                                 }
+                                disabled={disableEdit}
                             />
                         </FormControl>
                         <FormControl sx={{ flex: 1 }} fullWidth>
-                            <FormLabel htmlFor="firstname">First name</FormLabel>
+                            <FormLabel htmlFor="firstname">First name (*)</FormLabel>
                             <TextField
                                 fullWidth
                                 id='firstname'
                                 type='text'
-                                placeholder="Tien"
                                 variant="outlined"
                                 error={!!errors?.firstname}
-                                helperText={errors.firstname?.message || 'Input your Last name'}
+                                helperText={errors?.firstname?.message || 'Input your Last name'}
                                 {
                                 ...register('firstname', { required: "First name is required" })
                                 }
+                                disabled={disableEdit}
                             />
                         </FormControl>
                     </Stack>
@@ -159,12 +202,11 @@ const Profile = () => {
                         pt={2} px={2}
                     >
                         <FormControl sx={{ flex: 1 }} fullWidth>
-                            <FormLabel htmlFor="birthdate">Birth date</FormLabel>
+                            <FormLabel htmlFor="birthdate">Birth date (*)</FormLabel>
                             <Controller
                                 name='birthdate'
                                 id='birthdate'
                                 control={control}
-                                defaultValue={null}
                                 render={({ field, fieldState }) => (
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
@@ -192,6 +234,7 @@ const Profile = () => {
                                                         fieldState.error?.message || "Select your birthdate",
                                                 },
                                             }}
+                                            disabled={disableEdit}
                                         />
                                     </LocalizationProvider>
                                 )}
@@ -203,13 +246,13 @@ const Profile = () => {
                                 fullWidth
                                 id='city'
                                 type='text'
-                                placeholder="Nha Trang"
                                 variant="outlined"
                                 error={!!errors?.city}
-                                helperText={errors.city?.message || 'Input your city where you born'}
+                                helperText={errors?.city?.message || 'Input your city where you born'}
                                 {
                                 ...register('city')
                                 }
+                                disabled={disableEdit}
                             />
                         </FormControl>
                     </Stack>
@@ -221,19 +264,19 @@ const Profile = () => {
                         pt={2} px={2}
                     >
                         <FormControl sx={{ flex: 1 }} fullWidth>
-                            <FormLabel id="gender">Gender</FormLabel>
+                            <FormLabel id="gender">Gender (*)</FormLabel>
                             <Controller
                                 fullWidth
                                 name="gender"
                                 control={control}
-                                defaultValue=""
                                 variant="outlined"
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         select
-                                        error={!!errors.gender}
-                                        helperText={errors.gender?.message || 'Gender is required'}
+                                        error={!!errors?.gender}
+                                        helperText={errors?.gender?.message || 'Gender is required'}
+                                        disabled={disableEdit}
                                     >
                                         <MenuItem value="Male">Male</MenuItem>
                                         <MenuItem value="Female">Female</MenuItem>
@@ -250,26 +293,26 @@ const Profile = () => {
                                 type='text'
                                 variant="outlined"
                                 error={!!errors?.phone}
-                                helperText={errors.phone?.message || 'Input your phone number'}
+                                helperText={errors?.phone?.message || 'Input your phone number'}
                                 {
-                                ...register('phone')
+                                ...register('phone', { pattern: { value: /^[0-9]+$/, message: 'Invalid characters' } })
                                 }
+                                disabled={disableEdit}
                             />
                         </FormControl>
                     </Stack>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
-                        justifyContent='flex-start'
-                        alignItems='center'
-                        spacing={2}
+                        justifyContent='flex-end'
                         pt={3} px={2}
                     >
                         <Button
-                            variant='contained'
+                            variant='outlined'
                             color='primary'
                             type='submit'
                             sx={{ width: { sm: '100%', md: 100 } }}
                             startIcon={<SaveIcon />}
+                            disabled={disableEdit}
                         >
                             Save
                         </Button>

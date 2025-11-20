@@ -36,8 +36,8 @@ export function Dashboard() {
                     spacing={2}
                     sx={{
                         // alignItems: 'center',
-                        ml: 6,
-                        mr: 1,
+                        ml: 2,
+                        mr: 2,
                         pb: 5,
                         mt: { xs: 8, md: 0 },
                     }}

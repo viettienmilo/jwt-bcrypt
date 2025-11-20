@@ -4,6 +4,7 @@ import { imageUploadMiddleware } from './../middlewares/uploadMiddleware.js';
 
 import fetchUserProfile from './../controllers/user/fetchUserProfile.js';
 import createUserProfile from './../controllers/user/createUserProfile.js';
+import updateUserProfile from './../controllers/user/updateUserProfile.js';
 import uploadImage from './../controllers/user/uploadImage.js';
 
 const userRouter = express.Router()
@@ -17,15 +18,23 @@ userRouter.get(
 );
 
 userRouter.post(
-    '/create-profile',
+    '/profile/create',
     express.json(),
     createUserProfile
+);
+
+userRouter.post(
+    '/profile/update',
+    express.json(),
+    authUserMiddleware,
+    updateUserProfile
 );
 
 userRouter.post(
     '/upload/profile-picture',
     authUserMiddleware,
     imageUploadMiddleware.single('avatarUrl'),  // 'avatarUrl' comes from frontend formData
-    uploadImage);
+    uploadImage
+);
 
 export default userRouter;
