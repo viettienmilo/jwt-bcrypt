@@ -13,6 +13,7 @@ const OAuth = () => {
     const params = new URLSearchParams(window.location.search);
     const accessToken = params.get('accessToken');
     const userId = params.get('userId');
+    const role = params.get('role');
     const username = params.get('username');
     const firstname = params.get('firstname');
     const lastname = params.get('lastname');
@@ -20,6 +21,8 @@ const OAuth = () => {
 
     const { mutate } = useCreateProfile();
     const setUser = useUserStore(state => state.setUser);
+    const setRole = useUserStore(state => state.setRole)
+
     const [profileCreated, setProfileCreated] = useState(false);
     const navigate = useNavigate();
 
@@ -29,6 +32,7 @@ const OAuth = () => {
         mutate({ userId, username, firstname, lastname, avatarUrl }, {
             onSuccess: (data) => {
                 setUser(data.user);
+                setRole(role);
                 setProfileCreated(true);
                 navigate('/');
             },

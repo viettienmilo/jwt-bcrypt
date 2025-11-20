@@ -1,19 +1,22 @@
 import UserProfile from './../../models/UserProfile.js';
+import { userProfileSchema } from './../../validations/userProfileValidation.js';
 
 const updateUserProfile = async (req, res) => {
     const userId = req.user.userId;
+    const { error, value } = userProfileSchema.validate(req.body);
+    if (error) return res.json({ error: error.details[0].message });
 
     const userProfile = await UserProfile.findOneAndUpdate(
         { _id: userId },
         {
-            username: req.body.username || `user${Date.now()}`,
-            studentCode: req.body.studentCode || `${crypto.randomUUID()}`,
-            firstname: req.body.firstname || '_',
-            lastname: req.body.lastname || '_',
-            birthdate: req.body.birthdate || '',
-            city: req.body.city || '',
-            gender: req.body.gender || '',
-            phone: req.body.phone || '',
+            username: value.username || `user${Date.now()}`,
+            studentCode: value.studentCode || `${crypto.randomUUID()}`,
+            firstname: value.firstname || '_',
+            lastname: value.lastname || '_',
+            birthdate: value.birthdate || '',
+            city: value.city || '',
+            gender: value.gender || '',
+            phone: value.phone || '',
         },
         { upsert: false, new: true, setDefaultsOnInsert: true }
     );

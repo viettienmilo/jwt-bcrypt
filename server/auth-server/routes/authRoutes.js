@@ -5,11 +5,11 @@ import logoutUser from '../controllers/logoutUser.js';
 import refreshAccessToken from './../controllers/refreshAccessToken.js';
 
 import passport from 'passport';
-import { generateAccessToken } from './../tokens/generateTokens.js';
 import activateUser from './../controllers/activateUser.js';
 import forgotPassword from './../controllers/forgotPassword.js';
 import resetPassword from './../controllers/resetPassword.js';
 import sendActivationLink from './../controllers/sendActivationLink.js';
+import { googleCallback, facebookCallback, githubCallback } from './../controllers/oauthCallbacks.js';
 
 const authRouter = express.Router()
 
@@ -51,7 +51,6 @@ authRouter.post('/logout', logoutUser);
 */
 authRouter.post('/refresh-token', refreshAccessToken);
 
-
 /*
     ROUTER FOR OAUTH2 AUTHENTICATION
     GOOGE, FACEBOOK, ...
@@ -60,72 +59,28 @@ authRouter.post('/refresh-token', refreshAccessToken);
 // Google
 authRouter.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 authRouter.get('/login/google/callback',
-    passport.authenticate('google', { session: false }),
-    (req, res) => {
-        const user = req.user.user;
-        const normalized = req.user.normalized;
-        const accessToken = generateAccessToken(user);
-        const refreshToken = req.user.refreshToken;
-        console.log(refreshToken)
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-            path: "/",            // important so cookie is sent to /auth/logout
-            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
-        });
-        res.redirect(`${process.env.CLIENT_URL}/auth/google/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
-    }
+    passport.authenticate('google', { session: false }), googleCallback
 );
 
 // Facebook
 authRouter.get('/login/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 authRouter.get('/login/facebook/callback',
-    passport.authenticate('facebook', { session: false }),
-    (req, res) => {
-        const user = req.user.user;
-        const normalized = req.user.normalized;
-        const accessToken = generateAccessToken(user);
-        const refreshToken = req.user.refreshToken;
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-            path: "/",            // important so cookie is sent to /auth/logout
-            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
-        });
-        res.redirect(`${process.env.CLIENT_URL}/auth/facebook/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
-    }
+    passport.authenticate('facebook', { session: false }), facebookCallback
 );
 
 // Github
 authRouter.get('/login/github', passport.authenticate('github', { scope: ['user:email'] }));
 authRouter.get('/login/github/callback',
     passport.authenticate('github', {
-        failureRedirect: `${process.env.CLIENT_URL}/user/login`,
+        // failureRedirect: `${process.env.CLIENT_URL}/user/login`,
         session: false
-    }),
-    (req, res) => {
-        const user = req.user.user;
-        const normalized = req.user.normalized;
-        const accessToken = generateAccessToken(user);
-        const refreshToken = req.user.refreshToken;
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-            path: "/",            // important so cookie is sent to /auth/logout
-            maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
-        });
-        res.redirect(`${process.env.CLIENT_URL}/auth/github/callback?accessToken=${accessToken}&userId=${user._id}&email=${encodeURIComponent(normalized.email)}&username=${encodeURIComponent(normalized.username)}&firstname=${encodeURIComponent(normalized.firstname)}&lastname=${encodeURIComponent(normalized.lastname)}&avatarUrl=${encodeURIComponent(normalized.avatarUrl)}`);
-    }
+    }), githubCallback
 );
 
 // forgot password
 authRouter.post('/forgot-password', forgotPassword);
 // reset password
 authRouter.post('/reset-password', resetPassword);
-
 // send activation link
 authRouter.post('/send-activation-link', sendActivationLink);
 
