@@ -1,15 +1,12 @@
 import { Box, Typography } from '@mui/material';
-import Container from './../components/Container.jsx';
-// import { redirect } from 'react-router'
+import Container from '../components/Container.jsx';
+import { useForm } from 'react-hook-form'
 
-// export async function loader(isAuthed) {
-//     return (!isAuthed ? redirect('/user/login') : null);
-// }
-
-const Home = () => {
+export default function Home() {
+    useForm();
 
     return (
-        <Container>
+        <Container direction="column" justifyContent="space-between">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -21,7 +18,6 @@ const Home = () => {
                 </Typography>
             </Box>
         </Container>
-    )
+    );
 }
 
-export default Home

@@ -69,7 +69,8 @@ export default function SignIn(props) {
         setRole(user.role);
         fetchUserProfileMutate({ accessToken }, {
           onSuccess: (data) => {
-            setUser(data.data.user);
+            const fetchedUser = data.data.user
+            setUser({ ...fetchedUser, email: user.email });
             navigate('/')
           },
           onError: (error) => {

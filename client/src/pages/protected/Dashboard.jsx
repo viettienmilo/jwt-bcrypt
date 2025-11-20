@@ -1,59 +1,25 @@
 import { Box, Stack } from '@mui/material'
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
-import { redirect, useLoaderData, } from 'react-router';
-// import { authAPI } from './../../api/axiosInstance.js';
+import { Outlet, redirect } from 'react-router';
 import AppNavbar from './../../components/protected/AppNavbar';
 import SideMenu from './../../components/protected/SideMenu';
 import Header from './../../components/protected/Header';
-import { fetchUserProfileService } from '../../services/userServices.js';
 
 // authorize user and redirect to dashboard page
-export async function loader() {
-    try {
-        const { accessToken } = useUserStore.getState();
-        if (!accessToken) throw redirect('/user/login');
-        useUserStore.getState().setAccessToken(accessToken);
-
-        // const { data } = await fetchUserProfileService(accessToken);
-
-        // useUserStore.getState().setUser(data.user); // update user
-        // useUIStore.getState().setShowNavbar(false); // hide navbar
-
-        // return { user: data.user };
-        return redirect('/')
-
-    } catch (error) {
-        throw redirect('/user/login');
-    }
-}
-
-export async function oauthLoader({ request }) {
-    try {
-        const url = new URL(request.url);
-        const accessToken = url.searchParams.get('accessToken');
-        if (!accessToken) throw redirect('/user/login');
-        useUserStore.getState().setAccessToken(accessToken);
-
-        // const { data } = await fetchUserProfileService(accessToken);
-
-        // useUserStore.getState().setUser(data.user);
-        // useUIStore.getState().setShowNavbar(false);
-
-        // return { user: data.user };
-        return redirect('/')
-
-    } catch (error) {
-        throw redirect('/user/login');
-    }
+export async function loader(isAuthed) {
+    if (!isAuthed) throw redirect('/user/login');
+    useUIStore.getState().setShowNavbar(false); // hide main navbar
+    useUIStore.getState().setDashboardSideMenuItem("Overview"); // set default menu item button selection
+    return;
 }
 
 export function Dashboard() {
-    const { user } = useLoaderData();
+    const user = useUserStore(state => state.user);
 
     return (
         <Box sx={{ display: 'flex' }}>
             <SideMenu user={user} />
-            <AppNavbar />
+            <AppNavbar user={user} />
 
             {/* Main content */}
             <Box
@@ -69,7 +35,7 @@ export function Dashboard() {
                 <Stack
                     spacing={2}
                     sx={{
-                        alignItems: 'center',
+                        // alignItems: 'center',
                         ml: 6,
                         mr: 1,
                         pb: 5,
@@ -78,9 +44,9 @@ export function Dashboard() {
                 >
                     <Header />
                     {/* <MainGrid /> */}
+                    <Outlet />
                 </Stack>
             </Box>
         </Box>
     );
 }
-

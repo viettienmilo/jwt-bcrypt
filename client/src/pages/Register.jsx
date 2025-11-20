@@ -23,7 +23,7 @@ export async function loader(isAuthed) {
   return (isAuthed ? redirect('/dashboard') : null);
 }
 
-export default function SignUp(props) {
+export default function Register(props) {
 
   // handle form input (react-hook-form)
   const {

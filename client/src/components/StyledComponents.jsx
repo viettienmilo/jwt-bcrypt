@@ -1,5 +1,6 @@
 import Toolbar from '@mui/material/Toolbar';
 import { styled, alpha } from '@mui/material/styles';
+import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -17,4 +18,18 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     padding: '8px 12px',
 }));
 
-export default StyledToolbar;
+
+const drawerWidth = 240;
+
+const StyledDrawer = styled(MuiDrawer)({
+    width: drawerWidth,
+    flexShrink: 0,
+    boxSizing: 'border-box',
+    mt: 10,
+    [`& .${drawerClasses.paper}`]: {
+        width: drawerWidth,
+        boxSizing: 'border-box',
+    },
+});
+
+export { StyledToolbar, StyledDrawer };

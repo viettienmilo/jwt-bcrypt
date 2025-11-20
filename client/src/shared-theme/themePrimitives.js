@@ -160,7 +160,7 @@ export const getDesignTokens = (mode) => {
       },
     },
     typography: {
-      fontFamily: 'Poppins, sans-serif',
+      fontFamily: 'Roboto, sans-serif',
       h1: {
         fontSize: defaultTheme.typography.pxToRem(48),
         fontWeight: 600,
@@ -318,7 +318,7 @@ export const colorSchemes = {
 };
 
 export const typography = {
-  fontFamily: 'Poppins, sans-serif',
+  fontFamily: 'Roboto, sans-serif',
   h1: {
     fontSize: defaultTheme.typography.pxToRem(48),
     fontWeight: 600,

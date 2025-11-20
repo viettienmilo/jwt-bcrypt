@@ -38,8 +38,8 @@ const EditableAvatar = ({ user }) => {
                 display: 'inline-block',
                 position: 'relative',
                 flexDirection: 'column',
-                width: 150,
-                height: 150,
+                width: 100,
+                height: 100,
                 gap: 2,
             }}
             onMouseEnter={() => setIsHovered(true)}
@@ -47,12 +47,12 @@ const EditableAvatar = ({ user }) => {
         >
             <Avatar
                 sx={{
-                    width: 150,
-                    height: 150,
+                    width: '100%',
+                    height: '100%',
                     alignSelf: 'center',
                 }}
-                src={user.avatarUrl || undefined}
-                alt={user.username}
+                src={user?.avatarUrl || undefined}
+                alt={user?.username}
             />
 
             {/* Spinner overlay */}
@@ -80,14 +80,14 @@ const EditableAvatar = ({ user }) => {
                 <Box
                     sx={{
                         position: 'absolute',
-                        bottom: 8,
-                        right: 8,
+                        bottom: 0,
+                        right: 0,
                     }}
                 >
                     <IconButton aria-label="edit" size='small'
                         onClick={() => inputRef.current.click()}
                     >
-                        <EditIcon />
+                        <EditIcon size='small' />
                     </IconButton>
                 </Box>
             )}

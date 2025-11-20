@@ -108,7 +108,7 @@ const UserMenu = () => {
                 }
                 <MenuItem onClick={() => {
                     closeMenu();
-                    navigate('/user/profile')
+                    navigate('/user/dashboard/profile')
                 }}>
                     <ListItemIcon>
                         <SettingsIcon sx={{ fontSize: 22, color: green[500] }} />

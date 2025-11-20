@@ -9,7 +9,7 @@ export default function PageError() {
     const error = useRouteError();
 
     return (
-        <Container>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Box
                 component="img"
                 src={pageError}
@@ -19,7 +19,6 @@ export default function PageError() {
                     mx: "auto",
                     mt: 16,
                     maxWidth: "100%",
-                    height: "auto",
                 }}
             />
             <Box
@@ -54,6 +53,6 @@ export default function PageError() {
                     BACK TO HOME
                 </Button>
             </Box>
-        </Container>
+        </Box>
     );
 }

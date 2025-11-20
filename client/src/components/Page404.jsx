@@ -7,7 +7,7 @@ import Container from './Container.jsx';
 export default function Page404() {
     const theme = useTheme();
     return (
-        <Container>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Box
                 component="img"
                 src={dark404}
@@ -17,7 +17,6 @@ export default function Page404() {
                     mx: "auto",
                     mt: 16,
                     maxWidth: "100%",
-                    height: "auto",
                 }}
             />
 
@@ -47,6 +46,6 @@ export default function Page404() {
                     BACK TO HOME
                 </Button>
             </Box>
-        </Container>
+        </Box>
     );
 }

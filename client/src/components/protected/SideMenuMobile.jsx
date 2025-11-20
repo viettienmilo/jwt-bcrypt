@@ -1,5 +1,4 @@
 import Avatar from '@mui/material/Avatar';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
@@ -10,7 +9,7 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 
-function SideMenuMobile({ open, toggleDrawer }) {
+function SideMenuMobile({ open, toggleDrawer, user }) {
   return (
     <Drawer
       anchor="right"
@@ -37,12 +36,14 @@ function SideMenuMobile({ open, toggleDrawer }) {
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
+              alt={user?.username}
+              src={user?.avatarUrl || undefined}
               sx={{ width: 24, height: 24 }}
-            />
+            >
+              {user?.username?.[0]?.toUpperCase() || "X"}
+            </Avatar>
             <Typography component="p" variant="h6">
-              Riley Carter
+              {user?.username}
             </Typography>
           </Stack>
           <MenuButton showBadge>
@@ -54,7 +55,6 @@ function SideMenuMobile({ open, toggleDrawer }) {
           <MenuContent />
           <Divider />
         </Stack>
-        {/* <CardAlert /> */}
         <Stack sx={{ p: 2 }}>
           <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
             Logout
@@ -64,10 +64,5 @@ function SideMenuMobile({ open, toggleDrawer }) {
     </Drawer>
   );
 }
-
-SideMenuMobile.propTypes = {
-  open: PropTypes.bool,
-  toggleDrawer: PropTypes.func.isRequired,
-};
 
 export default SideMenuMobile;

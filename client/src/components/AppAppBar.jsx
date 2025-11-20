@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from './../shared-theme/ColorModeIconDropdown.jsx';
 import Sitemark from './SitemarkIcon';
-import StyledToolbar from './StyledToolbar';
+import { StyledToolbar } from './StyledComponents.jsx';
 import UserMenu from './UserMenu';
 
 import { useNavigate } from 'react-router';
@@ -43,15 +43,14 @@ export default function AppAppBar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <Sitemark />
+          <Sitemark />
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', px: 0 }}>
+
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">Features</Button>
-              <Button variant="text" color="info" size="small">Testimonials</Button>
-              <Button variant="text" color="info" size="small">Highlights</Button>
-              <Button variant="text" color="info" size="small">Pricing</Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>FAQ</Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>Blog</Button>
+              <Button variant="text" color="info" >MIS</Button>
+              <Button variant="text" color="info" >Database</Button>
+              <Button variant="text" color="info" sx={{ minWidth: 0 }}>Blog</Button>
+              <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
             </Box>
           </Box>
 
@@ -70,9 +69,6 @@ export default function AppAppBar() {
               onClick={() => navigate('user/login')}>
               Log in
             </Button>}
-            {/* {user && <Button color="primary" variant="contained" size="small" >
-              Log out
-            </Button>} */}
             {user && <UserMenu />}
             <ColorModeIconDropdown />
           </Box>
@@ -99,28 +95,30 @@ export default function AppAppBar() {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  <IconButton onClick={toggleDrawer(false)}>
+
+                  <IconButton onClick={toggleDrawer(false)} size='small'>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
-                <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Register
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
-                    Log in
-                  </Button>
-                </MenuItem>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                  {user && <UserMenu />}
+                  <Divider sx={{ my: 1, width: '100%' }} />
+                  <MenuItem sx={{ minHeight: 'auto' }}>MIS</MenuItem>
+                  <MenuItem sx={{ minHeight: 'auto' }}>Database</MenuItem>
+                  <MenuItem sx={{ minHeight: 'auto' }}>Blog</MenuItem>
+                  <MenuItem sx={{ minHeight: 'auto' }}>FAQ</MenuItem>
+                  {!user && <MenuItem>
+                    <Divider sx={{ my: 3 }} />
+                    <Button color="primary" variant="contained" fullWidth>
+                      Register
+                    </Button>
+                  </MenuItem>}
+                  {!user && <MenuItem>
+                    <Button color="primary" variant="outlined" fullWidth>
+                      Log in
+                    </Button>
+                  </MenuItem>}
+                </Box>
               </Box>
             </Drawer>
           </Box>

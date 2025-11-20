@@ -26,4 +26,6 @@ export const useUserStore = create(
 export const useUIStore = create((set) => ({
     showNavbar: true,
     setShowNavbar: (value) => set({ showNavbar: value }),
+    dashboardSideMenuItem: null,
+    setDashboardSideMenuItem: (item) => set({ dashboardSideMenuItem: item }),
 }));

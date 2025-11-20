@@ -3,16 +3,20 @@ import mainDb from './../configs/mainDb.js';
 
 const userProfileSchema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    username: String,
-    firstname: String,
-    lastname: String,
+    studentCode: { type: String, require: true },
+    username: { type: String, require: true },
+    firstname: { type: String, require: true },
+    lastname: { type: String, require: true },
+    birthdate: { type: Date, require: true },
+    gender: { type: String, enum: ["Male", "Female"] },
+    phone: String,
+    city: String,
     avatarUrl: String,
-    desc: { type: String },
-    address: { type: String },
+    status: { type: String, enum: ["active", "inactive"], default: "active" }
 }, { timestamps: true });
 
 userProfileSchema.virtual('fullName').get(function () {
-    return `${this.firstname} ${this.lastname}`;
+    return `${this.lastname} ${this.firstname}`;
 });
 
 const UserProfile = mainDb.model('UserProfile', userProfileSchema);

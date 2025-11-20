@@ -1,18 +1,21 @@
-import { useState } from 'react';
-import { styled } from '@mui/material/styles';
 import Divider, { dividerClasses } from '@mui/material/Divider';
-import Menu from '@mui/material/Menu';
+import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import MuiMenuItem from '@mui/material/MenuItem';
 import { paperClasses } from '@mui/material/Paper';
 import { listClasses } from '@mui/material/List';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
+import { Typography, Menu, ListItemText } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import { styled } from '@mui/material/styles';
+
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
 import MenuButton from './MenuButton';
 import { useUserStore } from './../../store/useUserStore.js';
-import { useNavigate } from 'react-router';
 import { logoutService } from '../../services/authServices.js';
+
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
@@ -44,7 +47,7 @@ export default function OptionsMenu() {
       <MenuButton
         aria-label="Open menu"
         onClick={handleClick}
-        sx={{ borderColor: 'transparent' }}
+        sx={{ borderColor: 'transparent', width: 32, height: 32 }}
       >
         <MoreVertRoundedIcon />
       </MenuButton>
@@ -64,15 +67,18 @@ export default function OptionsMenu() {
             padding: 0,
           },
           [`& .${dividerClasses.root}`]: {
-            margin: '4px -4px',
+            margin: '2px -4px',
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <Divider />
-        <MenuItem onClick={() => navigate('/')}>Main page</MenuItem>
-        {/* <MenuItem onClick={handleClose}>Settings</MenuItem> */}
+
+        <MenuItem onClick={() => navigate('/')} sx={{ gap: 1 }}>
+          <HomeIcon fontSize='small' />
+          <Typography fontSize='small'>
+            Home page
+          </Typography>
+        </MenuItem>
+
         <Divider />
         <MenuItem
           onClick={handleLogout}
@@ -81,12 +87,13 @@ export default function OptionsMenu() {
               ml: 'auto',
               minWidth: 0,
             },
+            gap: 1
           }}
         >
-          <ListItemText>Logout</ListItemText>
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>
+          <ListItemText sx={{ fontSize: 'small' }} disableTypography>Logout</ListItemText>
         </MenuItem>
       </Menu>
     </>
