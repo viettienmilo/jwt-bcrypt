@@ -1,60 +1,57 @@
 import { Box, Typography } from "@mui/material";
 import Container from './../components/Container.jsx';
 import Card from './../components/Card.jsx';
-import useCreateProfile from './../hooks/user/useCreateProfile.js';
 import { useUserStore } from './../store/useUserStore.js';
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
+import useFetchUserProfile from './../hooks/user/useFetchUserProfile.js';
+import { useSnackbar } from "notistack";
 
 
 const OAuth = () => {
+    const [params] = useSearchParams();
+    const navigate = useNavigate();
 
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('accessToken');
-    const userId = params.get('userId');
-    const role = params.get('role');
-    const username = params.get('username');
-    const firstname = params.get('firstname');
-    const lastname = params.get('lastname');
-    const avatarUrl = params.get('avatarUrl');
-
-    const { mutate } = useCreateProfile();
+    const setAccessToken = useUserStore(state => state.setAccessToken);
     const setUser = useUserStore(state => state.setUser);
     const setRole = useUserStore(state => state.setRole)
 
-    const [profileCreated, setProfileCreated] = useState(false);
-    const navigate = useNavigate();
-
+    const { data: userProfile, refetch: fetchUserProfile } = useFetchUserProfile(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        if (!userId || profileCreated) return;
-        mutate({ userId, username, firstname, lastname, avatarUrl }, {
-            onSuccess: (data) => {
-                setUser(data.user);
-                setRole(role);
-                setProfileCreated(true);
+        const accessToken = params.get('accessToken');
+        if (!accessToken) {
+            navigate("/user/login");
+            return;
+        }
+
+        // save accessToken
+        setAccessToken(accessToken);
+
+        // fetch and save user profile, email and role
+        fetchUserProfile()
+            .then(({ data }) => {
+                const fetchedUser = data.data.user;
+                setUser(fetchedUser);
+                setRole(fetchedUser.role);
+                enqueueSnackbar("User logged in successfully", { variant: 'success' });
                 navigate('/');
-            },
-            onError: (error) => {
-                console.log(error);
-                navigate('/user/login');
-            }
-        })
-    }, [userId, profileCreated])
+            })
+            .catch((error) => {
+                console.log("Failed to fetch profile:", error);
+                enqueueSnackbar("Failed to load user profile", { variant: "error" });
+            });
+    }, [])
 
     return (
         <Container direction="column" justifyContent="space-between">
             <Card variant="outlined">
-                {!userId ?
-                    <Box sx={{ display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography variant="h3" color="secondary">Account is invalid</Typography>
-                    </Box>
-                    :
-                    <Box sx={{ display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography variant="h4" color="secondary">Sign in successfully. Redirecting…</Typography>
-                    </Box>
-                }
+
+                <Box sx={{ display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h4" color="secondary">Sign in successfully. Redirecting…</Typography>
+                </Box>
+
             </Card>
         </Container >
     )

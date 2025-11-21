@@ -40,7 +40,7 @@ export default function SignIn(props) {
 
   //const { register, handleSubmit, formState: { errors, } } = useForm(); // react-hook-form
   const { mutate: loginUserMutate, isPending } = useLoginUser();   // tanstack-query
-  const { mutate: fetchUserProfileMutate } = useFetchUserProfile();
+  const { data: userProfile, refetch: fetchUserProfile } = useFetchUserProfile(false); // disabled by default
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -63,24 +63,28 @@ export default function SignIn(props) {
   const onFormSubmit = (formData) => {
     loginUserMutate(formData, {
       onSuccess: (response) => {
-        enqueueSnackbar("User logged in successfully", { variant: 'success' });
+
         const { accessToken, user } = response.data;
+
+        // save accessToken and user role
         setAccessToken(accessToken);
         setRole(user.role);
-        fetchUserProfileMutate({ accessToken }, {
-          onSuccess: (data) => {
-            const fetchedUser = data.data.user
+
+        // fetch and save user profile
+        fetchUserProfile()
+          .then(({ data }) => {
+            const fetchedUser = data.data.user;
             setUser({ ...fetchedUser, email: user.email });
-            navigate('/')
-          },
-          onError: (error) => {
-            console.log(error)
-          }
-        })
+            enqueueSnackbar("User logged in successfully", { variant: 'success' });
+            navigate('/');
+          })
+          .catch((error) => {
+            console.log("Failed to fetch profile:", error);
+            enqueueSnackbar("Failed to load user profile", { variant: "error" });
+          });
       },
       onError: (error) => {
         const errorCode = error.response?.data?.error;
-        console.log(errorCode)
         switch (errorCode) {
           case "ACCOUNT_NOT_VERIFIED":
             const { email } = error.response?.data?.details;

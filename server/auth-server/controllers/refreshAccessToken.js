@@ -34,8 +34,8 @@ const refreshAccessToken = async (req, res) => {
         // Re-set the cookie with proper options
         res.cookie("refreshToken", newRefreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: process.env.COOKIE_SECURE === "production", // localhost must be false
+            sameSite: process.env.COOKIE_SAME_SITE === "production" ? "strict" : "lax",
             path: "/",
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         });

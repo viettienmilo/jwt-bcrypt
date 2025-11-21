@@ -1,6 +1,6 @@
 import { drawerClasses } from '@mui/material/Drawer';
 import Avatar from '@mui/material/Avatar';
-import { StyledDrawer } from './../StyledComponents.jsx';
+import { StyledDrawer } from '../../StyledComponents.jsx';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';

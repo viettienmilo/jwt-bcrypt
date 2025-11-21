@@ -5,7 +5,7 @@ export default function SitemarkIcon() {
   return (
     <RouterLink to="/" style={{ display: 'inline-flex' }}>
       <SvgIcon
-        sx={{ height: 21, width: 100, mr: 2 }}>
+        sx={{ height: 21, width: 100, mr: 2 }} >
         <svg width="239" height="74" viewBox="0 0 239 74" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#filter0_d_203_9)">
             <circle cx="94.5004" cy="12.4999" r="11" fill="#E72320" />

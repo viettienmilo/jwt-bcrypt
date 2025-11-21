@@ -49,8 +49,8 @@ const loginUser = async (req, res) => {
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: process.env.COOKIE_SECURE === "production", // localhost must be false
+            sameSite: process.env.COOKIE_SAME_SITE === "production" ? "strict" : "lax",
             path: "/",            // important so cookie is sent to /auth/logout
             maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
         });

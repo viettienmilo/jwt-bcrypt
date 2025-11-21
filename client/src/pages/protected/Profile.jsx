@@ -1,7 +1,7 @@
 import { Button, Divider, Typography, Stack, TextField, FormControl, FormLabel, MenuItem } from '@mui/material';
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
 import { redirect } from 'react-router';
-import EditableAvatar from './../../components/protected/EditableAvatar.jsx';
+import EditableAvatar from './../../components/protected/user/EditableAvatar.jsx';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';

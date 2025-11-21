@@ -41,19 +41,16 @@ export default function AppAppBar() {
         mt: 'calc(var(--template-frame-height, 0px) + 28px)',
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <StyledToolbar variant="dense" disableGutters>
           <Sitemark />
           <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', px: 0 }}>
-
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" >MIS</Button>
-              <Button variant="text" color="info" >Database</Button>
-              <Button variant="text" color="info" sx={{ minWidth: 0 }}>Blog</Button>
-              <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+              <Button variant="text" color="info" sx={{ flex: 1 }}>About</Button>
+              <Button variant="text" color="info" sx={{ flex: 1 }}>Features</Button>
+              <Button variant="text" color="info" sx={{ flex: 1 }}>Blog</Button>
             </Box>
           </Box>
-
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -95,18 +92,16 @@ export default function AppAppBar() {
                     justifyContent: 'flex-end',
                   }}
                 >
-
-                  <IconButton onClick={toggleDrawer(false)} size='small'>
+                  <IconButton onClick={toggleDrawer(false)} sx={{ width: 24, height: 24 }}>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                   {user && <UserMenu />}
-                  <Divider sx={{ my: 1, width: '100%' }} />
-                  <MenuItem sx={{ minHeight: 'auto' }}>MIS</MenuItem>
-                  <MenuItem sx={{ minHeight: 'auto' }}>Database</MenuItem>
+                  <Divider sx={{ my: 2, width: '100%' }} />
+                  <MenuItem sx={{ minHeight: 'auto' }}>About</MenuItem>
+                  <MenuItem sx={{ minHeight: 'auto' }}>Features</MenuItem>
                   <MenuItem sx={{ minHeight: 'auto' }}>Blog</MenuItem>
-                  <MenuItem sx={{ minHeight: 'auto' }}>FAQ</MenuItem>
                   {!user && <MenuItem>
                     <Divider sx={{ my: 3 }} />
                     <Button color="primary" variant="contained" fullWidth>

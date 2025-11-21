@@ -19,8 +19,8 @@ const logoutUser = async (req, res) => {
                 'refreshToken', {
                 httpOnly: true,
                 path: '/',
-                secure: process.env.NODE_ENV === "production", // localhost must be false
-                sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+                secure: process.env.COOKIE_SECURE === "production", // localhost must be false
+                sameSite: process.env.COOKIE_SAME_SITE === "production" ? "strict" : "lax",
             });
             return ErrorResponse(res, ERROR.USER_NOT_FOUND, 401);
         }
@@ -35,8 +35,8 @@ const logoutUser = async (req, res) => {
             'refreshToken', {
             httpOnly: true,
             path: '/',
-            secure: process.env.NODE_ENV === "production", // localhost must be false
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: process.env.COOKIE_SECURE === "production", // localhost must be false
+            sameSite: process.env.COOKIE_SAME_SITE === "production" ? "strict" : "lax",
         });
         return SuccessResponse(res, null, "LOGOUT_SUCCESS", 200);
 

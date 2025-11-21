@@ -10,6 +10,8 @@ import forgotPassword from './../controllers/forgotPassword.js';
 import resetPassword from './../controllers/resetPassword.js';
 import sendActivationLink from './../controllers/sendActivationLink.js';
 import { googleCallback, facebookCallback, githubCallback } from './../controllers/oauthCallbacks.js';
+import fetchUser from './../controllers/fetchUser.js';
+import authMiddleware from './../middlewares/authMiddleware.js';
 
 const authRouter = express.Router()
 
@@ -83,5 +85,8 @@ authRouter.post('/forgot-password', forgotPassword);
 authRouter.post('/reset-password', resetPassword);
 // send activation link
 authRouter.post('/send-activation-link', sendActivationLink);
+
+// get auth user
+authRouter.get('/users/:userId', authMiddleware, fetchUser);
 
 export default authRouter;

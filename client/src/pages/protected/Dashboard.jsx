@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material'
 import { useUserStore, useUIStore } from './../../store/useUserStore.js';
 import { Outlet, redirect } from 'react-router';
-import AppNavbar from './../../components/protected/AppNavbar';
-import SideMenu from './../../components/protected/SideMenu';
-import Header from './../../components/protected/Header';
+import AppNavbar from './../../components/protected/user/AppNavbar';
+import SideMenu from './../../components/protected/user/SideMenu';
+import Header from './../../components/protected/user/Header';
 
 // authorize user and redirect to dashboard page
 export async function loader(isAuthed) {

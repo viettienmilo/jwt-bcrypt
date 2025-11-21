@@ -28,16 +28,9 @@ export async function updateUserProfileService(data) {
     }
 }
 
-export async function fetchUserProfileService(accessToken) {
+export async function fetchUserProfileService() {
     try {
-        const response = await userAPI.get(
-            USER.PROFILE,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            }
-        );
+        const response = await userAPI.get(USER.PROFILE);
         return response.data;
 
     } catch (error) {
@@ -67,3 +60,9 @@ export async function uploadProfilePitureService(data) {
         throw (error.response?.data || error);
     }
 }
+
+// {
+//     headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//     }
+// }

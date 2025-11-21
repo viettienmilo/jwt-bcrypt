@@ -10,7 +10,7 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import FitbitRoundedIcon from '@mui/icons-material/FitbitRounded';
-import { useUIStore } from './../../store/useUserStore.js';
+import { useUIStore } from '../../../store/useUserStore.js';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 

@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import 'dotenv/config'
 import userRouter from './routes/userRoutes.js';
+import internalRouter from './routes/internalRoutes.js';
 import connectToCloudinary from './configs/cloudinary.js';
 
 connectToCloudinary();
@@ -29,6 +30,7 @@ server.get('/', (req, res) => {
 })
 
 server.use('/api/user', userRouter);
+server.use('/internal/user', internalRouter);
 
 server.listen(process.env.MAIN_PORT, () => {
     console.log(`MAIN SERVER IS RUNNING ON PORT ${process.env.MAIN_PORT}`)

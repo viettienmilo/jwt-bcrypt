@@ -1,8 +1,8 @@
 import { Box, Avatar, IconButton, CircularProgress } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import { useRef, useState } from 'react';
-import useImageUpload from './../../hooks/user/useImageUpload.js';
-import { useUserStore } from '../../store/useUserStore.js';
+import useImageUpload from '../../../hooks/user/useImageUpload.js';
+import { useUserStore } from '../../../store/useUserStore.js';
 import { useSnackbar } from 'notistack';
 
 const EditableAvatar = ({ user }) => {

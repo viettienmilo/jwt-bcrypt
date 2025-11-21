@@ -12,10 +12,11 @@ const Layout = () => {
     const location = useLocation();
 
     const hideNavbarPaths = [
-        'user/dashboard',
+        'user',
         'auth/google/callback',
         'auth/facebook/callback',
         'auth/github/callback',
+        'admin',
     ];
 
     // hide Navbar when enter dashboard and restore it when going back
@@ -27,7 +28,7 @@ const Layout = () => {
 
     return (
         showNavbar ?
-            <Container maxWidth='lg'>
+            <Container maxWidth='xl'>
                 <AppAppBar />
                 <Box>
                     <Outlet />

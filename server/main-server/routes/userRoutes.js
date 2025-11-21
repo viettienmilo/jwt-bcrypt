@@ -11,9 +11,8 @@ const userRouter = express.Router()
 
 userRouter.get(
     '/profile',
-    express.json(),
     authUserMiddleware,
-    authRoleMiddleware("STUDENT", "ADMIN"),
+    authRoleMiddleware("STUDENT", "TEACHER", "ADMIN"),
     fetchUserProfile
 );
 

@@ -47,8 +47,6 @@ server.get('/', (req, res) => {
 
 // auth routes for handle register/login/logout and refresh access token
 server.use('/api/auth', authRouter)
-// user routes for handle users
-// server.use('/api/user', userRouter)
 
 // global error handler
 server.use(errorHandlerMiddleware);

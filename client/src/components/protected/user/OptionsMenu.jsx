@@ -13,8 +13,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import MenuButton from './MenuButton';
-import { useUserStore } from './../../store/useUserStore.js';
-import { logoutService } from '../../services/authServices.js';
+import { useUserStore } from '../../../store/useUserStore.js';
+import { logoutService } from '../../../services/authServices.js';
 
 
 const MenuItem = styled(MuiMenuItem)({

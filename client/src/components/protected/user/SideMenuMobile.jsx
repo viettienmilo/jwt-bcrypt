@@ -8,8 +8,8 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
-import { logoutService } from './../../services/authServices.js';
-import { useUserStore } from '../../store/useUserStore.js';
+import { logoutService } from '../../../services/authServices.js';
+import { useUserStore } from '../../../store/useUserStore.js';
 import { useNavigate } from 'react-router';
 
 function SideMenuMobile({ open, toggleDrawer, user }) {

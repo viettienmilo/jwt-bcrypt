@@ -11,10 +11,6 @@ export default function normalizeOAuthUser(provider, profile) {
         case 'facebook':
             return {
                 email: profile.emails?.[0]?.value,
-                // username: `${profile.first_name}${profile.last_name}` || `user${Date.now()}`,
-                // firstname: profile.first_name || '',
-                // lastname: profile.last_name || '',
-                // avatarUrl: profile.picture?.data?.url || ''
                 username: profile.displayName || `user${Date.now()}`,
                 firstname: profile.first_name || '',
                 lastname: profile.last_name || '',

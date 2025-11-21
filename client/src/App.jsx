@@ -10,6 +10,7 @@ import Overview, { loader as overviewLoader } from './pages/protected/Overview.j
 import Profile, { loader as profileLoader } from './pages/protected/Profile.jsx';
 import Page404 from './components/Page404.jsx';
 import PageError from './components/PageError.jsx';
+import AdminLayout from './layouts/protected/AdminLayout.jsx';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -24,13 +25,17 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
     <Route path='user/activate' element={<Activate />} />
     <Route path='user/reset-password' element={<ResetPassword />} />
     <Route path='user/login' element={<SignIn />} loader={() => signInLoader(requireAuth())} />
-    <Route path='auth/google/callback' element={<OAuth />} />
+    <Route path='auth/success' element={<OAuth />} />
     <Route path='auth/facebook/callback' element={<OAuth />} />
     <Route path='auth/github/callback' element={<OAuth />} />
     <Route path='user/dashboard' element={<Dashboard />} loader={() => dashboardLoader(requireAuth())}>
       <Route index element={<Overview />} loader={() => overviewLoader(requireAuth())} />
       <Route path='profile' element={<Profile />} loader={() => profileLoader(requireAuth())} />
       <Route path='*' element={<Page404 />} />
+    </Route>
+    <Route path='admin' element={<AdminLayout />} errorElement={<PageError />} HydrateFallback={<></>}>
+
+
     </Route>
     <Route path='*' element={<Page404 />} />
   </Route>

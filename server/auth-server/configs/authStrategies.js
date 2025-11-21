@@ -77,8 +77,6 @@ function passportConfig(passport) {
         },
             async (accessToken, refreshToken, profile, done) => {
                 await handleOAuthCallback(profile, 'github', done);
-                // console.log("PROFILE:", profile);
-                // console.log("EMAILS:", profile.emails);
             }
         )
     )
