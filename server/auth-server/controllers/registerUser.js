@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
         if (error)
             return ErrorResponse(res, ERROR.VALIDATION_ERROR, 400, error.details[0].message);
 
-        const { username, email, password } = value;
+        const { email, password } = value;
         const user = await AuthUser.findOne({ email })
         if (user)
             return ErrorResponse(res, ERROR.DUPLICATE_EMAIL, 409);
@@ -40,7 +40,6 @@ const registerUser = async (req, res) => {
                 user: {
                     userId: newUser._id,
                     email: newUser.email,
-                    username: username,
                     role: newUser.role,
                     oauth: newUser.oauth
                 }

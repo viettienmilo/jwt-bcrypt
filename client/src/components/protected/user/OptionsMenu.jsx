@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import MenuButton from './MenuButton';
+import MenuButton from '../MenuButton.jsx';
 import { useUserStore } from '../../../store/useUserStore.js';
 import { logoutService } from '../../../services/authServices.js';
 

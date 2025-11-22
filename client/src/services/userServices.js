@@ -60,9 +60,3 @@ export async function uploadProfilePitureService(data) {
         throw (error.response?.data || error);
     }
 }
-
-// {
-//     headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//     }
-// }

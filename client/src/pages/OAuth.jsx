@@ -35,7 +35,6 @@ const OAuth = () => {
                 const fetchedUser = data.data.user;
                 setUser(fetchedUser);
                 setRole(fetchedUser.role);
-                enqueueSnackbar("User logged in successfully", { variant: 'success' });
                 navigate('/');
             })
             .catch((error) => {

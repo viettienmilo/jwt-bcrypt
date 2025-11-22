@@ -104,12 +104,14 @@ export default function AppAppBar() {
                   <MenuItem sx={{ minHeight: 'auto' }}>Blog</MenuItem>
                   {!user && <MenuItem>
                     <Divider sx={{ my: 3 }} />
-                    <Button color="primary" variant="contained" fullWidth>
+                    <Button color="primary" variant="contained" fullWidth
+                      onClick={() => navigate('user/register')}>
                       Register
                     </Button>
                   </MenuItem>}
                   {!user && <MenuItem>
-                    <Button color="primary" variant="outlined" fullWidth>
+                    <Button color="primary" variant="outlined" fullWidth
+                      onClick={() => navigate('user/login')}>
                       Log in
                     </Button>
                   </MenuItem>}

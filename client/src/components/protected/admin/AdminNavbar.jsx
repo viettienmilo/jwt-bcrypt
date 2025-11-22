@@ -9,9 +9,11 @@ import Typography from '@mui/material/Typography';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 
-import SideMenuMobile from './SideMenuMobile';
-import MenuButton from '../MenuButton';
-import ColorModeIconDropdown from '../../../shared-theme/ColorModeIconDropdown'
+import AdminSideMenuMobile from './AdminSideMenuMobile.jsx';
+import MenuButton from './../MenuButton.jsx';
+import ColorModeIconDropdown from './../../../shared-theme/ColorModeIconDropdown.jsx';
+import { useUserStore } from '../../../store/useUserStore.js';
+
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -29,8 +31,9 @@ const Toolbar = styled(MuiToolbar)({
   },
 });
 
-export default function AppNavbar({ user }) {
+export default function AdminNavbar({ user }) {
   const [open, setOpen] = useState(false);
+  const role = useUserStore(state => state.role);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -66,7 +69,7 @@ export default function AppNavbar({ user }) {
           >
             <CustomIcon />
             <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
+              {role === 'ADMIN' ? "Panel" : "Dashboard"}
             </Typography>
           </Stack>
           <ColorModeIconDropdown />
@@ -74,7 +77,7 @@ export default function AppNavbar({ user }) {
             <MenuRoundedIcon />
           </MenuButton>
           {/* side menu when click on drawer */}
-          <SideMenuMobile open={open} toggleDrawer={toggleDrawer} user={user} />
+          <AdminSideMenuMobile open={open} toggleDrawer={toggleDrawer} user={user} />
         </Stack>
       </Toolbar>
     </AppBar>

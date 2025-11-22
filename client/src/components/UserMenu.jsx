@@ -15,7 +15,7 @@ import { orange, green, deepPurple } from '@mui/material/colors';
 import { useState } from "react"
 import { useUserStore } from "../store/useUserStore"
 import { useNavigate } from "react-router"
-import MenuButton from "./protected/user/MenuButton.jsx";
+import MenuButton from "./protected/MenuButton.jsx";
 import { logoutService } from './../services/authServices.js';
 
 const UserMenu = () => {
@@ -98,7 +98,7 @@ const UserMenu = () => {
                 {
                     role === 'ADMIN' && <MenuItem onClick={() => {
                         closeMenu();
-                        navigate('/admin')
+                        navigate('/admin');
                     }}>
                         <ListItemIcon>
                             <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />

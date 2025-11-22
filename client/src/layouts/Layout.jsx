@@ -2,32 +2,17 @@ import { Outlet } from "react-router"
 import AppAppBar from './../components/AppAppBar.jsx';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { useUIStore } from "../store/useUserStore.js";
 import { useLocation } from "react-router";
-import { useEffect } from "react";
+
 
 const Layout = () => {
-    const showNavbar = useUIStore(state => state.showNavbar);
-    const setShowNavbar = useUIStore(state => state.setShowNavbar);
+
     const location = useLocation();
-
-    const hideNavbarPaths = [
-        'user',
-        'auth/google/callback',
-        'auth/facebook/callback',
-        'auth/github/callback',
-        'admin',
-    ];
-
-    // hide Navbar when enter dashboard and restore it when going back
-    // useEffect helps restore Navbar when user uses Back button of the browser
-    useEffect(() => {
-        const shouldHide = hideNavbarPaths.some(path => location.pathname.includes(path));
-        setShowNavbar(!shouldHide);
-    }, [location.pathname])
+    const isProtectdPath = location.pathname.includes("dashboard") ||
+        location.pathname.includes("admin")
 
     return (
-        showNavbar ?
+        !isProtectdPath ?
             <Container maxWidth='xl'>
                 <AppAppBar />
                 <Box>

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs, { breadcrumbsClasses } from '@mui/material/Breadcrumbs';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
-import { useUIStore } from '../../../store/useUserStore.js';
+import { useUIStore, useUserStore } from '../../store/useUserStore.js';
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
@@ -17,13 +17,14 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
 
 export default function NavbarBreadcrumbs() {
   const dashboardSideMenuItem = useUIStore(state => state.dashboardSideMenuItem);
+  const role = useUserStore(state => state.role);
 
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
-      <Typography variant="body1">Dashboard</Typography>
+      <Typography variant="body1">{role === "ADMIN" ? "Panel" : "Dashboard"}</Typography>
       <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
         {dashboardSideMenuItem}
       </Typography>

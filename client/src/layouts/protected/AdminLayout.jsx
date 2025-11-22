@@ -1,94 +1,49 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import { Outlet } from 'react-router';
+import { Box, Stack } from '@mui/material'
+import { useUserStore, useUIStore } from './../../store/useUserStore.js';
+import { Outlet, redirect } from 'react-router';
 
+import AdminSideMenu from './../../components/protected/admin/AdminSideMenu.jsx';
 import AdminHeader from './../../components/protected/admin/AdminHeader.jsx';
-// import AdminSidebar from './../../components/protected/admin/AdminSidebar.jsx';
+import AdminNavbar from './../../components/protected/admin/AdminNavbar.jsx';
 
+// export async function loader(isAuthed) {
+//   if (!isAuthed) throw redirect('/user/login');
+//   useUIStore.getState().setShowNavbar(false); // hide main navbar
+//   useUIStore.getState().setDashboardSideMenuItem("Student"); // set default menu item button selection
+//   return;
+// }
 
 export default function AdminLayout() {
-  // const theme = useTheme();
-
-  // const [isDesktopNavigationExpanded, setIsDesktopNavigationExpanded] =
-  //   React.useState(true);
-  // const [isMobileNavigationExpanded, setIsMobileNavigationExpanded] =
-  //   React.useState(false);
-
-  // const isOverMdViewport = useMediaQuery(theme.breakpoints.up('md'));
-
-  // const isNavigationExpanded = isOverMdViewport
-  //   ? isDesktopNavigationExpanded
-  //   : isMobileNavigationExpanded;
-
-  // const setIsNavigationExpanded = React.useCallback(
-  //   (newExpanded) => {
-  //     if (isOverMdViewport) {
-  //       setIsDesktopNavigationExpanded(newExpanded);
-  //     } else {
-  //       setIsMobileNavigationExpanded(newExpanded);
-  //     }
-  //   },
-  //   [
-  //     isOverMdViewport,
-  //     setIsDesktopNavigationExpanded,
-  //     setIsMobileNavigationExpanded,
-  //   ],
-  // );
-
-  // const handleToggleHeaderMenu = React.useCallback(
-  //   (isExpanded) => {
-  //     setIsNavigationExpanded(isExpanded);
-  //   },
-  //   [setIsNavigationExpanded],
-  // );
-
-  // const layoutRef = React.useRef(null);
+  const user = useUserStore(state => state.user);
 
   return (
-    <Box
-      // ref={layoutRef}
-      sx={{
-        position: 'relative',
-        display: 'flex',
-        overflow: 'hidden',
-        height: '100%',
-        width: '100%',
-      }}
-    >
-      <AdminHeader
-      // logo={<SitemarkIcon />}
-      // title=""
-      // menuOpen={isNavigationExpanded}
-      // onToggleMenu={handleToggleHeaderMenu}
-      />
-      {/* <AdminSidebar
-        expanded={isNavigationExpanded}
-        setExpanded={setIsNavigationExpanded}
-        container={layoutRef?.current ?? undefined}
-      /> */}
+    <Box sx={{ display: 'flex' }}>
+      <AdminSideMenu user={user} />
+      <AdminNavbar user={user} />
+
+      {/* Main content */}
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          minWidth: 0,
-        }}
+        component="main"
+        sx={(theme) => ({
+          flexGrow: 1,
+          backgroundColor: theme.vars
+            ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+            : alpha(theme.palette.background.default, 1),
+          overflow: 'auto',
+        })}
       >
-        <Toolbar sx={{ displayPrint: 'none' }} />
-        <Box
-          component="main"
+        <Stack
+          spacing={2}
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            overflow: 'auto',
+            ml: 2,
+            mr: 2,
+            pb: 5,
+            mt: { xs: 8, md: 0 },
           }}
         >
+          <AdminHeader />
           <Outlet />
-        </Box>
+        </Stack>
       </Box>
     </Box>
   );

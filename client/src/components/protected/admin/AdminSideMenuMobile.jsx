@@ -5,14 +5,14 @@ import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import MenuButton from '../MenuButton.jsx';
-import MenuContent from './MenuContent';
+
 import { logoutService } from '../../../services/authServices.js';
 import { useUserStore } from '../../../store/useUserStore.js';
 import { useNavigate } from 'react-router';
 
-function SideMenuMobile({ open, toggleDrawer, user }) {
+import AdminMenuContent from './AdminMenuContent.jsx';
+
+function AdminSideMenuMobile({ open, toggleDrawer, user }) {
   const logout = useUserStore(state => state.logout);
   const navigate = useNavigate();
 
@@ -59,13 +59,10 @@ function SideMenuMobile({ open, toggleDrawer, user }) {
               {user?.username}
             </Typography>
           </Stack>
-          <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton>
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>
-          <MenuContent />
+          <AdminMenuContent />
           <Divider />
         </Stack>
         <Stack sx={{ p: 2 }}>
@@ -80,4 +77,4 @@ function SideMenuMobile({ open, toggleDrawer, user }) {
   );
 }
 
-export default SideMenuMobile;
+export default AdminSideMenuMobile;

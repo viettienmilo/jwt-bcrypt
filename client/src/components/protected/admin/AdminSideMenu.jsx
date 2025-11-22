@@ -1,14 +1,24 @@
 import { drawerClasses } from '@mui/material/Drawer';
 import Avatar from '@mui/material/Avatar';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography, IconButton, Icon } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-import { StyledDrawer } from '../../StyledComponents.jsx';
-import MenuContent from './MenuContent';
-import OptionsMenu from './OptionsMenu';
+import { StyledDrawer } from './../../StyledComponents.jsx';
+import AdminMenuContent from './AdminMenuContent.jsx';
+import { logoutService } from './../../../services/authServices.js';
+import { useUserStore } from '../../../store/useUserStore.js';
+import { useNavigate } from 'react-router';
 
+export default function AdminSideMenu({ user }) {
+  const logout = useUserStore(state => state.logout);
+  const navigate = useNavigate();
 
-export default function SideMenu({ user }) {
+  const handleLogout = () => {
+    logoutService();
+    logout();
+    navigate('/user/login');
+  }
 
   return (
     <StyledDrawer
@@ -46,7 +56,10 @@ export default function SideMenu({ user }) {
             {user?.email}
           </Typography>
         </Box>
-        <OptionsMenu />
+        <IconButton size='small' onClick={handleLogout}>
+          <LogoutIcon />
+        </IconButton>
+
       </Stack>
       <Divider />
       <Box
@@ -57,7 +70,7 @@ export default function SideMenu({ user }) {
           flexDirection: 'column',
         }}
       >
-        <MenuContent />
+        <AdminMenuContent />
       </Box>
     </StyledDrawer>
   );

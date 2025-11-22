@@ -75,7 +75,6 @@ export default function SignIn(props) {
           .then(({ data }) => {
             const fetchedUser = data.data.user;
             setUser({ ...fetchedUser, email: user.email });
-            enqueueSnackbar("User logged in successfully", { variant: 'success' });
             navigate('/');
           })
           .catch((error) => {

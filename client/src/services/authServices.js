@@ -21,10 +21,10 @@ export async function sendActivationLinkService(data) {
     }
 }
 
-export async function activateService(token, username) {
+export async function activateService(token) {
     try {
         const response = await authAPI.get(AUTH.ACTIVATE, {
-            params: { token, username },
+            params: { token },
         });
         return response.data;
     } catch (error) {

@@ -6,13 +6,13 @@ const createUserProfile = async (req, res) => {
     const userProfile = await UserProfile.findOneAndUpdate(
         { _id: userId },
         {
+            _id: userId,
+            studentCode: 'N/A',
             username: req.body.username || `user${Date.now()}`,
             firstname: req.body.firstname || '',
             lastname: req.body.lastname || '',
+            birthdate: new Date(),
             avatarUrl: req.body.avatarUrl || '',
-            role: 'STUDENT',
-            desc: '',
-            address: ''
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
     );

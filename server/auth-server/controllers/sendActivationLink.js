@@ -6,7 +6,7 @@ import { ERROR } from './../constants/errorCodes.js';
 import AuthUser from './../models/AuthUser.js';
 
 export default async function sendActivationLink(req, res) {
-    const { email, username } = req.body;
+    const { email } = req.body;
     if (!email)
         return ErrorResponse(res, ERROR.INVALID_CREDENTIALS, 401);
 
@@ -32,11 +32,11 @@ export default async function sendActivationLink(req, res) {
         html:
             `
                 <p><i>Please click on following link to activate your account: </i><p>
-                <a href="${process.env.CLIENT_URL}/user/activate?token=${token}&username=${username}&email=${email}"">
-                    ${process.env.CLIENT_URL}/user/activate?token=${token}&username=${username}&email=${email}"
+                <a href="${process.env.CLIENT_URL}/user/activate?token=${token}&email=${email}"">
+                    Click here to activate your account
                 </a>
             `
     }
     await mailSender.sendMail(mail)
-    return SuccessResponse(res, { email, username }, "EMAIL_SENT", 201);
+    return SuccessResponse(res, { email }, "EMAIL_SENT", 201);
 }

@@ -5,7 +5,7 @@ import { ERROR } from './../constants/errorCodes.js';
 import crypto from 'crypto'
 
 export default async function activateUser(req, res) {
-    const { token, username } = req.query;
+    const { token } = req.query;
 
     if (!token)
         return ErrorResponse(res, ERROR.INVALID_TOKEN, 403);
@@ -26,9 +26,9 @@ export default async function activateUser(req, res) {
 
     user.isVerified = true;
     await user.save();
+
     await record.deleteOne();
 
-    return SuccessResponse(res, { userId: user._id, username }, "ACCOUNT_ACTIVATED", 200);
+    return SuccessResponse(res, { userId: user._id }, "ACCOUNT_ACTIVATED", 200);
 }
 
-// const { token } = req.body;

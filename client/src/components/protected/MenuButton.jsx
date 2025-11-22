@@ -1,5 +1,4 @@
 import Badge, { badgeClasses } from '@mui/material/Badge';
-import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 
 function MenuButton({ showBadge = false, ...props }) {
@@ -14,9 +13,5 @@ function MenuButton({ showBadge = false, ...props }) {
     </Badge>
   );
 }
-
-MenuButton.propTypes = {
-  showBadge: PropTypes.bool,
-};
 
 export default MenuButton;

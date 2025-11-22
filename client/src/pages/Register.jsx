@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { useNavigate, redirect } from 'react-router'
 import useRegisterUser from './../hooks/auth/useRegisterUser.js'
+import useSendActivationLink from './../hooks/auth/useSendActivationLink.js';
 
 export async function loader(isAuthed) {
   return (isAuthed ? redirect('/dashboard') : null);
@@ -34,17 +35,19 @@ export default function Register(props) {
     formState: { errors, }
   } = useForm({
     defaultValues: {
-      // username: '',
       email: '',
       password: ''
     }
   })
 
+
   // hook for show snackbar
   const { enqueueSnackbar } = useSnackbar();
 
   // register user using tanstack mutation hook
-  const { mutate, isPending } = useRegisterUser();
+  const { mutate } = useRegisterUser();
+
+  const { mutate: sendActivationLinkMutate, isPending } = useSendActivationLink();
 
   // const setUser = useUserStore(state => state.setUser);
   const navigate = useNavigate();
@@ -57,8 +60,26 @@ export default function Register(props) {
       {
         onSuccess: (response) => {
           const { user } = response.data;
+          const email = user.email;
+
           enqueueSnackbar('Registration successful.Please activate your account to continue', { variant: 'info' });
-          navigate(`/user/activate?email=${user.email}&username=${formData.username}`);
+
+          // send activation link to user mailbox
+          sendActivationLinkMutate({ email }, {
+            onSuccess: () => {
+              enqueueSnackbar("Activation Link has been sent. Please check your mailbox.", { variant: 'success' });
+            },
+            onError: (error) => {
+              setError(true);
+              const errorCode = error.response?.data?.error;
+              switch (errorCode) {
+                case "INVALID_CREDENTIALS":
+                  return enqueueSnackbar("Email is invalid", { variant: 'error' });
+                default:
+                  return enqueueSnackbar("Undefined error occurs. Please register account again.", { variant: 'error' });
+              }
+            }
+          });
         },
         onError: (error) => {
           const errorCode = error.response?.data?.error;
@@ -89,25 +110,6 @@ export default function Register(props) {
           <Box
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
-            <FormControl>
-              <FormLabel htmlFor="username">Username</FormLabel>
-              <TextField
-                fullWidth
-                autoFocus
-                variant="outlined"
-                placeholder="Jon Snow"
-                error={!!errors.username}
-                helperText={errors.username?.message}
-                {...register(
-                  "username",
-                  {
-                    required: "Username is required",
-                    minLength: { value: 4, message: "4 characters at least" },
-                    maxLength: { value: 20, message: "10 characters maximum" },
-                  })}
-              />
-
-            </FormControl>
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField

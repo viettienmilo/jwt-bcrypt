@@ -33,7 +33,6 @@ authAPI.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // if access token expired and not retried yet
         if (error.response?.status === 401
             && !originalRequest._retry
             && !originalRequest.url.includes(AUTH.LOGIN)) { // prevent axios send refresh-token when log in

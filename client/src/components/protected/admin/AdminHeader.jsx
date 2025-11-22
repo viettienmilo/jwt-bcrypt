@@ -1,24 +1,11 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import Stack from '@mui/material/Stack';
-import { Link } from 'react-router';
-
-import SitemarkIcon from './../../SitemarkIcon.jsx';
+import NavbarBreadcrumbs from './../NavbarBreadcrumbs.jsx';
 import ColorModeIconDropdown from './../../../shared-theme/ColorModeIconDropdown.jsx';
+import Search from './../Search.jsx';
+import HomeButton from './../../HomeButton.jsx';
 
-function AdminHeader() {
-
-
+export default function AdminHeader() {
   return (
-
     <Stack
       direction="row"
       sx={{
@@ -31,32 +18,12 @@ function AdminHeader() {
       }}
       spacing={2}
     >
-      <SitemarkIcon />
-      <Typography
-        variant="h6"
-        sx={{
-          fontWeight: '700',
-          ml: 1,
-          whiteSpace: 'nowrap',
-          lineHeight: 1,
-        }}
-      >
-        ADMIN PANEL
-      </Typography>
-
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
-        sx={{ marginLeft: 'auto' }}
-      >
-        <Stack direction="row" alignItems="center">
-          <ColorModeIconDropdown />
-        </Stack>
+      <NavbarBreadcrumbs />
+      <Stack direction="row" sx={{ gap: 1 }}>
+        <Search />
+        <HomeButton />
+        <ColorModeIconDropdown />
       </Stack>
     </Stack>
-
   );
 }
-
-export default AdminHeader;

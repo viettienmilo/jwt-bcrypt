@@ -1,15 +1,12 @@
-import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
+import { useEffect, useState, useRef } from "react";
 
 import { Box, Typography, Button } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import Container from './../components/Container.jsx';
 import Card from './../components/Card.jsx';
 import SendIcon from '@mui/icons-material/Send';
-import HomeIcon from '@mui/icons-material/Home';
 
 import { useSnackbar } from 'notistack';
-import { useUserStore } from "../store/useUserStore.js";
 import useSendActivationLink from './../hooks/auth/useSendActivationLink.js';
 import useActivateUser from './../hooks/auth/useActivateUser.js';
 import useCreateUserProfile from './../hooks/user/useCreateProfile.js';
@@ -17,11 +14,10 @@ import useCreateUserProfile from './../hooks/user/useCreateProfile.js';
 export default function Activate() {
 
     const navigate = useNavigate();
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-    const email = params.get("email");
-    const username = params.get("username");
-    const expired = params.get("expired");
+
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get("token");
+    const email = searchParams.get("email");
 
     const [error, setError] = useState(false);
 
@@ -30,8 +26,8 @@ export default function Activate() {
     const { mutate: createUserProfileMutate } = useCreateUserProfile();
 
     const { enqueueSnackbar } = useSnackbar();
-    const user = useUserStore(state => state.user);
-    const setUser = useUserStore(state => state.setUser);
+
+    const hasActivated = useRef(false);
 
     const handleSubmit = () => {
         if (!email) {
@@ -40,7 +36,7 @@ export default function Activate() {
             return;
         }
 
-        sendActivationLinkMutate({ email, username }, {
+        sendActivationLinkMutate({ email }, {
             onSuccess: () => {
                 enqueueSnackbar("Activation Link has been sent. Please check your mailbox.", { variant: 'success' });
             },
@@ -58,88 +54,66 @@ export default function Activate() {
     }
 
     useEffect(() => {
-        if (token) {
-            activateUserMutate({ token, username }, {
-                onSuccess: (data) => {
-                    const { userId, username } = data.data;
 
-                    createUserProfileMutate({ userId, username }, {
-                        onSuccess: (data) => {
-                            // setUser(data.user);
-                            enqueueSnackbar("Activate Account successfully. Please log in to continue.", { variant: 'success' });
-                            navigate('/user/login');
-                        },
-                        onError: (error) => console.log("create user profile error: ", error),
-                    })
-                },
-                onError: (error) => {
-                    const errorCode = error.response?.data?.error;
-                    switch (errorCode) {
-                        case "INVALID_TOKEN":
-                            return enqueueSnackbar("Token is invalid. User activation failed.", { variant: 'error' });
-                        case "TOKEN_EXPIRED":
-                            return enqueueSnackbar("Token expired. User activation failed.", { variant: 'error' });
-                        case "USER_NOT_FOUND":
-                            return enqueueSnackbar("User not found. User activation failed", { variant: 'error' });
-                        default:
-                            return enqueueSnackbar("Undefined error occurs. Please register account again.", { variant: 'error' });
+        if (!token) return;
+        // if (!token || hasActivated.current) {
+        //     return;
+        // }
+
+        // hasActivated.current = true;
+
+        activateUserMutate({ token }, {
+            onSuccess: (data) => {
+                const { userId } = data.data;
+                createUserProfileMutate({ userId }, {
+                    onSuccess: () => {
+                        enqueueSnackbar("Activate Account successfully. Please log in to continue.", { variant: 'success' });
+                        navigate('/user/login');
+                    },
+                    onError: () => {
+                        enqueueSnackbar("Error on create User profile", { variant: 'error' });
                     }
+                })
+            },
+            onError: (error) => {
+                setError(true);
+                const errorCode = error.response?.data?.error;
+                switch (errorCode) {
+                    case "INVALID_TOKEN":
+                        return enqueueSnackbar("Token is invalid. User activation failed.", { variant: 'error' });
+                    case "TOKEN_EXPIRED":
+                        return enqueueSnackbar("Token expired. User activation failed.", { variant: 'error' });
+                    case "USER_NOT_FOUND":
+                        return enqueueSnackbar("User not found. User activation failed", { variant: 'error' });
+                    default:
+                        return enqueueSnackbar("Undefined error occurs. Please register account again.", { variant: 'error' });
                 }
-            });
-        }
-        // else return;
-    }, [token]);
+            }
+        });
+    }, []);
 
-    return (
+    return error && (
         <Container direction="column" justifyContent="space-between">
             <Card variant="outlined">
-                {token ?
-                    <Box sx={{ display: 'flex', flexDirection: "column", gap: 2, justifyContent: 'center' }}>
-                        <Typography variant="h3" color="secondary">Activating your account…</Typography>
-                        <CircularProgress />
+                <Box sx={{ display: 'flex', flexDirection: "column", width: '100%', gap: 2, justifyContent: 'center' }} >
+                    <Typography variant="h4" >Account Activation</Typography>
+                    <Typography variant="p" color="secondary">Your account activation link is expired.</Typography>
+                    <Typography variant="p">Press 'Send' to send activation link to your mailbox.</Typography>
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            sx={{ width: 'fit-content' }}
+                            loadingPosition="start"
+                            loading={isPending}
+                            endIcon={<SendIcon />}
+                            onClick={handleSubmit}
+                            disabled={!email || isPending}
+                        >
+                            Resend
+                        </Button>
                     </Box>
-                    :
-                    <Box sx={{ display: 'flex', flexDirection: "column", width: '100%', gap: 2, justifyContent: 'center' }} >
-                        <Typography variant="h4" >Account Activation</Typography>
-                        {!user ?
-                            <>
-                                {
-                                    expired ?
-                                        <Typography variant="p" color="secondary">Your account activation link is expired.</Typography>
-                                        : <Typography variant="p" color="secondary">Your account is not activated.</Typography>
-                                }
-                                <Typography variant="p">Press 'Send' to send activation link to your mailbox.</Typography>
-
-                                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                    <Button
-                                        type="button"
-                                        variant="outlined"
-                                        sx={{ width: 'fit-content' }}
-                                        loadingPosition="start"
-                                        loading={isPending}
-                                        endIcon={<SendIcon />}
-                                        onClick={handleSubmit}
-                                        disabled={!email}
-                                    >
-                                        {error ? "Resend" : "Send"}
-                                    </Button>
-                                </Box>
-                            </>
-                            :
-                            <>
-                                <Typography variant="p" color="primary">Your account has been activated.</Typography>
-                                <Button
-                                    type="button"
-                                    variant="outlined"
-                                    startIcon={<HomeIcon />}
-                                    onClick={() => navigate('/')}
-                                >
-                                    Back to Home
-                                </Button>
-                            </>
-                        }
-                    </Box>
-                }
+                </Box>
             </Card>
         </Container >
     )

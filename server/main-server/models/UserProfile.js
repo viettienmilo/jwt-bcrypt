@@ -8,10 +8,11 @@ const userProfileSchema = new mongoose.Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     birthdate: { type: Date, required: true },
-    gender: { type: String, enum: ["Male", "Female"] },
+    gender: { type: String, enum: ["Male", "Female"], default: "Male" },
     phone: String,
     city: String,
     avatarUrl: String,
+    role: { type: String, enum: ["STUDENT", "TEACHER", "ADMIN"], default: "STUDENT" },
     status: { type: String, enum: ["active", "inactive"], default: "active" }
 }, { timestamps: true });
 
