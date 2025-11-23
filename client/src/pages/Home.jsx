@@ -20,7 +20,7 @@ export default function Home() {
                         display: 'flex',
                         flexDirection: 'column',
                     }}
-                    mt={{ xs: 12 }}
+                    mt={{ xs: 12, md: -10 }}
                 >
                     <Typography variant="h1">
                         Learn Something New
@@ -38,7 +38,7 @@ export default function Home() {
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'row',
-                        mt: 10,
+                        mt: { xs: 4, md: 8 },
                         gap: 2,
                     }}>
                         <Button
@@ -76,10 +76,16 @@ export default function Home() {
                 <Box
                     component='img'
                     src={MainImage}
+                    alt='main-image'
                     sx={{
-                        width: { sm: '100%', md: '453px' },
-                        height: '854px'
+                        // width: { sm: '100%', md: '453px' },
+                        width: { sm: '100%', md: 'auto' },
+                        maxWidth: '453px',
+                        maxHeight: { xs: 480, md: 'calc(100vh - 140px)' },
+                        objectFit: 'contain',
+                        alignSelf: 'center',
                     }}
+
                     mt={{ xs: 4, md: 10 }}
                     mb={{ xs: 2 }}
                 />

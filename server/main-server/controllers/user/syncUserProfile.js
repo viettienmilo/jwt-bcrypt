@@ -17,6 +17,7 @@ export default async function syncUserProfile(req, res) {
             lastName,
             birthdate,
             avatarUrl,
+            role,
         },
         { upsert: true, new: true }
     );

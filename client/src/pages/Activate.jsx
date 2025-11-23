@@ -56,8 +56,8 @@ export default function Activate() {
 
         activateUserMutate({ token }, {
             onSuccess: (data) => {
-                const { userId } = data.data;
-                createUserProfileMutate({ userId }, {
+                const { userId, role } = data.data;
+                createUserProfileMutate({ userId, role }, {
                     onSuccess: () => {
                         enqueueSnackbar("Activate Account successfully. Please log in to continue.", { variant: 'success' });
                         navigate('/user/login');

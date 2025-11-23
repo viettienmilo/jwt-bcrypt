@@ -29,6 +29,6 @@ export default async function activateUser(req, res) {
 
     await record.deleteOne();
 
-    return SuccessResponse(res, { userId: user._id }, "ACCOUNT_ACTIVATED", 200);
+    return SuccessResponse(res, { userId: user._id, role: user.role }, "ACCOUNT_ACTIVATED", 200);
 }
 

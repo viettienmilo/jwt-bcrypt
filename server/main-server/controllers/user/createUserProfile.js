@@ -1,7 +1,7 @@
 import UserProfile from './../../models/UserProfile.js';
 
 const createUserProfile = async (req, res) => {
-    const userId = req.body.userId;
+    const { userId, role } = req.body;
 
     const userProfile = await UserProfile.findOneAndUpdate(
         { _id: userId },
@@ -13,6 +13,7 @@ const createUserProfile = async (req, res) => {
             lastname: req.body.lastname || '',
             birthdate: new Date(),
             avatarUrl: req.body.avatarUrl || '',
+            role: role || 'STUDENT',
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
     );
