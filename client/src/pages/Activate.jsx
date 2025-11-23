@@ -27,8 +27,6 @@ export default function Activate() {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const hasActivated = useRef(false);
-
     const handleSubmit = () => {
         if (!email) {
             enqueueSnackbar("Email is invalid", { variant: 'error' });
@@ -54,13 +52,7 @@ export default function Activate() {
     }
 
     useEffect(() => {
-
         if (!token) return;
-        // if (!token || hasActivated.current) {
-        //     return;
-        // }
-
-        // hasActivated.current = true;
 
         activateUserMutate({ token }, {
             onSuccess: (data) => {
