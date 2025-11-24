@@ -1,0 +1,35 @@
+import courseData from './../../../../data/courseData.js';
+import GenericDetail from './../../../../components/protected/admin/GenericDetail.jsx';
+import Box from "@mui/material/Box";
+
+const resource = {
+    name: 'course',
+    title: 'Course',
+    path: 'courses',
+    getOne: courseData.getOne
+};
+
+const fields = [
+    { name: 'courseCode', title: 'Code' },
+    { name: 'courseName', title: 'Course Name' },
+    { name: 'semester', title: 'Semester' },
+    { name: 'credit', title: 'Num of Credit' },
+    { name: 'teacherName', title: 'Teacher Name' },
+];
+
+const CourseDetail = () => {
+    return (
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            m: 0, p: 0
+        }}>
+            <GenericDetail
+                resource={resource}
+                fields={fields}
+            />
+        </Box>
+    )
+}
+
+export default CourseDetail

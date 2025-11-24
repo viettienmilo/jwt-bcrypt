@@ -11,40 +11,35 @@ import GradingIcon from '@mui/icons-material/Grading';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
 import { useUIStore } from '../../../store/useUserStore.js';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 
 const listItems = [
   { text: 'Courses', icon: <LocalLibraryIcon />, path: '' },
   { text: 'Students', icon: <SchoolIcon />, path: 'students' },
   { text: 'Grades', icon: <GradingIcon />, path: 'grades' },
-
   { text: 'Settings', icon: <SettingsRoundedIcon />, path: 'settings' },
 ];
 
-
 export default function AdminMenuContent() {
-  const { dashboardSideMenuItem, setDashboardSideMenuItem } = useUIStore();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  const setDashboardSideMenuItem = useUIStore(state => state.setDashboardSideMenuItem);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getIndexFromPath = () => {
+    const path = location.pathname.replace('/admin/courses/', '');
+    const index = listItems.findIndex(item => item.path === path);
+    return index >= 0 ? index : 0;   // fallback to courses
+  };
+
+  const [currentIndex, setCurrentIndex] = useState(() => getIndexFromPath());
 
   const handleClick = (text, index) => {
     setDashboardSideMenuItem(text);
     setCurrentIndex(index);
+    navigate(`/admin/courses/${listItems[index]?.path}`)
   }
-
-  useEffect(() => {
-    const idx = listItems.findIndex(item => item.text === dashboardSideMenuItem);
-    setCurrentIndex(idx);
-  }, []
-  )
-
-  useEffect(() => {
-    navigate(`/admin/${listItems[currentIndex].path}`)
-  }, [currentIndex]
-  )
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>

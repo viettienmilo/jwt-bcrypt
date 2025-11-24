@@ -98,7 +98,7 @@ const UserMenu = () => {
                 {
                     role === 'ADMIN' && <MenuItem onClick={() => {
                         closeMenu();
-                        navigate('/admin');
+                        navigate('/admin/courses');
                     }}>
                         <ListItemIcon>
                             <DashboardIcon sx={{ fontSize: 22, color: green[500] }} />

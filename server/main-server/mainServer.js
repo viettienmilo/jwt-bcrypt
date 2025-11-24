@@ -13,6 +13,7 @@ import studentRouter from './routes/studentRoutes.js';
 connectToCloudinary();
 
 const server = express();
+
 server.use(helmet()); // secure headers
 server.use(morgan('dev')); // http request log
 server.use(cors(
@@ -25,16 +26,20 @@ server.use(cors(
     }
 ));
 server.use(cookieParser()); // read cookies from headers
-// server.use(express.json()); // read/write json
 
 server.get('/', (req, res) => {
     res.status(200).json({ message: "Main server is running" });
 })
 
+// app.use(express.static('public'));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+// });
+
 server.use('/api/user', userRouter);
 server.use('/internal/user', internalRouter);
-server.use('/api/courses', courseRouter);
-server.use('/api/students', studentRouter);
+server.use('/api/admin/courses', courseRouter);
+server.use('/api/admin/students', studentRouter);
 
 server.listen(process.env.MAIN_PORT, () => {
     console.log(`MAIN SERVER IS RUNNING ON PORT ${process.env.MAIN_PORT}`)

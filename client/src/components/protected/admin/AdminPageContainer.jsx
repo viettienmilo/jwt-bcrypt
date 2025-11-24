@@ -1,6 +1,3 @@
-'use client';
-import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Breadcrumbs, { breadcrumbsClasses } from '@mui/material/Breadcrumbs';
@@ -72,7 +69,7 @@ function AdminPageContainer(props) {
               : null}
           </PageHeaderBreadcrumbs>
           <PageContentHeader>
-            {title ? <Typography variant="h4">{title}</Typography> : null}
+            {title ? <Typography variant="h4" color='primary'>{title}</Typography> : null}
             <PageHeaderToolbar>{actions}</PageHeaderToolbar>
           </PageContentHeader>
         </Stack>

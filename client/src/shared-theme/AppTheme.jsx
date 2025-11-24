@@ -7,7 +7,9 @@ import { feedbackCustomizations } from './customizations/feedback';
 import { navigationCustomizations } from './customizations/navigation';
 import { surfacesCustomizations } from './customizations/surfaces';
 import { colorSchemes, typography, shadows, shape } from './themePrimitives.js';
-
+import { dataGridCustomizations } from './customizations/dataGrid.jsx';
+import { datePickersCustomizations } from './customizations/datePickers.jsx';
+import { formInputCustomizations } from './customizations/formInput.jsx';
 function AppTheme(props) {
   const { children, disableCustomTheme, themeComponents } = props;
   const theme = React.useMemo(() => {
@@ -30,6 +32,10 @@ function AppTheme(props) {
           ...navigationCustomizations,
           ...surfacesCustomizations,
           ...themeComponents,
+          ...dataDisplayCustomizations,
+          ...dataGridCustomizations,
+          ...datePickersCustomizations,
+          // ...formInputCustomizations,
         },
       });
   }, [disableCustomTheme, themeComponents]);

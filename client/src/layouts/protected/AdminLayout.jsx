@@ -7,6 +7,7 @@ import AdminHeader from './../../components/protected/admin/AdminHeader.jsx';
 import AdminNavbar from './../../components/protected/admin/AdminNavbar.jsx';
 
 import DialogsProvider from './../../hooks/admin/useDialogs/DialogsProvider.jsx';
+
 // export async function loader(isAuthed) {
 //   if (!isAuthed) throw redirect('/user/login');
 //   useUIStore.getState().setShowNavbar(false); // hide main navbar

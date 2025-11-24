@@ -1,5 +1,5 @@
 // GenericList.jsx
-import * as React from "react";
+import { useMemo, useState, useCallback } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,10 +12,11 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams, useLocation } from "react-router";
 import { useDialogs } from './../../../hooks/admin/useDialogs/useDialogs.jsx';
 // import useNotifications from "../hooks/useNotifications/useNotifications";
 import AdminPageContainer from './AdminPageContainer.jsx';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -24,185 +25,194 @@ export default function GenericList({
     columns,
     getMany,
     deleteOne,
-    basePath, // "/employees", "/students", "/courses"
+    basePath, // "/courses", "/students", etc.
 }) {
-    const { pathname } = useLocation();
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-
     const dialogs = useDialogs();
-    // const notifications = useNotifications();
+    const queryClient = useQueryClient();
+    const [searchParams] = useSearchParams();
+    const { pathname } = useLocation();
 
-    // State
-    const [paginationModel, setPaginationModel] = React.useState({
-        page: searchParams.get("page") ? Number(searchParams.get("page")) : 0,
-        pageSize: searchParams.get("pageSize")
-            ? Number(searchParams.get("pageSize"))
+    // PAGINATION AND HANDLER
+    const [paginationModel, setPaginationModel] = useState({
+        page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
+        pageSize: searchParams.get('pageSize')
+            ? Number(searchParams.get('pageSize'))
             : INITIAL_PAGE_SIZE,
     });
+    const handlePaginationModelChange = useCallback(
+        (model) => {
+            setPaginationModel(model);
 
-    const [filterModel, setFilterModel] = React.useState(
-        searchParams.get("filter")
-            ? JSON.parse(searchParams.get("filter") ?? "")
-            : { items: [] }
+            searchParams.set('page', String(model.page));
+            searchParams.set('pageSize', String(model.pageSize));
+
+            const newSearchParamsString = searchParams.toString();
+
+            navigate(
+                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
+            );
+        },
+        [navigate, pathname, searchParams],
     );
 
-    const [sortModel, setSortModel] = React.useState(
-        searchParams.get("sort") ? JSON.parse(searchParams.get("sort") ?? "") : []
+    // const [sortModel, setSortModel] = useState([]);
+    const [sortModel, setSortModel] = useState(
+        searchParams.get('sort') ? JSON.parse(searchParams.get('sort') ?? '') : [],
+    );
+    const handleSortModelChange = useCallback(
+        (model) => {
+            setSortModel(model);
+
+            if (model.length > 0) {
+                searchParams.set('sort', JSON.stringify(model));
+            } else {
+                searchParams.delete('sort');
+            }
+
+            const newSearchParamsString = searchParams.toString();
+
+            navigate(
+                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
+            );
+        },
+        [navigate, pathname, searchParams],
     );
 
-    const [rowsState, setRowsState] = React.useState({
-        rows: [],
-        rowCount: 0,
+    // FILTER AND HANDLER
+    const [filterModel, setFilterModel] = useState(
+        searchParams.get('filter')
+            ? JSON.parse(searchParams.get('filter') ?? '')
+            : { items: [] },
+    );
+    const handleFilterModelChange = useCallback(
+        (model) => {
+            setFilterModel(model);
+
+            if (
+                model.items.length > 0 ||
+                (model.quickFilterValues && model.quickFilterValues.length > 0)
+            ) {
+                searchParams.set('filter', JSON.stringify(model));
+            } else {
+                searchParams.delete('filter');
+            }
+
+            const newSearchParamsString = searchParams.toString();
+
+            navigate(
+                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
+            );
+        },
+        [navigate, pathname, searchParams],
+    );
+
+
+    // FETCH MANY
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: [basePath, paginationModel, sortModel, filterModel],
+        queryFn: () => getMany({ paginationModel, sortModel, filterModel }),
+        keepPreviousData: true,
     });
 
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [error, setError] = React.useState(null);
+    const rows = data?.items ?? [];
+    const rowCount = data?.itemCount ?? 0;
 
-    // --- URL sync ---
-    const sync = (key, value) => {
-        if (value) searchParams.set(key, value);
-        else searchParams.delete(key);
-        const str = searchParams.toString();
-        navigate(`${pathname}${str ? "?" : ""}${str}`);
-    };
+    // DELETE ONE (MUTATION)
+    const deleteMutation = useMutation({
+        mutationFn: deleteOne,
+        onSuccess: () => queryClient.invalidateQueries([basePath]),
+    });
 
-    // --- handlers ---
-    const handlePaginationModelChange = (model) => {
-        setPaginationModel(model);
-        sync("page", model.page);
-        sync("pageSize", model.pageSize);
-    };
-
-    const handleFilterModelChange = (model) => {
-        setFilterModel(model);
-        sync(
-            "filter",
-            model.items.length > 0 ||
-                (model.quickFilterValues && model.quickFilterValues.length > 0)
-                ? JSON.stringify(model)
-                : null
-        );
-    };
-
-    const handleSortModelChange = (model) => {
-        setSortModel(model);
-        sync("sort", model.length > 0 ? JSON.stringify(model) : null);
-    };
-
-    // --- load data ---
-    const loadData = React.useCallback(async () => {
-        setError(null);
-        setIsLoading(true);
-        try {
-            const res = await getMany({ paginationModel, sortModel, filterModel });
-            setRowsState({
-                rows: res.items,
-                rowCount: res.itemCount,
-            });
-        } catch (err) {
-            setError(err);
-        }
-        setIsLoading(false);
-    }, [paginationModel, sortModel, filterModel, getMany]);
-
-    React.useEffect(() => {
-        loadData();
-    }, [loadData]);
-
-    const handleRefresh = () => {
-        if (!isLoading) loadData();
-    };
-
-    const handleRowClick = ({ row }) => navigate(`${basePath}/${row.id}`);
-    const handleCreateClick = () => navigate(`${basePath}/new`);
-    const handleRowEdit = (row) => () => navigate(`${basePath}/${row.id}/edit`);
-
-    const handleRowDelete = (row) => async () => {
+    // ROW ACTIONS: EDIT/DELETE/CREATE
+    const handleRowEdit = row => () => navigate(`${basePath}/${row.id}/edit`);
+    const handleRowDelete = row => async () => {
         const confirmed = await dialogs.confirm(`Delete ${row.id}?`, {
-            title: `Delete item?`,
+            title: "Delete item?",
             severity: "error",
             okText: "Delete",
             cancelText: "Cancel",
         });
 
-        if (confirmed) {
-            setIsLoading(true);
-            try {
-                await deleteOne(Number(row.id));
-                // notifications.show("Deleted successfully.", {
-                //     severity: "success",
-                // });
-                loadData();
-            } catch (err) {
-                console.log(err.message)
-                // notifications.show(`Delete failed: ${err.message}`, {
-                //     severity: "error",
-                // });
-            }
-            setIsLoading(false);
-        }
+        if (confirmed) deleteMutation.mutate(row.id);
     };
+    const handleCreateClick = () => navigate(`/admin/${basePath}/new`);
 
-    // Add "actions" column automatically
-    const finalColumns = React.useMemo(
-        () => [
-            ...columns,
-            {
-                field: "actions",
-                type: "actions",
-                flex: 1,
-                align: "right",
-                getActions: ({ row }) => [
-                    <GridActionsCellItem
-                        key="edit"
-                        icon={<EditIcon />}
-                        label="Edit"
-                        onClick={handleRowEdit(row)}
-                    />,
-                    <GridActionsCellItem
-                        key="delete"
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={handleRowDelete(row)}
-                    />,
-                ],
-            },
-        ],
-        [columns]
+    // REFRESH
+    const handleRefresh = () => refetch();
+
+
+    // ACTION COLUMNS (EDIT/DELETE)
+    const finalColumns = useMemo(() => [
+        ...columns,
+        {
+            field: "actions",
+            type: "actions",
+            flex: 1,
+            align: "right",
+            getActions: ({ row }) => [
+                <GridActionsCellItem
+                    key="edit"
+                    icon={<EditIcon />}
+                    label="Edit"
+                    onClick={handleRowEdit(row)}
+                />,
+                <GridActionsCellItem
+                    key="delete"
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={handleRowDelete(row)}
+                />,
+            ],
+        },
+    ],
+        [handleRowEdit, handleRowDelete]
+    );
+
+    const handleRowClick = useCallback(
+        ({ row }) => {
+            navigate(`/admin/courses/${row.id}`);
+        },
+        [navigate],
     );
 
     return (
         <AdminPageContainer
-            title={title}
+            title={`All ${title}`}
             breadcrumbs={[{ title }]}
             actions={
                 <Stack direction="row" alignItems="center" spacing={1}>
-                    <Tooltip title="Reload data" placement="right">
+                    <Tooltip title={`Reload ${title}`}>
                         <IconButton onClick={handleRefresh} size="small">
                             <RefreshIcon />
                         </IconButton>
                     </Tooltip>
-                    <Button variant="contained" onClick={handleCreateClick} startIcon={<AddIcon />}>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        startIcon={<AddIcon />}
+                        onClick={handleCreateClick}
+                    >
                         Create
                     </Button>
                 </Stack>
             }
         >
-            <Box sx={{ flex: 1, width: "100%" }}>
+            <Box sx={{ height: 600, width: "100%" }}>
                 {error ? (
-                    // <Alert severity="error">{error.message}</Alert>
-                    console.log(error.message)
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Alert severity="error">{error.message}</Alert>
+                    </Box>
                 ) : (
                     <DataGrid
-                        rows={rowsState.rows}
-                        rowCount={rowsState.rowCount}
+                        rows={rows}
+                        rowCount={rowCount}
                         columns={finalColumns}
                         loading={isLoading}
                         pagination
+                        paginationMode="server"
                         sortingMode="server"
                         filterMode="server"
-                        paginationMode="server"
                         paginationModel={paginationModel}
                         onPaginationModelChange={handlePaginationModelChange}
                         sortModel={sortModel}
@@ -210,16 +220,30 @@ export default function GenericList({
                         filterModel={filterModel}
                         onFilterModelChange={handleFilterModelChange}
                         disableRowSelectionOnClick
-                        onRowClick={handleRowClick}
+                        showToolbar
                         pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25]}
                         sx={{
                             [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
-                                outline: "transparent",
+                                outline: 'transparent',
+                            },
+                            [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
+                            {
+                                outline: 'none',
                             },
                             [`& .${gridClasses.row}:hover`]: {
-                                cursor: "pointer",
+                                cursor: 'pointer',
                             },
                         }}
+                        slotProps={{
+                            loadingOverlay: {
+                                variant: 'circular-progress',
+                                noRowsVariant: 'circular-progress',
+                            },
+                            baseIconButton: {
+                                size: 'small',
+                            },
+                        }}
+                        onRowClick={handleRowClick}
                     />
                 )}
             </Box>

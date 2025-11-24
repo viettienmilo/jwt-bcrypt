@@ -8,8 +8,8 @@ import Header from './../../components/protected/user/Header';
 // authorize user and redirect to dashboard page
 export async function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
-    useUIStore.getState().setShowNavbar(false); // hide main navbar
-    useUIStore.getState().setDashboardSideMenuItem("Overview"); // set default menu item button selection
+    //useUIStore.getState().setShowNavbar(false); // hide main navbar
+    // useUIStore.getState().setDashboardSideMenuItem("Overview"); 
     return;
 }
 

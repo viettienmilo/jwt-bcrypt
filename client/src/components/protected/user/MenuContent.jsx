@@ -12,12 +12,12 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import FitbitRoundedIcon from '@mui/icons-material/FitbitRounded';
 
 import { useUIStore } from '../../../store/useUserStore.js';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 
 const listItems = [
   { text: 'Overview', icon: <FitbitRoundedIcon />, path: '' },
-  { text: 'Courses', icon: <AnalyticsRoundedIcon />, path: 'course' },
+  { text: 'Courses', icon: <AnalyticsRoundedIcon />, path: 'courses' },
   { text: 'Grades', icon: <PeopleRoundedIcon />, path: 'grades' },
   { text: 'Tasks', icon: <AssignmentRoundedIcon />, path: 'tasks' },
   { text: 'My Profile', icon: <InfoRoundedIcon />, path: 'profile' },
@@ -25,30 +25,25 @@ const listItems = [
 ];
 
 
-
 export default function MenuContent() {
-  const { dashboardSideMenuItem, setDashboardSideMenuItem } = useUIStore();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  const setDashboardSideMenuItem = useUIStore(state => state.setDashboardSideMenuItem);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getIndexFromPath = () => {
+    const path = location.pathname.replace('/user/dashboard/', '');
+    const index = listItems.findIndex(item => item.path === path);
+    return index >= 0 ? index : 0;   // fallback to dashboard
+  };
+
+  const [currentIndex, setCurrentIndex] = useState(() => getIndexFromPath());
 
   const handleClick = (text, index) => {
     setDashboardSideMenuItem(text);
     setCurrentIndex(index);
+    navigate(`/user/dashboard/${listItems[index].path}`)
   }
-
-  useEffect(() => {
-    const idx = listItems.findIndex(item => item.text === dashboardSideMenuItem);
-    setCurrentIndex(idx);
-  }, []
-  )
-
-  useEffect(() => {
-    navigate(`/user/dashboard/${listItems[currentIndex].path}`)
-  }, [currentIndex]
-  )
-
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>

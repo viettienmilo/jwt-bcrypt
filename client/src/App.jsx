@@ -13,7 +13,8 @@ import PageError from './components/PageError.jsx';
 
 import AdminLayout from './layouts/protected/AdminLayout.jsx';
 import Students, { loader as studentsLoader } from './pages/protected/admin/Students.jsx';
-import Courses, { loader as coursesLoader } from './pages/protected/admin/Courses.jsx';
+import CourseList, { loader as courseListLoader } from './pages/protected/admin/course/CourseList.jsx';
+import CourseDetail from './pages/protected/admin/course/CourseDetail.jsx';
 import Grades, { loader as gradesLoader } from './pages/protected/admin/Grades.jsx';
 import { Settings as AdminSettings, loader as adminSettingsLoader } from './pages/protected/admin/Settings.jsx';
 
@@ -36,9 +37,10 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
       <Route path='profile' element={<Profile />} loader={() => profileLoader(requireAuth())} />
       <Route path='*' element={<Page404 />} />
     </Route>
-    <Route path='admin' element={<AdminLayout />} errorElement={<PageError />} HydrateFallback={<></>}>
-      <Route index element={<Courses />} loader={() => coursesLoader(requireAuth())} />
-      <Route path='courses' element={<Courses />} loader={() => coursesLoader(requireAuth())} />
+    <Route path='admin/courses' element={<AdminLayout />} errorElement={<PageError />} HydrateFallback={<></>}>
+      <Route index element={<CourseList />} loader={() => courseListLoader(requireAuth())} />
+      {/* <Route path='courses' element={<CourseList />} loader={() => courseListLoader(requireAuth())} /> */}
+      <Route path=':id' element={<CourseDetail />} />
       <Route path='students' element={<Students />} loader={() => studentsLoader(requireAuth())} />
       <Route path='grades' element={<Grades />} loader={() => gradesLoader(requireAuth())} />
       <Route path='settings' element={<AdminSettings />} loader={() => adminSettingsLoader(requireAuth())} />
