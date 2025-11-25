@@ -3,27 +3,26 @@ import AppAppBar from './../components/AppAppBar.jsx';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useLocation } from "react-router";
+import { useLayoutEffect, useState } from "react";
 
 
 const Layout = () => {
 
     const location = useLocation();
-    const isProtectdPath = location.pathname.includes("dashboard") ||
-        location.pathname.includes("admin")
+    const [protectedPath, setProtectedPath] = useState(false);
+
+    useLayoutEffect(() => { // prevent screen flickering when refreshing page
+        const isProtected = location.pathname.includes("dashboard") || location.pathname.includes("admin")
+        setProtectedPath(isProtected)
+    }, [location.pathname]);
 
     return (
-        !isProtectdPath ?
-            <Container maxWidth='xl'>
-                <AppAppBar />
-                <Box>
-                    <Outlet />
-                </Box>
-            </Container> :
-            <Container maxWidth={false}>
-                <Box >
-                    <Outlet />
-                </Box>
-            </Container>
+        <Container maxWidth={`${protectedPath ? false : 'xl'}`}>
+            {!protectedPath && <AppAppBar />}
+            <Box>
+                <Outlet />
+            </Box>
+        </Container>
     )
 }
 

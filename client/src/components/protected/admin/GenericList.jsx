@@ -197,6 +197,7 @@ export default function GenericList({
                     <Button
                         variant="contained"
                         size="small"
+                        color="secondary"
                         startIcon={<AddIcon />}
                         onClick={handleCreateClick}
                     >

@@ -1,10 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import Container from '../components/Container.jsx';
-import { useForm } from 'react-hook-form'
 import MainImage from './../assets/mainpage_img_small.png';
 
 export default function Home() {
-    useForm();
 
     return (
         <Container >

@@ -9,7 +9,7 @@ export function loader(isAuthed) {
 }
 
 const Settings = () => {
-    const user = useUserStore(state => state.user);
+
 
     return (
         <Box sx={{
