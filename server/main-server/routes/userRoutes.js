@@ -7,6 +7,7 @@ import createUserProfile from './../controllers/user/createUserProfile.js';
 import updateUserProfile from './../controllers/user/updateUserProfile.js';
 import { imageUploadMiddleware } from './../middlewares/uploadMiddleware.js';
 import uploadImage from './../controllers/user/uploadImage.js';
+import fetchTeacherMany from './../controllers/user/fetchTeacherMany.js';
 
 const userRouter = express.Router()
 
@@ -36,5 +37,12 @@ userRouter.post(
     imageUploadMiddleware.single('avatarUrl'),  // 'avatarUrl' comes from frontend formData
     uploadImage
 );
+
+userRouter.get(
+    '/profile/teachers',
+    authUserMiddleware,
+    authRoleMiddleware("ADMIN"),
+    fetchTeacherMany
+)
 
 export default userRouter;

@@ -16,7 +16,7 @@ const courseColumns = [
     { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center' },
     { field: "semester", headerName: "Semester", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "credit", headerName: "Num of Credits", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "teacherName", headerName: "Teacher", flex: 2, headerAlign: 'center', align: 'center' },
+    { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', align: 'center' },
 ];
 
 const CourseList = () => {

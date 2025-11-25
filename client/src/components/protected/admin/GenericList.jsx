@@ -116,6 +116,7 @@ export default function GenericList({
     });
 
     const rows = data?.items ?? [];
+    // console.log(rows)
     const rowCount = data?.itemCount ?? 0;
 
     // DELETE ONE (MUTATION)
@@ -125,18 +126,31 @@ export default function GenericList({
     });
 
     // ROW ACTIONS: EDIT/DELETE/CREATE
-    const handleRowEdit = row => () => navigate(`${basePath}/${row.id}/edit`);
+    const handleRowEdit = row => () => navigate(`${row._id}/edit`);
+
     const handleRowDelete = row => async () => {
-        const confirmed = await dialogs.confirm(`Delete ${row.id}?`, {
+        const confirmed = await dialogs.confirm(`Delete ${row._id}?`, {
             title: "Delete item?",
             severity: "error",
             okText: "Delete",
             cancelText: "Cancel",
         });
 
-        if (confirmed) deleteMutation.mutate(row.id);
+        document.activeElement?.blur();  // no warning aria-label-hidden when control still has focus
+
+        if (confirmed) {
+            deleteMutation.mutate(row._id);
+        }
     };
+
     const handleCreateClick = () => navigate(`/admin/${basePath}/new`);
+
+    const handleRowClick = useCallback(
+        ({ row }) => {
+            navigate(`/admin/courses/${row._id}`);
+        },
+        [navigate],
+    );
 
     // REFRESH
     const handleRefresh = () => refetch();
@@ -159,7 +173,7 @@ export default function GenericList({
                 />,
                 <GridActionsCellItem
                     key="delete"
-                    icon={<DeleteIcon />}
+                    icon={<DeleteIcon color="error" />}
                     label="Delete"
                     onClick={handleRowDelete(row)}
                 />,
@@ -167,13 +181,6 @@ export default function GenericList({
         },
     ],
         [handleRowEdit, handleRowDelete]
-    );
-
-    const handleRowClick = useCallback(
-        ({ row }) => {
-            navigate(`/admin/courses/${row.id}`);
-        },
-        [navigate],
     );
 
     return (
@@ -207,6 +214,7 @@ export default function GenericList({
                     <DataGrid
                         rows={rows}
                         rowCount={rowCount}
+                        getRowId={(row) => row._id}
                         columns={finalColumns}
                         loading={isLoading}
                         pagination
@@ -232,6 +240,10 @@ export default function GenericList({
                             },
                             [`& .${gridClasses.row}:hover`]: {
                                 cursor: 'pointer',
+                            },
+                            '.MuiDataGrid-columnHeaderTitle': {
+                                fontWeight: 'bold',
+                                color: 'text.secondary',
                             },
                         }}
                         slotProps={{

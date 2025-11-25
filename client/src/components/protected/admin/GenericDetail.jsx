@@ -1,23 +1,37 @@
-import { useParams, useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-
 import { Box, Grid, Paper, Typography, CircularProgress, Alert, Divider, Stack, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import { useParams, useNavigate } from "react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
+
+import courseData from './../../../data/courseData.js';
 import AdminPageContainer from './AdminPageContainer.jsx';
+import { useDialogs } from './../../../hooks/admin/useDialogs/useDialogs.jsx';
 
 const GenericDetail = ({ resource, fields }) => {
 
     const { id } = useParams();
+    const dialogs = useDialogs();
+
     const { data, isLoading, isError, error } = useQuery({
         queryKey: [resource.name, id],
         queryFn: () => resource.getOne(id),
         enabled: !!id,
-        refetchOnWindowFocus: false,
-        refetchOnMount: true,
-        refetchOnReconnect: true,
+    });
+
+    const queryClient = useQueryClient();
+
+    const deleteMutation = useMutation({
+        mutationFn: courseData.deleteOne,
+        onSuccess: async () => {
+            await queryClient.cancelQueries([resource.name, id]);
+            queryClient.removeQueries([resource.name, id]);
+            queryClient.invalidateQueries([resource.path])
+            navigate(`/admin/${resource.path}`);
+        }
     });
 
     const navigate = useNavigate();
@@ -25,6 +39,25 @@ const GenericDetail = ({ resource, fields }) => {
     const handleBack = () => {
         navigate(`/admin/${resource.path}`);
     };
+
+    const handleEdit = useCallback(() => {
+        navigate(`/admin/${resource.path}/${id}/edit`);
+    }, [navigate, id]);
+
+    const handleDelete = async () => {
+        const confirmed = await dialogs.confirm(`Delete ${id}?`, {
+            title: "Delete item?",
+            severity: "error",
+            okText: "Delete",
+            cancelText: "Cancel",
+        });
+
+        document.activeElement?.blur();  // no warning aria-label-hidden when control still has focus
+
+        if (confirmed) {
+            deleteMutation.mutate(id);
+        }
+    }
 
     if (isLoading) {
         return (
@@ -55,7 +88,7 @@ const GenericDetail = ({ resource, fields }) => {
 
     return (
         <AdminPageContainer
-            title={`${resource.title} #${Object.values(item)[1]}`}
+            title={`${resource.title} #${item._id}`}      //${Object.values(item)[1]}
             breadcrumbs={[
                 { title: `${resource.title}s`, path: `/admin/${resource.path}` },
                 { title: `Detail` },
@@ -67,7 +100,7 @@ const GenericDetail = ({ resource, fields }) => {
                         {fields.map((field, index) => (
                             <Grid size={{ xs: 12, sm: 6 }} key={index}>
                                 <Paper sx={{ px: 2, py: 1 }}>
-                                    <Typography variant="caption">{field.title}</Typography>
+                                    <Typography variant="caption" sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}>{field.title}</Typography>
                                     <Typography variant="body1" sx={{ my: 1, ml: 1 }}>
                                         {item[field.name]}
                                     </Typography>
@@ -90,7 +123,7 @@ const GenericDetail = ({ resource, fields }) => {
                                 color="info"
                                 sx={{ width: 100, height: 40, color: 'white' }}
                                 startIcon={<EditIcon />}
-                            // onClick={handleEmployeeEdit}
+                                onClick={handleEdit}
                             >
                                 Edit
                             </Button>
@@ -99,7 +132,7 @@ const GenericDetail = ({ resource, fields }) => {
                                 color="error"
                                 sx={{ width: 100, height: 42 }}
                                 startIcon={<DeleteIcon />}
-                            // onClick={handleEmployeeDelete}
+                                onClick={handleDelete}
                             >
                                 Delete
                             </Button>

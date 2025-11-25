@@ -33,8 +33,19 @@ export default async function fetchMany(req, res) {
             .skip(page * pageSize)
             .limit(pageSize)
 
+        let simplified = [];
+        courses.forEach(course => simplified.push({
+            _id: course._id,
+            courseCode: course.courseCode,
+            courseName: course.courseName,
+            semester: course.semester,
+            credit: course.credit,
+            teacherId: course.teacherId._id,
+            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname}`
+        }));
+
         res.status(200).json({
-            items: courses,      // required by GenericList
+            items: simplified,
             itemCount: totalCount,
         });
 

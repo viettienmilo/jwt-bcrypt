@@ -15,8 +15,6 @@ import { useSnackbar } from 'notistack';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
-    // const dashboardSideMenuItem = useUIStore.getState().dashboardSideMenuItem;
-    // if (dashboardSideMenuItem === 'My Profile') return null;
     useUIStore.getState().setDashboardSideMenuItem('My Profile');
     return null;
 }

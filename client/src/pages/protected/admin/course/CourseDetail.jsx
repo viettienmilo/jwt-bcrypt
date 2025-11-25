@@ -2,6 +2,16 @@ import courseData from './../../../../data/courseData.js';
 import GenericDetail from './../../../../components/protected/admin/GenericDetail.jsx';
 import Box from "@mui/material/Box";
 
+import { useUIStore } from './../../../../store/useUserStore.js';
+
+
+export function loader(isAuthed) {
+    if (!isAuthed) throw redirect('/user/login');
+    useUIStore.getState().setDashboardSideMenuItem('Courses');
+    return null;
+}
+
+
 const resource = {
     name: 'course',
     title: 'Course',
