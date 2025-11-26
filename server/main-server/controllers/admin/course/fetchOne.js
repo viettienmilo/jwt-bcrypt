@@ -4,7 +4,7 @@ export default async function fetchOne(req, res) {
     try {
         const id = req.params.id;
 
-        const course = await Course.findById(id)?.populate('teacherId', 'lastname firstname');
+        const course = await Course.findById(id)?.populate('teacherId', 'lastname firstname status');
 
         if (!course) return res.status(401).json({ error: "Course not found." });
 
@@ -14,7 +14,7 @@ export default async function fetchOne(req, res) {
             courseName: course.courseName,
             credits: course.credits,
             teacherId: course.teacherId._id,
-            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname}`,
+            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname} ${course.teacherId.status === 'inactive' ? '- (inactive)' : ''}`,
             description: course.description,
         }
         res.status(200).json({ course: courseInfo });

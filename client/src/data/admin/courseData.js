@@ -4,7 +4,14 @@ const courseData = {
 
     getAll: async ({ paginationModel, sortModel, filterModel }) => {
         try {
-            const res = await adminAPI.get("/courses", { paginationModel, sortModel, filterModel });
+            const res = await adminAPI.get("/courses", {
+                params: {
+                    page: paginationModel.page,
+                    pageSize: paginationModel.pageSize,
+                    sort: JSON.stringify(sortModel),
+                    filter: JSON.stringify(filterModel)
+                }
+            });
             const items = res.data.items;
             const itemCount = res.data.itemCount;
             return { items, itemCount };
@@ -14,6 +21,7 @@ const courseData = {
             return { items: [], itemCount: 0 };
         }
     },
+
 
     getOne: async (id) => {
         const res = await adminAPI.get(`/courses/${id}`); // http://localhost:3000/api/admin/courses/id

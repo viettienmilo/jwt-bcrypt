@@ -31,6 +31,9 @@ import Students, { loader as studentsLoader } from './pages/protected/admin/Stud
 import Grades, { loader as gradesLoader } from './pages/protected/admin/Grades.jsx';
 import { Settings as AdminSettings, loader as adminSettingsLoader } from './pages/protected/admin/Settings.jsx';
 
+import UserList, { loader as userListLoader } from './pages/protected/admin/user/UserList.jsx';
+import UserDetail, { loader as userDetailLoader } from './pages/protected/admin/user/UserDetail.jsx';
+import UserEdit, { loader as userEditLoader } from './pages/protected/admin/user/UserEdit.jsx';
 
 const appRouter = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Layout />} errorElement={<PageError />} HydrateFallback={<></>}>
@@ -51,9 +54,14 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
       <Route path='courses/:id' element={<CourseDetail />} loader={() => courseDetailLoader(requireAuth())} />
       <Route path='courses/new' element={<CourseNew />} loader={() => courseNewLoader(requireAuth())} />
       <Route path='courses/:id/edit' element={<CourseEdit />} loader={() => courseEditLoader(requireAuth())} />
-      <Route path='courses/students' element={<Students />} loader={() => studentsLoader(requireAuth())} />
-      <Route path='courses/grades' element={<Grades />} loader={() => gradesLoader(requireAuth())} />
-      <Route path='courses/settings' element={<AdminSettings />} loader={() => adminSettingsLoader(requireAuth())} />
+      <Route path='students' element={<Students />} loader={() => studentsLoader(requireAuth())} />
+      <Route path='grades' element={<Grades />} loader={() => gradesLoader(requireAuth())} />
+      <Route path='settings' element={<AdminSettings />} loader={() => adminSettingsLoader(requireAuth())} />
+
+      <Route path='users' element={<UserList />} loader={() => userListLoader(requireAuth())} />
+      <Route path='users/:id' element={<UserDetail />} loader={() => userDetailLoader(requireAuth())} />
+      <Route path='users/:id/edit' element={<UserEdit />} loader={() => userEditLoader(requireAuth())} />
+
 
       <Route path='*' element={<Page404 />} />
     </Route>

@@ -7,7 +7,7 @@ const courseSchema = new mongoose.Schema({
     credits: { type: Number, required: true },
     teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'UserProfile' },
     description: String,
-});
+}, { timestamps: true });
 
 const Course = mainDb.model('Course', courseSchema);
 

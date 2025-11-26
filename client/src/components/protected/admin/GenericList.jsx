@@ -1,4 +1,3 @@
-// GenericList.jsx
 import { useMemo, useState, useCallback } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -26,6 +25,7 @@ export default function GenericList({
     getMany,
     deleteOne,
     basePath, // "/courses", "/students", etc.
+    noCreate = false
 }) {
     const navigate = useNavigate();
     const dialogs = useDialogs();
@@ -33,80 +33,25 @@ export default function GenericList({
     const [searchParams] = useSearchParams();
     const { pathname } = useLocation();
 
-    // PAGINATION AND HANDLER
+    // PAGINATION
     const [paginationModel, setPaginationModel] = useState({
         page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
         pageSize: searchParams.get('pageSize')
             ? Number(searchParams.get('pageSize'))
             : INITIAL_PAGE_SIZE,
     });
-    const handlePaginationModelChange = useCallback(
-        (model) => {
-            setPaginationModel(model);
 
-            searchParams.set('page', String(model.page));
-            searchParams.set('pageSize', String(model.pageSize));
-
-            const newSearchParamsString = searchParams.toString();
-
-            navigate(
-                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
-            );
-        },
-        [navigate, pathname, searchParams],
-    );
-
-    // const [sortModel, setSortModel] = useState([]);
+    // SORT
     const [sortModel, setSortModel] = useState(
         searchParams.get('sort') ? JSON.parse(searchParams.get('sort') ?? '') : [],
     );
-    const handleSortModelChange = useCallback(
-        (model) => {
-            setSortModel(model);
 
-            if (model.length > 0) {
-                searchParams.set('sort', JSON.stringify(model));
-            } else {
-                searchParams.delete('sort');
-            }
-
-            const newSearchParamsString = searchParams.toString();
-
-            navigate(
-                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
-            );
-        },
-        [navigate, pathname, searchParams],
-    );
-
-    // FILTER AND HANDLER
+    // FILTER
     const [filterModel, setFilterModel] = useState(
         searchParams.get('filter')
             ? JSON.parse(searchParams.get('filter') ?? '')
             : { items: [] },
     );
-    const handleFilterModelChange = useCallback(
-        (model) => {
-            setFilterModel(model);
-
-            if (
-                model.items.length > 0 ||
-                (model.quickFilterValues && model.quickFilterValues.length > 0)
-            ) {
-                searchParams.set('filter', JSON.stringify(model));
-            } else {
-                searchParams.delete('filter');
-            }
-
-            const newSearchParamsString = searchParams.toString();
-
-            navigate(
-                `${pathname}${newSearchParamsString ? '?' : ''}${newSearchParamsString}`,
-            );
-        },
-        [navigate, pathname, searchParams],
-    );
-
 
     // FETCH MANY
     const { data, isLoading, error, refetch } = useQuery({
@@ -116,7 +61,6 @@ export default function GenericList({
     });
 
     const rows = data?.items ?? [];
-    // console.log(rows)
     const rowCount = data?.itemCount ?? 0;
 
     // DELETE ONE (MUTATION)
@@ -128,11 +72,11 @@ export default function GenericList({
     // ROW ACTIONS: VIEW/EDIT/DELETE/CREATE
     const handleRowClick = useCallback(
         ({ row }) => {
-            navigate(`${basePath}/${row._id}`);
+            navigate(`/admin/${basePath}/${row._id}`);
         },
         [navigate],
     );
-    const handleRowEdit = row => () => navigate(`${basePath}/${row._id}/edit`);
+    const handleRowEdit = row => () => navigate(`/admin/${basePath}/${row._id}/edit`);
 
     const handleRowDelete = row => async () => {
         const confirmed = await dialogs.confirm(`Delete ${row._id}?`, {
@@ -151,11 +95,8 @@ export default function GenericList({
 
     const handleCreateClick = () => navigate(`/admin/${basePath}/new`);
 
-
-
     // REFRESH
     const handleRefresh = () => refetch();
-
 
     // ACTION COLUMNS (EDIT/DELETE)
     const finalColumns = useMemo(() => [
@@ -196,11 +137,12 @@ export default function GenericList({
                         </IconButton>
                     </Tooltip>
                     <Button
-                        variant="contained"
+                        variant={noCreate ? "outlined" : "contained"}
                         size="small"
-                        color="secondary"
+                        // color="secondary"
                         startIcon={<AddIcon />}
                         onClick={handleCreateClick}
+                        disabled={noCreate}
                     >
                         Create
                     </Button>
@@ -224,11 +166,11 @@ export default function GenericList({
                         sortingMode="server"
                         filterMode="server"
                         paginationModel={paginationModel}
-                        onPaginationModelChange={handlePaginationModelChange}
+                        onPaginationModelChange={setPaginationModel}
                         sortModel={sortModel}
-                        onSortModelChange={handleSortModelChange}
+                        onSortModelChange={setSortModel}
                         filterModel={filterModel}
-                        onFilterModelChange={handleFilterModelChange}
+                        onFilterModelChange={setFilterModel}
                         disableRowSelectionOnClick
                         showToolbar
                         pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25]}
@@ -258,6 +200,7 @@ export default function GenericList({
                             },
                         }}
                         onRowClick={handleRowClick}
+                        disableColumnFilter
                     />
                 )}
             </Box>

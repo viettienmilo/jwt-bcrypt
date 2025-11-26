@@ -17,7 +17,7 @@ export default function GenericEdit({ title, schema, updateOne, breadcrums, defa
         mutationFn: ({ id, data }) => updateOne({ id, data }),
         onSuccess: () => {
             queryClient.invalidateQueries([invalidateKey, id]); // update new data to cache
-            enqueueSnackbar(`${title} have been edited successfully.`, { variant: 'success' })
+            enqueueSnackbar(`${title} have been updated successfully.`, { variant: 'success' })
         },
         onError: () => enqueueSnackbar(`${title} editing failed.`, { variant: 'error' }),
     });

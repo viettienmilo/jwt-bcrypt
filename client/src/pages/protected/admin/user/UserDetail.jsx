@@ -1,4 +1,4 @@
-import courseData from '../../../../data/admin/courseData.js';
+import userAdminData from '../../../../data/admin/userAdminData.js';
 import GenericDetail from '../../../../components/protected/admin/GenericDetail.jsx';
 import Box from "@mui/material/Box";
 
@@ -12,22 +12,21 @@ export function loader(isAuthed) {
 
 
 const resource = {
-    name: 'course',
-    title: 'Course',
-    path: 'courses',
-    getOne: courseData.getOne,
-    deleteOne: courseData.deleteOne,
+    name: 'user',
+    title: 'User',
+    path: 'users',
+    getOne: userAdminData.getOne,
+    deleteOne: userAdminData.deleteOne,
 };
 
 const fields = [
-    { name: 'courseCode', title: 'Code' },
-    { name: 'courseName', title: 'Course Name' },
-    { name: 'credits', title: 'Num of Credits' },
-    { name: 'teacherName', title: 'Teacher Name' },
-    { name: 'description', title: 'Description' },
+    { name: 'studentCode', title: 'Code' },
+    { name: 'fullName', title: 'Full Name' },
+    { name: 'role', title: 'Role' },
+    { name: 'status', title: 'Status' },
 ];
 
-const CourseDetail = () => {
+const UserDetail = () => {
     return (
         <Box sx={{
             display: 'flex',
@@ -42,4 +41,4 @@ const CourseDetail = () => {
     )
 }
 
-export default CourseDetail
+export default UserDetail

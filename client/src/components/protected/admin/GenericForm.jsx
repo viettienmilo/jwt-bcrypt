@@ -36,6 +36,7 @@ export const componentMap = {
       <TextField
         {...field}
         value={field.value ?? ""}
+        disabled={config.disabled}
         fullWidth
       />
     </FormControl>
@@ -51,9 +52,10 @@ export const componentMap = {
       </Typography>
       <TextField
         {...field}
-        value={field.value ?? ""}
-        fullWidth
         type='number'
+        value={field.value ?? ""}
+        disabled={config.disabled}
+        fullWidth
       />
     </FormControl>
   ),
@@ -70,6 +72,7 @@ export const componentMap = {
         {...field}
         select
         value={field.value ?? ""}
+        disabled={config.disabled}
       >
         {config.options.map(opt => (
           <MenuItem key={opt.value} value={opt.value}>

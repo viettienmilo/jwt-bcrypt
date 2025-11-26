@@ -7,10 +7,17 @@ import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-// import courseData from './../../../data/admin/courseData.js';
-
 import AdminPageContainer from './AdminPageContainer.jsx';
 import { useDialogs } from './../../../hooks/admin/useDialogs/useDialogs.jsx';
+
+// use for mapping breadcrumbs path
+const resourceListPath = {
+    courses: '/admin',       // default route is /admin
+    users: '/admin/users',
+    students: '/admin/students',
+    grades: '/admin/grades',
+    settings: '/admin/settings',
+};
 
 const GenericDetail = ({ resource, fields }) => {
 
@@ -93,7 +100,7 @@ const GenericDetail = ({ resource, fields }) => {
         <AdminPageContainer
             title={`${resource.title} #${item._id}`}      //${Object.values(item)[1]}
             breadcrumbs={[
-                { title: `${resource.title}s`, path: `/admin/${resource.path}` },
+                { title: `${resource.title}s`, path: resourceListPath[resource.path] },
                 { title: `Detail` },
             ]}
         >

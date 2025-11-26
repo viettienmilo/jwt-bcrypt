@@ -29,10 +29,31 @@ export default function AdminMenuContent() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // const getIndexFromPath = () => {
+  //   const path = location.pathname.replace('/', '');
+  //   const index = listItems.findIndex(item => item.path === path);
+  //   return index >= 0 ? index : 0;   // fallback to courses
+  // };
+
   const getIndexFromPath = () => {
-    const path = location.pathname.replace('/admin/', '');
-    const index = listItems.findIndex(item => item.path === path);
-    return index >= 0 ? index : 0;   // fallback to courses
+    const path = location.pathname.replace(/^\/+/, ''); // remove leading slash
+
+    // find all items whose path is a prefix of current path
+    const matchedItems = listItems
+      .map((item, index) => ({
+        index,
+        itemPath: item.path.replace(/^\/+/, ''),
+      }))
+      .filter(({ itemPath }) => path === itemPath || path.startsWith(itemPath + '/'));
+
+    if (matchedItems.length === 0) return 0; // fallback
+
+    // pick the one with the longest path (most specific)
+    const bestMatch = matchedItems.reduce((a, b) =>
+      a.itemPath.length >= b.itemPath.length ? a : b
+    );
+
+    return bestMatch.index;
   };
 
   const [currentIndex, setCurrentIndex] = useState(() => getIndexFromPath());
