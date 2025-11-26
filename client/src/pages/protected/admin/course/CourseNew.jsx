@@ -24,8 +24,8 @@ export default function CourseNew() {
     const baseSchema = [
         { name: 'courseCode', label: "Course Code", type: 'text', required: true, },
         { name: 'courseName', label: "Course Name", type: 'text', required: true, },
-        { name: 'semester', label: "Semester", type: 'text', required: true, },
-        { name: 'credit', label: "Num of credits", type: 'number', required: true, },
+        { name: 'credits', label: "Num of credits", type: 'number', required: true, },
+        { name: 'description', label: "Description", type: 'text', required: false, },
     ]
 
     const courseSchema = useMemo(() => {

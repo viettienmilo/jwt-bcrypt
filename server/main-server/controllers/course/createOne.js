@@ -2,10 +2,10 @@ import Course from './../../models/Course.js';
 
 export default async function createOne(req, res) {
     try {
-        const { courseCode, courseName, semester, credit, teacherId } = req.body;
+        const { courseCode, courseName, credits, teacherId, description } = req.body;
 
         const newCourse = await Course.create({
-            courseCode, courseName, semester, credit, teacherId,
+            courseCode, courseName, credits, teacherId, description,
         });
 
         if (!newCourse) return res.status(400).json({ error: "Create new course failed." });

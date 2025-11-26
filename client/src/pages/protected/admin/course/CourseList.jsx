@@ -14,9 +14,9 @@ export function loader(isAuthed) {
 const courseColumns = [
     { field: "courseCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center' },
-    { field: "semester", headerName: "Semester", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "credit", headerName: "Num of Credits", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "credits", headerName: "Num of Credits", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', align: 'center' },
+    { field: "description", headerName: "Description", flex: 2, headerAlign: 'center', align: 'center' },
 ];
 
 const CourseList = () => {

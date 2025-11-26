@@ -15,7 +15,6 @@ export function loader(isAuthed) {
 const resource = {
     name: 'course',
     title: 'Course',
-    // path: 'courses',
     path: 'courses',
     getOne: courseData.getOne
 };
@@ -23,9 +22,9 @@ const resource = {
 const fields = [
     { name: 'courseCode', title: 'Code' },
     { name: 'courseName', title: 'Course Name' },
-    { name: 'semester', title: 'Semester' },
-    { name: 'credit', title: 'Num of Credit' },
+    { name: 'credits', title: 'Num of Credits' },
     { name: 'teacherName', title: 'Teacher Name' },
+    { name: 'description', title: 'Description' },
 ];
 
 const CourseDetail = () => {

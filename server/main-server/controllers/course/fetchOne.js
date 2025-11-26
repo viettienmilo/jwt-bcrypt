@@ -12,10 +12,10 @@ export default async function fetchOne(req, res) {
             _id: course._id,
             courseCode: course.courseCode,
             courseName: course.courseName,
-            semester: course.semester,
-            credit: course.credit,
+            credits: course.credits,
             teacherId: course.teacherId._id,
-            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname}`
+            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname}`,
+            description: course.description,
         }
         res.status(200).json({ course: courseInfo });
 
