@@ -55,10 +55,6 @@ export const attachAuthInterceptors = (axiosInstance) => {
 };
 
 
-
-
-
-
 //////////////////////////////////////////////////////////
 const authAPI = axios.create({
     baseURL: import.meta.env.VITE_AUTH_API,

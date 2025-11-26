@@ -15,6 +15,7 @@ export function loader(isAuthed) {
 const resource = {
     name: 'course',
     title: 'Course',
+    // path: 'courses',
     path: 'courses',
     getOne: courseData.getOne
 };

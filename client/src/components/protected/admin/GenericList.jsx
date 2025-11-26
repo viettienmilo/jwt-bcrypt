@@ -125,8 +125,14 @@ export default function GenericList({
         onSuccess: () => queryClient.invalidateQueries([basePath]),
     });
 
-    // ROW ACTIONS: EDIT/DELETE/CREATE
-    const handleRowEdit = row => () => navigate(`${row._id}/edit`);
+    // ROW ACTIONS: VIEW/EDIT/DELETE/CREATE
+    const handleRowClick = useCallback(
+        ({ row }) => {
+            navigate(`${basePath}/${row._id}`);
+        },
+        [navigate],
+    );
+    const handleRowEdit = row => () => navigate(`${basePath}/${row._id}/edit`);
 
     const handleRowDelete = row => async () => {
         const confirmed = await dialogs.confirm(`Delete ${row._id}?`, {
@@ -145,12 +151,7 @@ export default function GenericList({
 
     const handleCreateClick = () => navigate(`/admin/${basePath}/new`);
 
-    const handleRowClick = useCallback(
-        ({ row }) => {
-            navigate(`/admin/courses/${row._id}`);
-        },
-        [navigate],
-    );
+
 
     // REFRESH
     const handleRefresh = () => refetch();

@@ -64,7 +64,7 @@ export default function CourseNew() {
         }}>
             <GenericCreate
                 title="New Course"
-                breadcrums={{ title: 'Courses', path: '/admin/courses' }}
+                breadcrums={{ title: 'Courses', path: '/admin' }}
                 schema={courseSchema}
                 createOne={courseData.createOne}
             />

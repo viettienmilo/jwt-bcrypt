@@ -10,10 +10,11 @@ import './api/axiosInstance.js'; // set API globally and auto run interceptors t
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
+
   <QueryClientProvider client={queryClient}>
     <AppTheme >
       <CssBaseline enableColorScheme />
-      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} dense>
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} dense autoHideDuration={3000}>
         <App />
       </SnackbarProvider>
     </AppTheme>

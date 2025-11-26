@@ -82,7 +82,7 @@ export default function CourseEdit() {
         }}>
             <GenericEdit
                 title={`Course #${id}`}
-                breadcrums={{ title: 'Courses', path: '/admin/courses' }}
+                breadcrums={{ title: 'Courses', path: '/admin' }}
                 schema={courseSchema}
                 updateOne={courseData.updateOne}
                 defaultValues={defaultValues}

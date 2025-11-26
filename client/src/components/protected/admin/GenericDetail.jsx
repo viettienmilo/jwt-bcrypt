@@ -37,7 +37,8 @@ const GenericDetail = ({ resource, fields }) => {
     const navigate = useNavigate();
 
     const handleBack = () => {
-        navigate(`/admin/${resource.path}`);
+        // navigate(`/admin/${resource.path}`);
+        navigate(-1);
     };
 
     const handleEdit = useCallback(() => {

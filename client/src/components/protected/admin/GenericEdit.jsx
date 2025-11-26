@@ -27,7 +27,8 @@ export default function GenericEdit({ title, schema, updateOne, breadcrums, defa
     };
 
     const handleBack = () => {
-        navigate(breadcrums.path)
+        // navigate(breadcrums.path);
+        navigate(-1);
     }
 
     return (

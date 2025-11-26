@@ -21,7 +21,8 @@ export default function GenericCreate({ title, schema, createOne, breadcrums }) 
     };
 
     const handleBack = () => {
-        navigate(breadcrums.path)
+        // navigate(breadcrums.path)
+        navigate(-1);
     }
 
     return (

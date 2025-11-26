@@ -15,10 +15,10 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 
 const listItems = [
-  { text: 'Courses', icon: <LocalLibraryIcon />, path: '' },
-  { text: 'Students', icon: <SchoolIcon />, path: 'students' },
-  { text: 'Grades', icon: <GradingIcon />, path: 'grades' },
-  { text: 'Settings', icon: <SettingsRoundedIcon />, path: 'settings' },
+  { text: 'Courses', icon: <LocalLibraryIcon />, path: 'admin' },
+  { text: 'Students', icon: <SchoolIcon />, path: 'admin/students' },
+  { text: 'Grades', icon: <GradingIcon />, path: 'admin/grades' },
+  { text: 'Settings', icon: <SettingsRoundedIcon />, path: 'admin/settings' },
 ];
 
 export default function AdminMenuContent() {
@@ -28,7 +28,7 @@ export default function AdminMenuContent() {
   const location = useLocation();
 
   const getIndexFromPath = () => {
-    const path = location.pathname.replace('/admin/courses/', '');
+    const path = location.pathname.replace('/admin/', '');
     const index = listItems.findIndex(item => item.path === path);
     return index >= 0 ? index : 0;   // fallback to courses
   };
@@ -38,7 +38,7 @@ export default function AdminMenuContent() {
   const handleClick = (text, index) => {
     setDashboardSideMenuItem(text);
     setCurrentIndex(index);
-    navigate(`/admin/courses/${listItems[index]?.path}`)
+    navigate(`/${listItems[index]?.path}`)
   }
 
   return (
