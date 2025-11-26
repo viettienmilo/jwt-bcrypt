@@ -1,4 +1,5 @@
-import Course from '../../models/Course.js';
+import Course from './../../../models/Course.js';
+
 
 export default async function fetchMany(req, res) {
     try {

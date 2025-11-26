@@ -1,16 +1,10 @@
-import { adminAPI } from './../api/axiosInstance.js';
+import { adminAPI } from './../../api/axiosInstance.js';
 
 const courseData = {
 
     getAll: async ({ paginationModel, sortModel, filterModel }) => {
         try {
             const res = await adminAPI.get("/courses", { paginationModel, sortModel, filterModel });
-
-            // const items = (res.data.items).map(item => ({
-            //     ...item,
-            //     id: item._id,  // _id → id for DataGrid
-            //     teacherName: `${item.teacherId.lastname} ${item.teacherId.firstname}`, // teacherId → teacherName
-            // }));
             const items = res.data.items;
             const itemCount = res.data.itemCount;
             return { items, itemCount };

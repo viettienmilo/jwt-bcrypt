@@ -1,11 +1,12 @@
 import express from 'express'
-import { authUserMiddleware, authRoleMiddleware } from './../middlewares/authMiddleware.js';
 
-import fetchMany from '../controllers/course/fetchMany.js';
-import fetchOne from './../controllers/course/fetchOne.js';
-import deleteOne from './../controllers/course/deleteOne.js';
-import createOne from './../controllers/course/createOne.js';
-import updateOne from './../controllers/course/updateOne.js';
+import { authUserMiddleware, authRoleMiddleware } from './../../middlewares/authMiddleware.js';
+
+import fetchMany from './../../controllers/admin/course/fetchMany.js';
+import fetchOne from './../../controllers/admin/course/fetchOne.js';
+import deleteOne from './../../controllers/admin/course/deleteOne.js';
+import createOne from './../../controllers/admin/course/createOne.js';
+import updateOne from './../../controllers/admin/course/updateOne.js';
 
 const courseRouter = express.Router();
 

@@ -3,7 +3,7 @@ import { redirect } from 'react-router';
 
 import { useUIStore } from '../../../../store/useUserStore.js';
 import GenericList from '../../../../components/protected/admin/GenericList.jsx';
-import courseData from '../../../../data/courseData.js';
+import courseData from './../../../../data/admin/courseData.js';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');

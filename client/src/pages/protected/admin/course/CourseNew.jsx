@@ -1,6 +1,6 @@
 import GenericCreate from './../../../../components/protected/admin/GenericCreate.jsx';
-import courseData from './../../../../data/courseData.js';
-import userData from './../../../../data/userData.js';
+import courseData from './../../../../data/admin/courseData.js';
+import userAdminData from './../../../../data/admin/userAdminData.js';
 import { useQuery } from '@tanstack/react-query';
 
 import { Box, CircularProgress } from '@mui/material';
@@ -18,7 +18,7 @@ export function loader(isAuthed) {
 export default function CourseNew() {
     const { data: teachers, isLoading, isError, error } = useQuery({
         queryKey: ['teachers'],
-        queryFn: userData.getAllTeachers,
+        queryFn: userAdminData.getAllTeachers,
     });
 
     const baseSchema = [

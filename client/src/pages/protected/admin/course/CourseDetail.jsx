@@ -1,9 +1,8 @@
-import courseData from './../../../../data/courseData.js';
+import courseData from './../../../../data/admin/courseData.js';
 import GenericDetail from './../../../../components/protected/admin/GenericDetail.jsx';
 import Box from "@mui/material/Box";
 
 import { useUIStore } from './../../../../store/useUserStore.js';
-
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -16,7 +15,8 @@ const resource = {
     name: 'course',
     title: 'Course',
     path: 'courses',
-    getOne: courseData.getOne
+    getOne: courseData.getOne,
+    deleteOne: courseData.deleteOne,
 };
 
 const fields = [

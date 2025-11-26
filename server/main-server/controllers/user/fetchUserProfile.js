@@ -1,6 +1,7 @@
-import { ErrorResponse, SuccessResponse } from './../../utils/response.js';
-import { ERROR } from './../../constants/errorCodes.js';
+import { ErrorResponse, SuccessResponse } from '../../utils/response.js';
+import { ERROR } from '../../constants/errorCodes.js';
 import UserProfile from './../../models/UserProfile.js';
+
 import axios from 'axios'
 
 const fetchUserProfile = async (req, res) => {

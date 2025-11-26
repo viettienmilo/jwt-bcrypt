@@ -4,8 +4,8 @@ import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 
 import GenericEdit from './../../../../components/protected/admin/GenericEdit.jsx';
-import courseData from './../../../../data/courseData.js';
-import userData from './../../../../data/userData.js';
+import courseData from './../../../../data/admin/courseData.js';
+import userAdminData from './../../../../data/admin/userAdminData.js';
 import { useUIStore } from './../../../../store/useUserStore.js';
 
 export function loader(isAuthed) {
@@ -26,7 +26,7 @@ export default function CourseEdit() {
 
     const { data: teachers, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
         queryKey: ['teachers'],
-        queryFn: userData.getAllTeachers,
+        queryFn: userAdminData.getAllTeachers,
     });
 
     const baseSchema = [

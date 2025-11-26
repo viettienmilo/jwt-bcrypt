@@ -9,6 +9,7 @@ import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import SchoolIcon from '@mui/icons-material/School';
 import GradingIcon from '@mui/icons-material/Grading';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import GroupIcon from '@mui/icons-material/Group';
 
 import { useUIStore } from '../../../store/useUserStore.js';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ const listItems = [
   { text: 'Courses', icon: <LocalLibraryIcon />, path: 'admin' },
   { text: 'Students', icon: <SchoolIcon />, path: 'admin/students' },
   { text: 'Grades', icon: <GradingIcon />, path: 'admin/grades' },
+  { text: 'Users', icon: <GroupIcon />, path: 'admin/users' },
   { text: 'Settings', icon: <SettingsRoundedIcon />, path: 'admin/settings' },
 ];
 

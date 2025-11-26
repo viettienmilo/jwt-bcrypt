@@ -1,4 +1,4 @@
-import Course from './../../models/Course.js';
+import Course from './../../../models/Course.js';
 
 export default async function deleteOne(req, res) {
     try {

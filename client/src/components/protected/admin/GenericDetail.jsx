@@ -7,7 +7,8 @@ import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-import courseData from './../../../data/courseData.js';
+// import courseData from './../../../data/admin/courseData.js';
+
 import AdminPageContainer from './AdminPageContainer.jsx';
 import { useDialogs } from './../../../hooks/admin/useDialogs/useDialogs.jsx';
 
@@ -25,12 +26,13 @@ const GenericDetail = ({ resource, fields }) => {
     const queryClient = useQueryClient();
 
     const deleteMutation = useMutation({
-        mutationFn: courseData.deleteOne,
+        mutationFn: resource.deleteOne,
         onSuccess: async () => {
             await queryClient.cancelQueries([resource.name, id]);
             queryClient.removeQueries([resource.name, id]);
             queryClient.invalidateQueries([resource.path])
-            navigate(`/admin/${resource.path}`);
+            // navigate(`/admin/${resource.path}`);
+            navigate(-1);
         }
     });
 

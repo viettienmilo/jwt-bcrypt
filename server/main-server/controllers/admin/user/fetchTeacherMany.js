@@ -1,4 +1,5 @@
-import UserProfile from './../../models/UserProfile.js';
+import UserProfile from './../../../models/UserProfile.js';
+
 
 export default async function fetchTeacherMany(req, res) {
     try {
