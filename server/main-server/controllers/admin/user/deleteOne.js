@@ -7,7 +7,7 @@ export default async function deleteOne(req, res) {
             id,
             { status: "inactive" }
         );
-        if (!deletedUser) return res.status(401).json({ error: "User not found." });
+        if (!deletedUser) return res.status(401).json({ error: "Account ot found." });
 
         return res.status(200).json();
 

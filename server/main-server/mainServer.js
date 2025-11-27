@@ -7,9 +7,8 @@ import 'dotenv/config'
 import userRouter from './routes/userRoutes.js';
 import internalRouter from './routes/internalRoutes.js';
 import connectToCloudinary from './configs/cloudinary.js';
-import courseRouter from './routes/admin/courseRoutes.js';
-import studentRouter from './routes/admin/studentRoutes.js';
-import userAdminRouter from './routes/admin/userAdminRoutes.js';
+import adminCourseRouter from './routes/admin/adminCourseRoutes.js';
+import adminUserRouter from './routes/admin/adminUserRoutes.js';
 
 
 connectToCloudinary();
@@ -33,16 +32,10 @@ server.get('/', (req, res) => {
     res.status(200).json({ message: "Main server is running" });
 })
 
-// app.use(express.static('public'));
-// app.get('*', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-// });
-
 server.use('/api/user', userRouter);
 server.use('/internal/user', internalRouter);
-server.use('/api/admin/courses', courseRouter);
-server.use('/api/admin/students', studentRouter);
-server.use('/api/admin/users', userAdminRouter);
+server.use('/api/admin/courses', adminCourseRouter);
+server.use('/api/admin/users', adminUserRouter);
 
 server.listen(process.env.MAIN_PORT, () => {
     console.log(`MAIN SERVER IS RUNNING ON PORT ${process.env.MAIN_PORT}`)

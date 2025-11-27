@@ -1,22 +1,20 @@
 import UserProfile from './../../../models/UserProfile.js';
+import { formatToDDMMYYYY } from './../../../utils/dateFormat.js';
 
 export default async function fetchOne(req, res) {
     try {
         const id = req.params.id;
-
         const user = await UserProfile.findById(id)
 
-        if (!user) return res.status(401).json({ error: "User not found." });
+        if (!user) return res.status(401).json({ error: "Account not found." });
 
-        const userInfo = {
-            _id: user._id,
-            studentCode: user.studentCode,
+        const item = {
+            ...user.toObject(),
             fullName: `${user.lastname} ${user.firstname}`,
-            role: user.role,
-            status: user.status,
+            birthdate: formatToDDMMYYYY(user.birthdate),
         }
 
-        return res.status(200).json({ item: userInfo });
+        return res.status(200).json({ item });
 
     } catch (error) {
         console.log(error);

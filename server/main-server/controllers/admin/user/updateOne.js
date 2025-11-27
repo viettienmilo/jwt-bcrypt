@@ -11,7 +11,7 @@ export default async function updateOne(req, res) {
             { new: true }
         )
 
-        if (!updatedUserProfile) return res.status(400).json({ error: "User not found." });
+        if (!updatedUserProfile) return res.status(400).json({ error: "Account not found." });
 
         return res.status(200).json();
 

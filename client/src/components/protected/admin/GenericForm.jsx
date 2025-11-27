@@ -24,14 +24,15 @@ import Typography from '@mui/material/Typography';
 import { FormLabel } from '@mui/material';
 
 export const componentMap = {
-
   text: ({ field, config }) => (
     <FormControl>
       <Typography
         htmlFor={`${config.name}`}
         component='label'
         variant='caption'
-        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}>{config.label}
+        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}
+      >
+        {config.label}
       </Typography>
       <TextField
         {...field}
@@ -48,7 +49,9 @@ export const componentMap = {
         htmlFor={`${config.name}`}
         component='label'
         variant='caption'
-        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}>{config.label}
+        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}
+      >
+        {config.label}
       </Typography>
       <TextField
         {...field}
@@ -66,7 +69,9 @@ export const componentMap = {
         htmlFor={`${config.name}`}
         component='label'
         variant='caption'
-        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}>{config.label}
+        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}
+      >
+        {config.label}
       </Typography>
       <TextField
         {...field}
@@ -95,6 +100,47 @@ export const componentMap = {
     />
   ),
 
+  date: ({ field, fieldState, config }) => (
+    <FormControl fullWidth>
+      <Typography
+        htmlFor={`${config.name}`}
+        component='label'
+        variant='caption'
+        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}
+      >
+        {config.label}
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          sx={{
+            '& .MuiButtonBase-root': {
+              height: '30px',
+              width: '30px',
+            },
+            '& .MuiInputBase-root': {
+              height: '32px',
+              width: '32px'
+            },
+            '& .MuiPickersSectionList-root': {
+              py: 1.2,
+            },
+          }}
+          {...field}
+          value={field.value ? dayjs(field.value) : null}
+          format="DD/MM/YYYY"
+          onChange={(date) => field.onChange(date ? date.format("YYYY-MM-DD") : null)}
+          slotProps={{
+            textField: {
+              error: !!fieldState.error,
+              helperText:
+                fieldState.error?.message,
+            },
+          }}
+          disabled={config.disabled}
+        />
+      </LocalizationProvider>
+    </FormControl>
+  ),
 }
 
 
@@ -118,15 +164,16 @@ export default function GenericForm({ schema, onSubmit, defaultValues = {}, hand
                 rules={{
                   required: fieldConfig.required ? `${fieldConfig.name} is required` : false
                 }}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <Stack>
                     <Component
                       field={field}
+                      fieldState={fieldState}
                       config={fieldConfig}
                     />
                     {errors[fieldConfig.name] && (
                       <Typography variant='caption' color='error'>
-                        {errors[fieldConfig.name].message}
+                        {errors[fieldConfig.name].message ?? fieldState.error.message}
                       </Typography>)
                     }
                   </Stack>

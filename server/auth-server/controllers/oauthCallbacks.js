@@ -17,7 +17,7 @@ async function oauthCallbackController(req, res) {
 
     await syncUserProfileToMainServer({
         _id: user._id,
-        studentCode: 'N/A',
+        studentCode: '00000000',
         username: normalized.username,
         firstName: normalized.firstName,
         lastName: normalized.lastName,

@@ -1,7 +1,7 @@
 import joi from 'joi'
 
 const userProfileSchema = joi.object({
-    username: joi.string().trim().min(4).max(20).required(),
+    username: joi.string().trim().min(4).max(20).optional(),
     studentCode: joi.string().trim().required(),
     firstname: joi.string().trim().required(),
     lastname: joi.string().trim().required(),
