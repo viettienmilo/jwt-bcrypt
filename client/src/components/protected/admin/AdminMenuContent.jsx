@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import SchoolIcon from '@mui/icons-material/School';
+import ClassIcon from '@mui/icons-material/Class';
 import GradingIcon from '@mui/icons-material/Grading';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import GroupIcon from '@mui/icons-material/Group';
@@ -17,8 +18,10 @@ import { useNavigate, useLocation } from 'react-router';
 
 const listItems = [
   { text: 'Courses', icon: <LocalLibraryIcon />, path: 'admin' },
+  { text: 'Classes', icon: <ClassIcon />, path: 'admin/classes' },
   { text: 'Students', icon: <SchoolIcon />, path: 'admin/students' },
   { text: 'Grades', icon: <GradingIcon />, path: 'admin/grades' },
+
   { text: 'Users', icon: <GroupIcon />, path: 'admin/users' },
   { text: 'Settings', icon: <SettingsRoundedIcon />, path: 'admin/settings' },
 ];
@@ -67,7 +70,7 @@ export default function AdminMenuContent() {
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
-        {listItems.slice(0, 3).map((item, index) => (
+        {listItems.slice(0, 4).map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <ListItemButton selected={index === currentIndex} onClick={() => handleClick(item.text, index)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
@@ -77,9 +80,9 @@ export default function AdminMenuContent() {
         ))}
       </List>
       <List dense>
-        {listItems.slice(3).map((item, index) => (
+        {listItems.slice(4).map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index + 3 === currentIndex} onClick={() => handleClick(item.text, index + 3)}>
+            <ListItemButton selected={index + 4 === currentIndex} onClick={() => handleClick(item.text, index + 4)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

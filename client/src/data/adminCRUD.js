@@ -23,7 +23,7 @@ export const adminStudentCRUD =
     deleteOne: adminUserCRUD.deleteOne,
 }
 
-
+export const adminClassCRUD = createCRUD('classes', adminAPI);
 
 
 

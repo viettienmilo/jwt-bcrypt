@@ -40,6 +40,8 @@ import UserList, { loader as userListLoader } from './pages/protected/admin/user
 import UserDetail, { loader as userDetailLoader } from './pages/protected/admin/user/UserDetail.jsx';
 import UserEdit, { loader as userEditLoader } from './pages/protected/admin/user/UserEdit.jsx';
 
+import ClassList, { loader as classListLoader } from './pages/protected/admin/class/ClassList.jsx';
+
 const appRouter = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Layout />} errorElement={<PageError />} HydrateFallback={<></>}>
     <Route index element={<Home />} />
@@ -64,6 +66,8 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
       <Route path='students/:id' element={<StudentDetail />} loader={() => studentDetailLoader(requireAuth())} />
       <Route path='students/new' element={<StudentNew />} loader={() => studentNewLoader(requireAuth())} />
       <Route path='students/:id/edit' element={<StudentEdit />} loader={() => studentEditLoader(requireAuth())} />
+
+      <Route path='classes' element={<ClassList />} loader={() => classListLoader(requireAuth())} />
 
 
 
