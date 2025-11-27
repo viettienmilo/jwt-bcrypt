@@ -17,7 +17,7 @@ export default async function fetchOne(req, res) {
             teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname} ${course.teacherId.status === 'inactive' ? '- (inactive)' : ''}`,
             description: course.description,
         }
-        res.status(200).json({ course: courseInfo });
+        res.status(200).json({ item: courseInfo });
 
     } catch (error) {
         console.log(error);

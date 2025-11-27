@@ -16,7 +16,7 @@ userAdminRouter.get(
 );
 
 userAdminRouter.get(
-    '/users',
+    '/',
     authUserMiddleware,
     authRoleMiddleware("ADMIN"),
     fetchMany

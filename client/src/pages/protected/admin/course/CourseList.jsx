@@ -3,7 +3,7 @@ import { redirect } from 'react-router';
 
 import { useUIStore } from '../../../../store/useUserStore.js';
 import GenericList from '../../../../components/protected/admin/GenericList.jsx';
-import courseData from './../../../../data/admin/courseData.js';
+import { adminCourseCRUD } from './../../../../data/adminCRUD.js';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -15,7 +15,7 @@ const courseColumns = [
     { field: "courseCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center' },
     { field: "credits", headerName: "Num of Credits", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', align: 'center' },
+    { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', },
     { field: "description", headerName: "Description", flex: 2, headerAlign: 'center', align: 'center' },
 ];
 
@@ -30,8 +30,8 @@ const CourseList = () => {
             <GenericList
                 title="Courses"
                 columns={courseColumns}
-                getMany={courseData.getAll}
-                deleteOne={courseData.deleteOne}
+                getMany={adminCourseCRUD.getAll}
+                deleteOne={adminCourseCRUD.deleteOne}
                 basePath="courses"
             />
         </Box>

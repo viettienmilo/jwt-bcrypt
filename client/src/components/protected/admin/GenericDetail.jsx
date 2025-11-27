@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AdminPageContainer from './AdminPageContainer.jsx';
 import { useDialogs } from './../../../hooks/admin/useDialogs/useDialogs.jsx';
@@ -23,6 +23,10 @@ const GenericDetail = ({ resource, fields }) => {
 
     const { id } = useParams();
     const dialogs = useDialogs();
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    const [deleted, setDeleted] = useState(false);
 
     const { data, isLoading, isError, error } = useQuery({
         queryKey: [resource.name, id],
@@ -30,23 +34,19 @@ const GenericDetail = ({ resource, fields }) => {
         enabled: !!id,
     });
 
-    const queryClient = useQueryClient();
-
     const deleteMutation = useMutation({
         mutationFn: resource.deleteOne,
         onSuccess: async () => {
-            await queryClient.cancelQueries([resource.name, id]);
-            queryClient.removeQueries([resource.name, id]);
-            queryClient.invalidateQueries([resource.path])
-            // navigate(`/admin/${resource.path}`);
-            navigate(-1);
+            setDeleted(true);
         }
     });
 
-    const navigate = useNavigate();
+    // prevent react reload deleted document
+    useEffect(() => {
+        if (deleted) navigate('../')
+    }, [deleted, navigate])
 
     const handleBack = () => {
-        // navigate(`/admin/${resource.path}`);
         navigate(-1);
     };
 
@@ -62,7 +62,8 @@ const GenericDetail = ({ resource, fields }) => {
             cancelText: "Cancel",
         });
 
-        document.activeElement?.blur();  // no warning aria-label-hidden when control still has focus
+        // no warning aria-label-hidden when control still has focus
+        document.activeElement?.blur();
 
         if (confirmed) {
             deleteMutation.mutate(id);
@@ -110,7 +111,12 @@ const GenericDetail = ({ resource, fields }) => {
                         {fields.map((field, index) => (
                             <Grid size={{ xs: 12, sm: 6 }} key={index}>
                                 <Paper sx={{ px: 2, py: 1 }}>
-                                    <Typography variant="caption" sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}>{field.title}</Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{ display: "block", mb: 0.5, color: 'text.secondary' }}
+                                    >
+                                        {field.title}
+                                    </Typography>
                                     <Typography variant="body1" sx={{ my: 1, ml: 1 }}>
                                         {item[field.name]}
                                     </Typography>

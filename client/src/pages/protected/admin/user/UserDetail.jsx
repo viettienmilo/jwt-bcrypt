@@ -1,8 +1,9 @@
-import userAdminData from '../../../../data/admin/userAdminData.js';
-import GenericDetail from '../../../../components/protected/admin/GenericDetail.jsx';
 import Box from "@mui/material/Box";
 
 import { useUIStore } from '../../../../store/useUserStore.js';
+
+import { adminUserCRUD } from './../../../../data/adminCRUD.js';
+import GenericDetail from '../../../../components/protected/admin/GenericDetail.jsx';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -15,8 +16,8 @@ const resource = {
     name: 'user',
     title: 'User',
     path: 'users',
-    getOne: userAdminData.getOne,
-    deleteOne: userAdminData.deleteOne,
+    getOne: adminUserCRUD.getOne,
+    deleteOne: adminUserCRUD.deleteOne,
 };
 
 const fields = [

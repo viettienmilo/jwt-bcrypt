@@ -4,8 +4,7 @@ import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 
 import GenericEdit from './../../../../components/protected/admin/GenericEdit.jsx';
-import courseData from './../../../../data/admin/courseData.js';
-import userAdminData from './../../../../data/admin/userAdminData.js';
+import { adminCourseCRUD, getTeacherOptions } from './../../../../data/adminCRUD.js';
 import { useUIStore } from './../../../../store/useUserStore.js';
 
 export function loader(isAuthed) {
@@ -20,13 +19,13 @@ export default function CourseEdit() {
     const courseKey = 'course';
     const { data, isLoading: isCourseLoading, isError: isCourseError, error: courseError } = useQuery({
         queryKey: [courseKey, id],
-        queryFn: () => courseData.getOne(id),
+        queryFn: () => adminCourseCRUD.getOne(id),
         enabled: !!id,
     });
 
-    const { data: teachers, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
+    const { data: teacherOptions, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
         queryKey: ['teachers'],
-        queryFn: userAdminData.getAllTeachers,
+        queryFn: getTeacherOptions,
     });
 
     const baseSchema = [
@@ -37,12 +36,12 @@ export default function CourseEdit() {
     ]
 
     const courseSchema = useMemo(() => {
-        if (!teachers) return baseSchema;
+        if (!teacherOptions) return baseSchema;
         return [
             ...baseSchema,
-            { name: 'teacherId', label: "Teacher Name", type: "select", options: teachers, required: true }
+            { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
         ]
-    }, [teachers]);
+    }, [teacherOptions]);
 
     if (isTeacherLoading || isCourseLoading) {
         return (
@@ -84,7 +83,7 @@ export default function CourseEdit() {
                 title={`Course #${id}`}
                 breadcrums={{ title: 'Courses', path: '/admin' }}
                 schema={courseSchema}
-                updateOne={courseData.updateOne}
+                updateOne={adminCourseCRUD.updateOne}
                 defaultValues={defaultValues}
                 invalidateKey={courseKey}
             />

@@ -1,11 +1,11 @@
 import { Box, CircularProgress } from '@mui/material';
-import { useMemo } from 'react';
 import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 
-import GenericEdit from '../../../../components/protected/admin/GenericEdit.jsx';
-import userAdminData from './../../../../data/admin/userAdminData.js';
 import { useUIStore } from '../../../../store/useUserStore.js';
+
+import { adminUserCRUD } from './../../../../data/adminCRUD.js';
+import GenericEdit from '../../../../components/protected/admin/GenericEdit.jsx';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -19,7 +19,7 @@ export default function UserEdit() {
     const userKey = 'user';
     const { data, isLoading, isError, error } = useQuery({
         queryKey: [userKey, id],
-        queryFn: () => userAdminData.getOne(id),
+        queryFn: () => adminUserCRUD.getOne(id),
         enabled: !!id,
     });
 
@@ -84,7 +84,7 @@ export default function UserEdit() {
                 title={`User #${id}`}
                 breadcrums={{ title: 'Users', path: '/admin/users' }}
                 schema={baseSchema}
-                updateOne={userAdminData.updateOne}
+                updateOne={adminUserCRUD.updateOne}
                 defaultValues={defaultValues}
                 invalidateKey={userKey}
             />

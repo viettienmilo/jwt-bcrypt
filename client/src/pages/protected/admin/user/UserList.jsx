@@ -2,8 +2,9 @@ import { Box, } from '@mui/material';
 import { redirect } from 'react-router';
 
 import { useUIStore } from '../../../../store/useUserStore.js';
+
 import GenericList from '../../../../components/protected/admin/GenericList.jsx';
-import userAdminData from '../../../../data/admin/userAdminData.js';
+import { adminUserCRUD } from './../../../../data/adminCRUD.js';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -29,8 +30,8 @@ const UserList = () => {
             <GenericList
                 title="Users"
                 columns={userColumns}
-                getMany={userAdminData.getAll}
-                deleteOne={userAdminData.deleteOne}
+                getMany={adminUserCRUD.getAll}
+                deleteOne={adminUserCRUD.deleteOne}
                 basePath="users"
                 noCreate={true}
             />

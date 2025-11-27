@@ -1,13 +1,11 @@
-import GenericCreate from './../../../../components/protected/admin/GenericCreate.jsx';
-import courseData from './../../../../data/admin/courseData.js';
-import userAdminData from './../../../../data/admin/userAdminData.js';
 import { useQuery } from '@tanstack/react-query';
-
-import { Box, CircularProgress } from '@mui/material';
 import { useMemo } from 'react';
 
+import { Box, CircularProgress } from '@mui/material';
 import { useUIStore } from './../../../../store/useUserStore.js';
 
+import GenericCreate from './../../../../components/protected/admin/GenericCreate.jsx';
+import { adminCourseCRUD, getTeacherOptions } from './../../../../data/adminCRUD.js';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -16,9 +14,9 @@ export function loader(isAuthed) {
 }
 
 export default function CourseNew() {
-    const { data: teachers, isLoading, isError, error } = useQuery({
+    const { data: teacherOptions, isLoading, isError, error } = useQuery({
         queryKey: ['teachers'],
-        queryFn: userAdminData.getAllTeachers,
+        queryFn: getTeacherOptions,
     });
 
     const baseSchema = [
@@ -29,12 +27,12 @@ export default function CourseNew() {
     ]
 
     const courseSchema = useMemo(() => {
-        if (!teachers) return baseSchema;
+        if (!teacherOptions) return baseSchema;
         return [
             ...baseSchema,
-            { name: 'teacherId', label: "Teacher Name", type: "select", options: teachers, required: true }
+            { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
         ]
-    }, [teachers]);
+    }, [teacherOptions]);
 
     if (isLoading) {
         return (
@@ -66,7 +64,7 @@ export default function CourseNew() {
                 title="New Course"
                 breadcrums={{ title: 'Courses', path: '/admin' }}
                 schema={courseSchema}
-                createOne={courseData.createOne}
+                createOne={adminCourseCRUD.createOne}
             />
         </Box>
     )
