@@ -24,77 +24,47 @@ export default async function fetchMany(req, res) {
             orConditions.push({ description: regex });
             const num = Number(val);
             if (!isNaN(num)) orConditions.push({ credits: num });
-
-            // Teacher fields
-            orConditions.push({ "teacher.lastname": regex });
-            orConditions.push({ "teacher.firstname": regex });
         });
 
-        // --- Aggregation pipeline ---
-        const pipeline = [
-            {
-                $lookup: {
-                    from: "userprofiles",
-                    localField: "teacherId",
-                    foreignField: "_id",
-                    as: "teacher",
-                },
-            },
-            { $unwind: "$teacher" },
-        ];
-
-        if (orConditions.length > 0) pipeline.push({ $match: { $or: orConditions } });
+        // --- pipeline ---
+        const baseMatch = [];
+        if (orConditions.length > 0) baseMatch.push({ $match: { $or: orConditions } });
 
         // --- Sorting ---
+        const sortStage = [];
         if (sort.length > 0) {
             const sortObj = {};
             sort.forEach(s => {
-                if (s.field === "teacherName") {
-                    sortObj["teacher.lastname"] = s.sort === "asc" ? 1 : -1;
-                } else {
-                    sortObj[s.field] = s.sort === "asc" ? 1 : -1;
-                }
+                sortObj[s.field] = s.sort === "asc" ? 1 : -1;
             });
-            pipeline.push({ $sort: sortObj });
+            sortStage.push({ $sort: sortObj });
         }
 
-        // --- Pagination ---
-        pipeline.push({ $skip: page * pageSize });
-        pipeline.push({ $limit: pageSize });
+        // --- Final aggregation
+        const pipeline = [
+            ...baseMatch,
+            {
+                $facet: {
+                    items: [
+                        ...sortStage,
+                        // pagination
+                        { $skip: page * pageSize },
+                        { $limit: pageSize }
+                    ],
+                    count: [
+                        { $count: "total" }
+                    ]
+                }
+            }
+        ];
+
 
         // --- Fetch courses ---
-        const courses = await Course.aggregate(pipeline);
+        const result = await Course.aggregate(pipeline);
+        const items = result[0].items;
+        const itemCount = result[0].count[0]?.total ?? 0;
 
-        // --- Total count ---
-        const countPipeline = [
-            {
-                $lookup: {
-                    from: "userprofiles",
-                    localField: "teacherId",
-                    foreignField: "_id",
-                    as: "teacher",
-                },
-            },
-            { $unwind: "$teacher" },
-        ];
-        if (orConditions.length > 0) countPipeline.push({ $match: { $or: orConditions } });
-        countPipeline.push({ $count: "total" });
-
-        const totalCountResult = await Course.aggregate(countPipeline);
-        const totalCount = totalCountResult[0]?.total ?? 0;
-
-        // --- Simplify output ---
-        const simplified = courses.map(course => ({
-            _id: course._id,
-            courseCode: course.courseCode,
-            courseName: course.courseName,
-            credits: course.credits,
-            teacherId: course.teacher._id,
-            teacherName: `${course.teacher.lastname} ${course.teacher.firstname} ${course.teacher.status === "inactive" ? "- (inactive)" : ""}`,
-            description: course.description,
-        }));
-
-        res.status(200).json({ items: simplified, itemCount: totalCount });
+        res.status(200).json({ items, itemCount });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error" });

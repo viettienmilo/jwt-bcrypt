@@ -17,16 +17,16 @@ export default function CourseEdit() {
 
     const { id } = useParams();
     const courseKey = 'course';
-    const { data, isLoading: isCourseLoading, isError: isCourseError, error: courseError } = useQuery({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: [courseKey, id],
         queryFn: () => adminCourseCRUD.getOne(id),
         enabled: !!id,
     });
 
-    const { data: teacherOptions, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
-        queryKey: ['teachers'],
-        queryFn: getTeacherOptions,
-    });
+    // const { data: teacherOptions, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
+    //     queryKey: ['teachers'],
+    //     queryFn: getTeacherOptions,
+    // });
 
     const baseSchema = [
         { name: 'courseCode', label: "Course Code", type: 'text', required: true, },
@@ -35,15 +35,15 @@ export default function CourseEdit() {
         { name: 'description', label: "Description", type: 'text', required: false, },
     ]
 
-    const courseSchema = useMemo(() => {
-        if (!teacherOptions) return baseSchema;
-        return [
-            ...baseSchema,
-            { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
-        ]
-    }, [teacherOptions]);
+    // const courseSchema = useMemo(() => {
+    //     if (!teacherOptions) return baseSchema;
+    //     return [
+    //         ...baseSchema,
+    //         { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
+    //     ]
+    // }, [teacherOptions]);
 
-    if (isTeacherLoading || isCourseLoading) {
+    if (isLoading) {
         return (
             <Box sx={{
                 display: 'flex', flex: 1, flexDirection: 'column',
@@ -55,10 +55,10 @@ export default function CourseEdit() {
             </Box>
         );
     }
-    if (isTeacherError || isCourseError) {
+    if (isError) {
         return (
             <Box sx={{ flexGrow: 1 }}>
-                <Alert severity="error">{teacherError.message || courseError.message}</Alert>
+                <Alert severity="error">{error.message}</Alert>
             </Box>
         );
     }
@@ -68,7 +68,7 @@ export default function CourseEdit() {
         courseCode: item.courseCode,
         courseName: item.courseName,
         credits: item.credits,
-        teacherId: item.teacherId,
+        // teacherId: item.teacherId,
         description: item.description,
     }
 
@@ -82,7 +82,7 @@ export default function CourseEdit() {
             <GenericEdit
                 title={`Course #${id}`}
                 breadcrums={{ title: 'Courses', path: '/admin' }}
-                schema={courseSchema}
+                schema={baseSchema}
                 updateOne={adminCourseCRUD.updateOne}
                 defaultValues={defaultValues}
                 invalidateKey={courseKey}

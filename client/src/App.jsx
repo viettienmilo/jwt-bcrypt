@@ -43,7 +43,7 @@ import UserEdit, { loader as userEditLoader } from './pages/protected/admin/user
 import ClassList, { loader as classListLoader } from './pages/protected/admin/class/ClassList.jsx';
 import ClassDetail, { loader as classDetailLoader } from './pages/protected/admin/class/ClassDetail.jsx';
 import ClassEdit, { loader as classEditLoader } from './pages/protected/admin/class/ClassEdit.jsx';
-
+import ClassNew, { loader as classNewLoader } from './pages/protected/admin/class/ClassNew.jsx';
 
 
 const appRouter = createBrowserRouter(createRoutesFromElements(
@@ -74,6 +74,7 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
       <Route path='classes' element={<ClassList />} loader={() => classListLoader(requireAuth())} />
       <Route path='classes/:id' element={<ClassDetail />} loader={() => classDetailLoader(requireAuth())} />
       <Route path='classes/:id/edit' element={<ClassEdit />} loader={() => classEditLoader(requireAuth())} />
+      <Route path='classes/new' element={<ClassNew />} loader={() => classNewLoader(requireAuth())} />
 
 
 

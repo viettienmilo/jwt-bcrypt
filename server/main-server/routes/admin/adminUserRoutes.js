@@ -1,7 +1,7 @@
 import express from 'express'
 import { authUserMiddleware, authRoleMiddleware } from '../../middlewares/authMiddleware.js';
 
-import fetchTeacherMany from '../../controllers/admin/user/fetchTeacherMany.js';
+import fetchTeacherOptions from '../../controllers/admin/user/fetchTeacherOptions.js';
 import fetchMany from '../../controllers/admin/user/fetchMany.js';
 import deleteOne from '../../controllers/admin/user/deleteOne.js';
 import fetchOne from '../../controllers/admin/user/fetchOne.js';
@@ -14,7 +14,7 @@ const adminUserRouter = express.Router();
 /// NOTE: ROUTER ORDER!!!!!!!!!!
 adminUserRouter.get(  // <---- Teacher must be fetch here!
     '/teachers',
-    fetchTeacherMany
+    fetchTeacherOptions
 );
 
 adminUserRouter.get(

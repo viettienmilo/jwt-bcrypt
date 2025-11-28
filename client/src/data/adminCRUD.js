@@ -29,7 +29,7 @@ export const adminClassCRUD = createCRUD('classes', adminAPI);
 
 export async function getTeacherOptions() {
     const res = await adminAPI.get('/users/teachers'); //VITE_MAIN_API_ADMIN=http://localhost:3000/api/admin/users/teachers
-    return res.data.item; // {id, fullName}
+    return res.data.items; // {id, fullName}
 }
 
 export async function getCourseOptions() {

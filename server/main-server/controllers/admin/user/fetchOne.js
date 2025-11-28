@@ -4,14 +4,14 @@ import { formatToDDMMYYYY } from './../../../utils/dateFormat.js';
 export default async function fetchOne(req, res) {
     try {
         const id = req.params.id;
-        const user = await UserProfile.findById(id)
+        const data = await UserProfile.findById(id);
 
-        if (!user) return res.status(401).json({ error: "Account not found." });
+        if (!data) return res.status(401).json({ error: "Not found." });
 
         const item = {
-            ...user.toObject(),
-            fullName: `${user.lastname} ${user.firstname}`,
-            birthdate: formatToDDMMYYYY(user.birthdate),
+            ...data.toObject(),
+            fullName: `${data.lastname} ${data.firstname}`,
+            birthdate: formatToDDMMYYYY(data.birthdate),
         }
 
         return res.status(200).json({ item });

@@ -5,13 +5,13 @@ export default async function updateOne(req, res) {
         const { id } = req.params;
         const data = req.body;
 
-        const updatedCourse = await Course.findByIdAndUpdate(
+        const updated = await Course.findByIdAndUpdate(
             id,
             { $set: data },
             { new: true }
         )
 
-        if (!updatedCourse) return res.status(400).json({ error: "Course not found." });
+        if (!updated) return res.status(400).json({ error: "Not found." });
 
         return res.status(200).json();
 

@@ -1,12 +1,11 @@
-import { Box, CircularProgress } from '@mui/material';
-import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
+import { Box, CircularProgress } from '@mui/material';
 import { useUIStore } from '../../../../store/useUserStore.js';
 
+import GenericCreate from '../../../../components/protected/admin/GenericCreate.jsx';
 import { adminClassCRUD, getTeacherOptions, getCourseOptions } from '../../../../data/adminCRUD.js';
-import GenericEdit from '../../../../components/protected/admin/GenericEdit.jsx';
-import { useMemo } from 'react';
 
 export function loader(isAuthed) {
     if (!isAuthed) throw redirect('/user/login');
@@ -14,35 +13,15 @@ export function loader(isAuthed) {
     return null;
 }
 
-export default function ClassEdit() {
-
-    const { id } = useParams();
-
-    const {
-        data: teacherOptions,
-        isLoading: isTeacherLoading,
-        isError: isTeacherError,
-        error: teacherError
-    } = useQuery({
-        queryKey: ['teacher'],
+export default function ClassNew() {
+    const { data: teacherOptions, isLoading: isTeacherLoading, isError: isTeacherError, error: teacherError } = useQuery({
+        queryKey: ['teachers'],
         queryFn: getTeacherOptions,
     });
 
-    const {
-        data: courseOptions,
-        isLoading: isCourseLoading,
-        isError: isCourseError,
-        error: courseError
-    } = useQuery({
-        queryKey: ['course'],
+    const { data: courseOptions, isLoading: isCourseLoading, isError: isCourseError, error: courseError } = useQuery({
+        queryKey: ['courses'],
         queryFn: getCourseOptions,
-    });
-
-    const uniqueKey = 'class';
-    const { data, isLoading, isError, error } = useQuery({
-        queryKey: [uniqueKey, id],
-        queryFn: () => adminClassCRUD.getOne(id),
-        enabled: !!id && !!teacherOptions && !!courseOptions
     });
 
     const schema = useMemo(() => {
@@ -72,7 +51,8 @@ export default function ClassEdit() {
         ]
     }, [teacherOptions, courseOptions]);
 
-    if (isLoading || isTeacherLoading || isCourseLoading) {
+
+    if (isTeacherLoading || isCourseLoading) {
         return (
             <Box sx={{
                 display: 'flex', flex: 1, flexDirection: 'column',
@@ -84,29 +64,12 @@ export default function ClassEdit() {
             </Box>
         );
     }
-    if (isError || isTeacherError || isCourseError) {
+    if (isTeacherError || isCourseError) {
         return (
             <Box sx={{ flexGrow: 1 }}>
-                <Alert severity="error">{error.message || teacherError.message || courseError.message}</Alert>
+                <Alert severity="error">{teacherError.message || courseError.message}</Alert>
             </Box>
         );
-    }
-
-    const item = data?.item;
-
-    const defaultValues = {
-        classCode: item.classCode,
-        className: item.className,
-        courseId: item.courseId._id,
-        teacherId: item.teacherId._id,
-        semester: item.semester,
-        year: item.year,
-        schedule: {
-            days: item.schedule?.days || [],
-            time: item.schedule?.time || "",
-            room: item.schedule?.room || ""
-        },
-        status: item.status,
     }
 
     return (
@@ -115,13 +78,11 @@ export default function ClassEdit() {
             flexDirection: 'column',
             m: 0, p: 0
         }}>
-            <GenericEdit
-                title={`Class #${id}`}
+            <GenericCreate
+                title="New Class"
                 breadcrums={{ title: 'Classes', path: '/admin/classes' }}
                 schema={schema}
-                updateOne={adminClassCRUD.updateOne}
-                defaultValues={defaultValues}
-                invalidateKey={uniqueKey}
+                createOne={adminClassCRUD.createOne}
             />
         </Box>
     )

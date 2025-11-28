@@ -3,10 +3,7 @@ import UserProfile from '../../../models/UserProfile.js';
 export default async function createOne(req, res) {
     try {
         const newUser = new UserProfile(req.body);
-        await newUser.save({
-            // validateBeforeSave: true,
-            timestamps: true,
-        });
+        await newUser.save();
 
         if (!newUser) return res.status(400).json({ error: "Create failed." });
 

@@ -15,7 +15,7 @@ export function loader(isAuthed) {
 const baseColumns = [
     { field: "classCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center', },
     { field: "className", headerName: "Class Name", flex: 2, headerAlign: 'center' },
-    { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center', align: 'center' },
+    { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center', },
     { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', align: 'center' },
     { field: "semester", headerName: "Semester", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "year", headerName: "Year", flex: 1, headerAlign: 'center', align: 'center' },

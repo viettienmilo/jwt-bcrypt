@@ -22,8 +22,8 @@ const resource = {
 const fields = [
     { name: 'courseCode', title: 'Code' },
     { name: 'courseName', title: 'Course Name' },
-    { name: 'credits', title: 'Num of Credits' },
-    { name: 'teacherName', title: 'Teacher Name' },
+    { name: 'credits', title: 'Credits' },
+    // { name: 'teacherName', title: 'Teacher Name' },
     { name: 'description', title: 'Description' },
 ];
 

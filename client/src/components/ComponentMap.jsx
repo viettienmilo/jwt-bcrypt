@@ -1,4 +1,3 @@
-
 import { ListItemText } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -164,7 +163,6 @@ export const ComponentMap = {
                                 }
                             }
                         },
-
                     }
                 }}
                 value={field.value ?? []}
@@ -172,7 +170,7 @@ export const ComponentMap = {
             >
                 {config.options.map(opt => (
                     <MenuItem key={opt} value={opt} gap={1}>
-                        <Checkbox checked={field.value?.includes(opt)} />
+                        <Checkbox checked={field.value ? field.value.includes(opt) : false} />
                         <ListItemText primary={opt} />
                     </MenuItem>
                 ))}

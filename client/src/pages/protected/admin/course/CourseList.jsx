@@ -12,11 +12,10 @@ export function loader(isAuthed) {
 }
 
 const courseColumns = [
-    { field: "courseCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center' },
-    { field: "credits", headerName: "Num of Credits", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', },
-    { field: "description", headerName: "Description", flex: 2, headerAlign: 'center', align: 'center' },
+    { field: "courseCode", headerName: "Code", headerAlign: 'center', align: 'center' },
+    { field: "courseName", headerName: "Course Name", flex: 1, headerAlign: 'center' },
+    { field: "credits", headerName: "Credits", headerAlign: 'center', align: 'center' },
+    { field: "description", headerName: "Description", flex: 2, headerAlign: 'center' },
 ];
 
 const CourseList = () => {
@@ -25,7 +24,7 @@ const CourseList = () => {
         <Box sx={{
             display: 'flex',
             flexDirection: 'column',
-            m: 0, p: 0
+            m: 0, p: 0,
         }}>
             <GenericList
                 title="Courses"

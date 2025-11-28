@@ -57,7 +57,8 @@ export default function GenericList({
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: [basePath, paginationModel, sortModel, filterModel],
         queryFn: () => getMany({ paginationModel, sortModel, filterModel }),
-        keepPreviousData: true,
+        // onSuccess: () => queryClient.invalidateQueries([basePath]),
+        // keepPreviousData: true,
     });
 
     const rows = data?.items ?? [];
@@ -149,7 +150,7 @@ export default function GenericList({
                 </Stack>
             }
         >
-            <Box sx={{ height: 600, width: "100%" }}>
+            <Box sx={{ height: 750, width: "100%" }}>
                 {error ? (
                     <Box sx={{ flexGrow: 1 }}>
                         <Alert severity="error">{error.message}</Alert>

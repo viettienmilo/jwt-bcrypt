@@ -3,8 +3,8 @@ import Course from './../../../models/Course.js';
 export default async function deleteOne(req, res) {
     try {
         const { id } = req.params;
-        const deletedCourse = await Course.findByIdAndDelete(id);
-        if (!deletedCourse) return res.status(401).json({ error: "Course not found." });
+        const deleted = await Course.findByIdAndDelete(id);
+        if (!deleted) return res.status(401).json({ error: "Not found." });
         return res.status(200).json();
 
     } catch (error) {

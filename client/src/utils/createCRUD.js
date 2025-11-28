@@ -7,7 +7,7 @@ export default function createCRUD(resource, api) {
                         page: paginationModel.page,
                         pageSize: paginationModel.pageSize,
                         sort: JSON.stringify(sortModel),
-                        filter: JSON.stringify(filterModel)
+                        filter: JSON.stringify(filterModel),
                     }
                 });
 

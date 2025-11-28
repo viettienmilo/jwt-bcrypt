@@ -3,11 +3,11 @@ import UserProfile from '../../../models/UserProfile.js';
 export default async function deleteOne(req, res) {
     try {
         const { id } = req.params;
-        const deletedUser = await UserProfile.findByIdAndUpdate(
+        const deleted = await UserProfile.findByIdAndUpdate(
             id,
             { status: "inactive" }
         );
-        if (!deletedUser) return res.status(401).json({ error: "Account ot found." });
+        if (!deleted) return res.status(401).json({ error: "Not found." });
 
         return res.status(200).json();
 

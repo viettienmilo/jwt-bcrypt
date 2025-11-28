@@ -8,19 +8,12 @@ import AdminNavbar from './../../components/protected/admin/AdminNavbar.jsx';
 
 import DialogsProvider from './../../hooks/admin/useDialogs/DialogsProvider.jsx';
 
-// export async function loader(isAuthed) {
-//   if (!isAuthed) throw redirect('/user/login');
-//   useUIStore.getState().setShowNavbar(false); // hide main navbar
-//   useUIStore.getState().setDashboardSideMenuItem("Student"); // set default menu item button selection
-//   return;
-// }
-
 export default function AdminLayout() {
   const user = useUserStore(state => state.user);
 
   return (
     <DialogsProvider>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', width: '100%' }}>
         <AdminSideMenu user={user} />
         <AdminNavbar user={user} />
 

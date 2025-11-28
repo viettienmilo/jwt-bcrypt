@@ -5,7 +5,7 @@ import { authUserMiddleware, authRoleMiddleware } from '../../middlewares/authMi
 import fetchMany from '../../controllers/admin/class/fetchMany.js';
 import fetchOne from '../../controllers/admin/class/fetchOne.js';
 import deleteOne from '../../controllers/admin/class/deleteOne.js';
-// import createOne from '../../controllers/admin/class/createOne.js';
+import createOne from '../../controllers/admin/class/createOne.js';
 import updateOne from '../../controllers/admin/class/updateOne.js';
 
 const adminClassRouter = express.Router();
@@ -29,12 +29,12 @@ adminClassRouter.delete('/:id',
     deleteOne,
 );
 
-// adminClassRouter.post('/new',
-//     express.json(),
-//     authUserMiddleware,
-//     authRoleMiddleware("ADMIN"),
-//     createOne,
-// )
+adminClassRouter.post('/new',
+    express.json(),
+    authUserMiddleware,
+    authRoleMiddleware("ADMIN"),
+    createOne,
+)
 
 adminClassRouter.put('/:id',
     express.json(),

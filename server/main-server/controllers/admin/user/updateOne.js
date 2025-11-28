@@ -5,13 +5,13 @@ export default async function updateOne(req, res) {
         const { id } = req.params;
         const data = req.body;
 
-        const updatedUserProfile = await UserProfile.findByIdAndUpdate(
+        const updated = await UserProfile.findByIdAndUpdate(
             id,
             { $set: data },
             { new: true }
         )
 
-        if (!updatedUserProfile) return res.status(400).json({ error: "Account not found." });
+        if (!updated) return res.status(400).json({ error: "Not found." });
 
         return res.status(200).json();
 

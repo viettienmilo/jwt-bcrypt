@@ -14,10 +14,10 @@ export function loader(isAuthed) {
 }
 
 export default function CourseNew() {
-    const { data: teacherOptions, isLoading, isError, error } = useQuery({
-        queryKey: ['teachers'],
-        queryFn: getTeacherOptions,
-    });
+    // const { data: teacherOptions, isLoading, isError, error } = useQuery({
+    //     queryKey: ['teachers'],
+    //     queryFn: getTeacherOptions,
+    // });
 
     const baseSchema = [
         { name: 'courseCode', label: "Course Code", type: 'text', required: true, },
@@ -26,33 +26,33 @@ export default function CourseNew() {
         { name: 'description', label: "Description", type: 'text', required: false, },
     ]
 
-    const courseSchema = useMemo(() => {
-        if (!teacherOptions) return baseSchema;
-        return [
-            ...baseSchema,
-            { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
-        ]
-    }, [teacherOptions]);
+    // const courseSchema = useMemo(() => {
+    //     if (!teacherOptions) return baseSchema;
+    //     return [
+    //         ...baseSchema,
+    //         { name: 'teacherId', label: "Teacher Name", type: "select", options: teacherOptions, required: true }
+    //     ]
+    // }, [teacherOptions]);
 
-    if (isLoading) {
-        return (
-            <Box sx={{
-                display: 'flex', flex: 1, flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                width: '100%', m: 1,
-            }}
-            >
-                <CircularProgress />
-            </Box>
-        );
-    }
-    if (isError) {
-        return (
-            <Box sx={{ flexGrow: 1 }}>
-                <Alert severity="error">{error.message}</Alert>
-            </Box>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <Box sx={{
+    //             display: 'flex', flex: 1, flexDirection: 'column',
+    //             alignItems: 'center', justifyContent: 'center',
+    //             width: '100%', m: 1,
+    //         }}
+    //         >
+    //             <CircularProgress />
+    //         </Box>
+    //     );
+    // }
+    // if (isError) {
+    //     return (
+    //         <Box sx={{ flexGrow: 1 }}>
+    //             <Alert severity="error">{error.message}</Alert>
+    //         </Box>
+    //     );
+    // }
 
     return (
         <Box sx={{
@@ -63,7 +63,7 @@ export default function CourseNew() {
             <GenericCreate
                 title="New Course"
                 breadcrums={{ title: 'Courses', path: '/admin' }}
-                schema={courseSchema}
+                schema={baseSchema}
                 createOne={adminCourseCRUD.createOne}
             />
         </Box>
