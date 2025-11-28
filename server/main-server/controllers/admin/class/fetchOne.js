@@ -1,23 +1,23 @@
-import Course from './../../../models/Course.js';
+import Class from './../../../models/Class.js';
 
 export default async function fetchOne(req, res) {
     try {
         const id = req.params.id;
 
-        const course = await Course.findById(id)?.populate('teacherId', 'lastname firstname status');
+        const data = await Class.findById(id)?.populate('teacherId', 'lastname firstname status').populate('courseId', 'courseName');
 
-        if (!course) return res.status(401).json({ error: "Course not found." });
+        if (!data) return res.status(401).json({ error: "Not found." });
 
-        const courseInfo = {
-            _id: course._id,
-            courseCode: course.courseCode,
-            courseName: course.courseName,
-            credits: course.credits,
-            teacherId: course.teacherId._id,
-            teacherName: `${course.teacherId.lastname} ${course.teacherId.firstname} ${course.teacherId.status === 'inactive' ? '- (inactive)' : ''}`,
-            description: course.description,
+        const item = {
+            ...data.toObject(),
+            teacherName: `${data.teacherId.lastname} ${data.teacherId.firstname}${data.teacherId.status === 'inactive' ? ' - (inactive)' : ''}`,
+            courseName: data.courseId.courseName,
+            scheduleDays: data.schedule.days.join(", "),
+            scheduleTime: data.schedule.time,
+            scheduleRoom: data.schedule.room
         }
-        res.status(200).json({ item: courseInfo });
+        // console.log(item)
+        res.status(200).json({ item });
 
     } catch (error) {
         console.log(error);

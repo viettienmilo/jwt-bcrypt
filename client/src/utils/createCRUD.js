@@ -23,7 +23,7 @@ export default function createCRUD(resource, api) {
 
         getOne: async (id) => {
             const res = await api.get(`/${resource}/${id}`);
-            return res.data; // e.g. "course" from "courses", "user" from "users", ...
+            return res.data; // e.g. "course" from "courses"
         },
 
         createOne: async (data) => {

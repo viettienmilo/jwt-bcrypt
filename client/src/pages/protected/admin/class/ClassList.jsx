@@ -13,7 +13,7 @@ export function loader(isAuthed) {
 }
 
 const baseColumns = [
-    { field: "classCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "classCode", headerName: "Code", flex: 1, headerAlign: 'center', align: 'center', },
     { field: "className", headerName: "Class Name", flex: 2, headerAlign: 'center' },
     { field: "courseName", headerName: "Course Name", flex: 2, headerAlign: 'center', align: 'center' },
     { field: "teacherName", headerName: "Teacher Name", flex: 2, headerAlign: 'center', align: 'center' },
@@ -22,13 +22,14 @@ const baseColumns = [
     {
         field: "schedule",
         headerName: "Schedule",
-        flex: 3,
+        flex: 1,
         headerAlign: "center",
         align: "center",
         valueGetter: (params) => {
             return `${params.days.join(", ")} | ${params.time} | ${params.room}`;
         }
     },
+    { field: "status", headerName: "Status", flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
 const ClassList = () => {

@@ -7,8 +7,16 @@ import fetchOne from '../../controllers/admin/course/fetchOne.js';
 import deleteOne from '../../controllers/admin/course/deleteOne.js';
 import createOne from '../../controllers/admin/course/createOne.js';
 import updateOne from '../../controllers/admin/course/updateOne.js';
+import fetchCourseOptions from './../../controllers/admin/course/fetchCourseOptions.js';
+
 
 const adminCourseRouter = express.Router();
+
+adminCourseRouter.get('/course-options',
+    authUserMiddleware,
+    authRoleMiddleware("ADMIN"),
+    fetchCourseOptions,
+);
 
 adminCourseRouter.get('/',
     authUserMiddleware,

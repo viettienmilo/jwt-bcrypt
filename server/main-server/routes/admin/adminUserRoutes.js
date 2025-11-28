@@ -11,6 +11,12 @@ import createOne from './../../controllers/admin/user/createOne.js';
 
 const adminUserRouter = express.Router();
 
+/// NOTE: ROUTER ORDER!!!!!!!!!!
+adminUserRouter.get(  // <---- Teacher must be fetch here!
+    '/teachers',
+    fetchTeacherMany
+);
+
 adminUserRouter.get(
     '/',
     authUserMiddleware,
@@ -46,13 +52,6 @@ adminUserRouter.delete(
     authUserMiddleware,
     authRoleMiddleware("ADMIN"),
     deleteOne
-);
-
-adminUserRouter.get(
-    '/teachers',
-    authUserMiddleware,
-    authRoleMiddleware("ADMIN"),
-    fetchTeacherMany
 );
 
 export default adminUserRouter;

@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography, CircularProgress, Alert, Divider, Stack, Button } from '@mui/material';
+import { Box, Grid, Paper, Typography, CircularProgress, Alert, Divider, Stack, Button, Card, CardHeader, CardContent } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -15,6 +15,7 @@ const resourceListPath = {
     courses: '/admin',       // default route is /admin
     users: '/admin/users',
     students: '/admin/students',
+    classes: '/admin/classes',
     grades: '/admin/grades',
     settings: '/admin/settings',
 };
@@ -23,7 +24,7 @@ const GenericDetail = ({ resource, fields }) => {
 
     const { id } = useParams();
     const dialogs = useDialogs();
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const navigate = useNavigate();
 
     const [deleted, setDeleted] = useState(false);
@@ -101,7 +102,7 @@ const GenericDetail = ({ resource, fields }) => {
         <AdminPageContainer
             title={`${resource.title} #${item._id}`}      //${Object.values(item)[1]}
             breadcrumbs={[
-                { title: `${resource.title}s`, path: resourceListPath[resource.path] },
+                { title: `${resource.title}${resource.title.slice(-1) === 's' ? 'es' : 's'}`, path: resourceListPath[resource.path] },
                 { title: `Detail` },
             ]}
         >
