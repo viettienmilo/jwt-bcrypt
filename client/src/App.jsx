@@ -17,9 +17,10 @@ import ResetPassword from './pages/ResetPassword.jsx';
 import OAuth from './pages/OAuth.jsx';
 
 // user dashboard pages
-import { Dashboard, loader as dashboardLoader } from './pages/protected/Dashboard.jsx';
-import Overview, { loader as overviewLoader } from './pages/protected/Overview.jsx';
-import Profile, { loader as profileLoader } from './pages/protected/Profile.jsx';
+import { Dashboard, loader as dashboardLoader } from './pages/protected/user/Dashboard.jsx';
+import Overview, { loader as overviewLoader } from './pages/protected/user/Overview.jsx';
+import Profile, { loader as profileLoader } from './pages/protected/user/Profile.jsx';
+import Enrollment, { loader as enrollmentLoader } from './pages/protected/Enrollment.jsx';
 
 // admin panel pages
 import AdminLayout from './layouts/protected/AdminLayout.jsx';
@@ -54,13 +55,17 @@ const appRouter = createBrowserRouter(createRoutesFromElements(
     <Route path='user/reset-password' element={<ResetPassword />} />
     <Route path='user/login' element={<SignIn />} loader={() => signInLoader(requireAuth())} />
     <Route path='auth/success' element={<OAuth />} />
+
+    <Route path='user/enroll' element={<Enrollment />} loader={() => enrollmentLoader(requireAuth())} />
+
+
     <Route path='user/dashboard' element={<Dashboard />} loader={() => dashboardLoader(requireAuth())}>
       <Route index element={<Overview />} loader={() => overviewLoader(requireAuth())} />
       <Route path='profile' element={<Profile />} loader={() => profileLoader(requireAuth())} />
       <Route path='*' element={<Page404 />} />
     </Route>
-    <Route path='admin' element={<AdminLayout />} errorElement={<PageError />} HydrateFallback={<></>}>
 
+    <Route path='admin' element={<AdminLayout />} errorElement={<PageError />} HydrateFallback={<></>}>
       <Route index element={<CourseList />} loader={() => courseListLoader(requireAuth())} />
       <Route path='courses/:id' element={<CourseDetail />} loader={() => courseDetailLoader(requireAuth())} />
       <Route path='courses/new' element={<CourseNew />} loader={() => courseNewLoader(requireAuth())} />

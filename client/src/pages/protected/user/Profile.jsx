@@ -1,7 +1,7 @@
 import { Button, Divider, Typography, Stack, TextField, FormControl, FormLabel, MenuItem } from '@mui/material';
-import { useUserStore, useUIStore } from './../../store/useUserStore.js';
+import { useUserStore, useUIStore } from '../../../store/useUserStore.js';
 import { redirect } from 'react-router';
-import EditableAvatar from './../../components/protected/user/EditableAvatar.jsx';
+import EditableAvatar from '../../../components/protected/user/EditableAvatar.jsx';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { useRef, useState, useEffect } from 'react';
-import useUpdateProfile from './../../hooks/user/useUpdateProfile.js';
+import useUpdateProfile from '../../../hooks/user/useUpdateProfile.js';
 import { useSnackbar } from 'notistack';
 
 export function loader(isAuthed) {

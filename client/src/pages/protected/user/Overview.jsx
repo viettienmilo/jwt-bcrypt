@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useUserStore, useUIStore } from './../../store/useUserStore.js';
+import { useUserStore, useUIStore } from '../../../store/useUserStore.js';
 import { redirect } from 'react-router';
 
 export function loader(isAuthed) {

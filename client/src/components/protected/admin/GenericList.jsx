@@ -150,7 +150,9 @@ export default function GenericList({
                 </Stack>
             }
         >
-            <Box sx={{ height: 750, width: "100%" }}>
+            <Box sx={{
+                width: "100%", height: { xs: 480, md: 'calc(100vh - 240px)' },
+            }}>
                 {error ? (
                     <Box sx={{ flexGrow: 1 }}>
                         <Alert severity="error">{error.message}</Alert>

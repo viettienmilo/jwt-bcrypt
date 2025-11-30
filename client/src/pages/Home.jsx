@@ -1,8 +1,10 @@
 import { Box, Button, Typography } from '@mui/material';
 import Container from '../components/Container.jsx';
 import MainImage from './../assets/mainpage_img_small.png';
+import { useNavigate } from 'react-router';
 
 export default function Home() {
+    const navigate = useNavigate();
 
     return (
         <Container >
@@ -52,7 +54,7 @@ export default function Home() {
                                 borderBottomRightRadius: 20, // sharp corner
                             }}
                         >
-                            Start Now
+                            Explore Now
                         </Button>
                         <Button
                             variant='contained'
@@ -66,8 +68,9 @@ export default function Home() {
                                 borderBottomLeftRadius: 20,
                                 borderBottomRightRadius: 0, // sharp corner
                             }}
+                            onClick={() => navigate('/user/enroll')}
                         >
-                            Registration
+                            Enroll Now
                         </Button>
                     </Box>
                 </Box>
