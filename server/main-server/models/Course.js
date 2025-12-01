@@ -8,6 +8,15 @@ const courseSchema = new mongoose.Schema({
     description: String,
 }, { timestamps: true });
 
+// courseSchema.virtual('classes', {
+//     ref: "Class",
+//     localField: "_id",
+//     foreignField: "courseId",
+// });
+
+// courseSchema.set('toJSON', { virtuals: true });
+// courseSchema.set('toObject', { virtuals: true });
+
 const Course = mainDb.model('Course', courseSchema);
 
 export default Course;

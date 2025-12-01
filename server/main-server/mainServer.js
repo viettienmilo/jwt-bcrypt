@@ -10,6 +10,7 @@ import connectToCloudinary from './configs/cloudinary.js';
 import adminCourseRouter from './routes/admin/adminCourseRoutes.js';
 import adminUserRouter from './routes/admin/adminUserRoutes.js';
 import adminClassRouter from './routes/admin/adminClassRoutes.js';
+import studentEnrollmentRouter from './routes/student/studentEnrollmentRoutes.js';
 
 connectToCloudinary();
 
@@ -37,6 +38,7 @@ server.use('/internal/user', internalRouter);
 server.use('/api/admin/courses', adminCourseRouter);
 server.use('/api/admin/users', adminUserRouter);
 server.use('/api/admin/classes', adminClassRouter);
+server.use('/api/student', studentEnrollmentRouter);
 
 server.listen(process.env.MAIN_PORT, () => {
     console.log(`MAIN SERVER IS RUNNING ON PORT ${process.env.MAIN_PORT}`)
